@@ -23,6 +23,42 @@ Things you may want to cover:
 
 * ...
 
+Chase vehicle web site with Ruby 2.0 on Rails 4.0 framework.
+
+Used Ruby Version Manager (rvm) version 1.19
+
+<em>Database</em>
+
+Redis DB is used for short-term database needs.
+
+Main database is MongoDb using MongoMapper.
+
+<em>Create gemset "fh" under ruby 2.0</em>
+
+$ rvm use 2.0
+$ rvm gemset create fh
+$ rvm 2.0@fh
+
+
+<em>Initial Framework:</em>
+
+Create rails framework without Active Record (will use MongoMapper)
+$ rails new FarHorizonsApp --skip-active-record
+
+Make gemset switch automatic upon entering the project's directory:
+$ cd <project name>
+$ echo fh > .ruby-gemset
+$ echo 2.0 > .ruby-version
+
+Edit Gemfile to add mongo_mapper and redis:
+
+# Database support
+gem 'mongo_mapper', :git => "git://github.com/mongomapper/mongomapper.git", :tag => "v0.13.0.beta2"
+gem 'redis'
+
+run bundle install again:
+
+$ bundle install
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
