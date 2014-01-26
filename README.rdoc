@@ -56,6 +56,30 @@ Edit Gemfile to add mongo_mapper and redis:
 gem 'mongo_mapper', :git => "git://github.com/mongomapper/mongomapper.git", :tag => "v0.13.0.beta2"
 gem 'redis'
 
+<em>I/O Support</em>
+
+Use ruby-serialport gem for serial port I/O. Add to Gemfile:
+
+gem 'serialport'
+
+NOTE: ruby-serialport seems to conflict with serialport, so find and delete
+ruby-serialport directories in the 2.0@fh gemset directory.
+
+<em>Misc useful gems</em>
+
+Add to Gemfile:
+
+gem 'bson_ext'
+
+# Better ruby console than irb
+gem 'pry'
+
+# Use thin web server instead of spammy webrick
+gem 'thin'
+
+# Uncomment line to use debugger
+gem 'debugger', group: [:development, :test]
+
 run bundle install again:
 
 $ bundle install

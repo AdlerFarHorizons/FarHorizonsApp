@@ -7,6 +7,15 @@ gem 'rails', '4.0.0'
 gem 'mongo_mapper', :git => "git://github.com/mongomapper/mongomapper.git", :tag => "v0.13.0.beta2"
 gem 'redis'
 
+# Serial IO support
+gem 'serialport'
+
+gem 'bson_ext'
+
+# Better ruby console than irb
+gem 'pry'
+
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
@@ -42,5 +51,8 @@ end
 # Use Capistrano for deployment
 # gem 'capistrano', group: :development
 
+# Use thin web server instead of spammy webrick
+gem 'thin'
+
 # Use debugger
-# gem 'debugger', group: [:development, :test]
+gem 'debugger', group: [:development, :test]
