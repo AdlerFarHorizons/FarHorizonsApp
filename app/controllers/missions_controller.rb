@@ -41,7 +41,7 @@ class MissionsController < ApplicationController
   # PATCH/PUT /missions/1.json
   def update
     respond_to do |format|
-      if @mission.update(mission_params)
+      if @mission.set(mission_params)
         format.html { redirect_to @mission, notice: 'Mission was successfully updated.' }
         format.json { head :no_content }
       else

@@ -41,7 +41,7 @@ class ChaseServersController < ApplicationController
   # PATCH/PUT /chase_servers/1.json
   def update
     respond_to do |format|
-      if @chase_server.update(chase_server_params)
+      if @chase_server.set(chase_server_params)
         format.html { redirect_to @chase_server, notice: 'Chase server was successfully updated.' }
         format.json { head :no_content }
       else

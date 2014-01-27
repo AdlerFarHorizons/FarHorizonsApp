@@ -41,7 +41,7 @@ class PredictedTracksController < ApplicationController
   # PATCH/PUT /predicted_tracks/1.json
   def update
     respond_to do |format|
-      if @predicted_track.update(predicted_track_params)
+      if @predicted_track.set(predicted_track_params)
         format.html { redirect_to @predicted_track, notice: 'Predicted track was successfully updated.' }
         format.json { head :no_content }
       else

@@ -41,7 +41,7 @@ class SkyTracksController < ApplicationController
   # PATCH/PUT /sky_tracks/1.json
   def update
     respond_to do |format|
-      if @sky_track.update(sky_track_params)
+      if @sky_track.set(sky_track_params)
         format.html { redirect_to @sky_track, notice: 'Sky track was successfully updated.' }
         format.json { head :no_content }
       else

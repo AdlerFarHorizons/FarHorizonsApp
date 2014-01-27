@@ -41,7 +41,7 @@ class RoutersController < ApplicationController
   # PATCH/PUT /routers/1.json
   def update
     respond_to do |format|
-      if @router.update(router_params)
+      if @router.set(router_params)
         format.html { redirect_to @router, notice: 'Router was successfully updated.' }
         format.json { head :no_content }
       else

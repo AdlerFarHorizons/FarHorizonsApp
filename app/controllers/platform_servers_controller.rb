@@ -41,7 +41,7 @@ class PlatformServersController < ApplicationController
   # PATCH/PUT /platform_servers/1.json
   def update
     respond_to do |format|
-      if @platform_server.update(platform_server_params)
+      if @platform_server.set(platform_server_params)
         format.html { redirect_to @platform_server, notice: 'Platform server was successfully updated.' }
         format.json { head :no_content }
       else

@@ -41,7 +41,7 @@ class GroundTracksController < ApplicationController
   # PATCH/PUT /ground_tracks/1.json
   def update
     respond_to do |format|
-      if @ground_track.update(ground_track_params)
+      if @ground_track.set(ground_track_params)
         format.html { redirect_to @ground_track, notice: 'Ground track was successfully updated.' }
         format.json { head :no_content }
       else

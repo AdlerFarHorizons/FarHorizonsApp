@@ -92,6 +92,12 @@ $ rails generate mongo_mapper:model <model> <key:type ...>
 Used rails built-in scaffolding for initial framework:
 $ rails generate scaffold <model> <key:type ...>
 
+NOTE: The scaffold-generated code uses the blah.update() method in the "update"
+controller action method. This is a private method in MongoMapper and it was
+manually replaced with the blah.set() method.
+
+Until plans are made to use testing features, the scaffold-generated files in
+the test folder have been backed up to test.zip and removed.
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.

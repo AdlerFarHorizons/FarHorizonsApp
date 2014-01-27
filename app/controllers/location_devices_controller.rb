@@ -41,7 +41,7 @@ class LocationDevicesController < ApplicationController
   # PATCH/PUT /location_devices/1.json
   def update
     respond_to do |format|
-      if @location_device.update(location_device_params)
+      if @location_device.set(location_device_params)
         format.html { redirect_to @location_device, notice: 'Location device was successfully updated.' }
         format.json { head :no_content }
       else

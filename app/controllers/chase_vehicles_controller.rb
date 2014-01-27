@@ -41,7 +41,7 @@ class ChaseVehiclesController < ApplicationController
   # PATCH/PUT /chase_vehicles/1.json
   def update
     respond_to do |format|
-      if @chase_vehicle.update(chase_vehicle_params)
+      if @chase_vehicle.set(chase_vehicle_params)
         format.html { redirect_to @chase_vehicle, notice: 'Chase vehicle was successfully updated.' }
         format.json { head :no_content }
       else

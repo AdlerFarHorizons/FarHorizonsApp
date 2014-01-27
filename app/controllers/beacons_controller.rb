@@ -41,7 +41,7 @@ class BeaconsController < ApplicationController
   # PATCH/PUT /beacons/1.json
   def update
     respond_to do |format|
-      if @beacon.update(beacon_params)
+      if @beacon.set(beacon_params)
         format.html { redirect_to @beacon, notice: 'Beacon was successfully updated.' }
         format.json { head :no_content }
       else
