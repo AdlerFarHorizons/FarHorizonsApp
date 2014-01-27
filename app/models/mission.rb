@@ -9,4 +9,10 @@ class Mission
   key :target_end, Time
   key :actual_end, Time
 
+  timestamps!
+  
+  has_many :chase_vehicles
+  
+  has_many :platforms
+
 end

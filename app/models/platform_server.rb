@@ -6,6 +6,8 @@ class PlatformServer
   key :model, String
   key :serial_no, String
   key :sw_version, String
-  key :persistent, Boolean
+  key :persistent, Boolean, :default => true
+  
+  timestamps!
 
 end

@@ -6,6 +6,8 @@ class Router
   key :serial_no, String
   key :address, String
   key :ssid, String
-  key :persistent, Boolean
+  key :persistent, Boolean, Boolean, :default => true
+  
+  timestamps!
 
 end

@@ -7,6 +7,8 @@ class BeaconTransmitter
   key :driver, String
   key :port, String
   key :call_sign, String
-  key :persistent, Boolean
+  key :persistent, Boolean, :default => true
+  
+  timestamps!
 
 end

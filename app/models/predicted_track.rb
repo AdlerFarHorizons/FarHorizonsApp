@@ -4,4 +4,8 @@ class PredictedTrack
   key :source, String
   key :file_path, String
 
+  belongs_to :platform
+  
+  timestamps!
+
 end

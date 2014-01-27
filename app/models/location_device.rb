@@ -6,6 +6,10 @@ class LocationDevice
   key :serial_no, String
   key :driver, String
   key :port, String
-  key :persistent, Boolean
+  key :persistent, Boolean, :default => true
+    
+  has_one :point
+  
+  timestamps!
 
 end

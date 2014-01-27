@@ -84,5 +84,14 @@ run bundle install again:
 
 $ bundle install
 
+<em>Initial model creation</em>
+
+Used Rails model generation with mongo_mapper template
+$ rails generate mongo_mapper:model <model> <key:type ...>
+
+Used rails built-in scaffolding for initial framework:
+$ rails generate scaffold <model> <key:type ...>
+
+
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.

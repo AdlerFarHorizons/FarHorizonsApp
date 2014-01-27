@@ -10,6 +10,8 @@ class ChaseServer
   key :beacon_transmitter_id, String
   key :beacon_receiver_ids, Array
   key :router_id, String
-  key :persistent, Boolean
+  key :persistent, Boolean, :default => true
+  
+  timestamps!
 
 end
