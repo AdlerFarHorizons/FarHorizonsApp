@@ -10,4 +10,9 @@ class GroundTrack
   
   timestamps!
 
+  def add_point point
+    points << point
+    self
+  end
+
 end

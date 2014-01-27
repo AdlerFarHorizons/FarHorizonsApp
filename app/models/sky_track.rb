@@ -10,4 +10,9 @@ class SkyTrack
   
   timestamps!
 
+  def add_point point
+    points << point
+    self
+  end
+
 end

@@ -11,4 +11,14 @@ class Beacon
 
   has_one :point
 
+  after_create :initialize_point
+  
+  private
+
+  def initialize_point
+    self.point = Point.create(:source_id=>self.id)
+    self.point.save
+    self.save
+  end
+
 end
