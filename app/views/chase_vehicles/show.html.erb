@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @chase_vehicle.description %>
+</p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @chase_vehicle.identifier %>
+</p>
+
+<p>
+  <strong>Chase server:</strong>
+  <%= @chase_vehicle.chase_server_id %>
+</p>
+
+<%= link_to 'Edit', edit_chase_vehicle_path(@chase_vehicle) %> |
+<%= link_to 'Back', chase_vehicles_path %>

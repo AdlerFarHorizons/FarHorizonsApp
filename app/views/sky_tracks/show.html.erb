@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @sky_track.source_id %>
+</p>
+
+<p>
+  <strong>No edit:</strong>
+  <%= @sky_track.no_edit %>
+</p>
+
+<%= link_to 'Edit', edit_sky_track_path(@sky_track) %> |
+<%= link_to 'Back', sky_tracks_path %>

@@ -1,4 +1,32 @@
 FarHorizonsApp::Application.routes.draw do
+  resources :sky_tracks
+
+  resources :routers
+
+  resources :predicted_tracks
+
+  resources :points
+
+  resources :platform_servers
+
+  resources :platforms
+
+  resources :missions
+
+  resources :location_devices
+
+  resources :ground_tracks
+
+  resources :chase_vehicles
+
+  resources :chase_servers
+
+  resources :beacon_transmitters
+
+  resources :beacon_receivers
+
+  resources :beacons
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

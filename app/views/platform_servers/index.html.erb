@@ -1,0 +1,37 @@
+<h1>Listing platform_servers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hostname</th>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Serial no</th>
+      <th>Sw version</th>
+      <th>Persistent</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @platform_servers.each do |platform_server| %>
+      <tr>
+        <td><%= platform_server.hostname %></td>
+        <td><%= platform_server.make %></td>
+        <td><%= platform_server.model %></td>
+        <td><%= platform_server.serial_no %></td>
+        <td><%= platform_server.sw_version %></td>
+        <td><%= platform_server.persistent %></td>
+        <td><%= link_to 'Show', platform_server %></td>
+        <td><%= link_to 'Edit', edit_platform_server_path(platform_server) %></td>
+        <td><%= link_to 'Destroy', platform_server, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Platform server', new_platform_server_path %>

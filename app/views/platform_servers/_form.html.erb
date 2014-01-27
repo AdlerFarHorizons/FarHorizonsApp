@@ -1,0 +1,41 @@
+<%= form_for(@platform_server) do |f| %>
+  <% if @platform_server.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@platform_server.errors.count, "error") %> prohibited this platform_server from being saved:</h2>
+
+      <ul>
+      <% @platform_server.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :hostname %><br>
+    <%= f.text_field :hostname %>
+  </div>
+  <div class="field">
+    <%= f.label :make %><br>
+    <%= f.text_field :make %>
+  </div>
+  <div class="field">
+    <%= f.label :model %><br>
+    <%= f.text_field :model %>
+  </div>
+  <div class="field">
+    <%= f.label :serial_no %><br>
+    <%= f.text_field :serial_no %>
+  </div>
+  <div class="field">
+    <%= f.label :sw_version %><br>
+    <%= f.text_field :sw_version %>
+  </div>
+  <div class="field">
+    <%= f.label :persistent %><br>
+    <%= f.check_box :persistent %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

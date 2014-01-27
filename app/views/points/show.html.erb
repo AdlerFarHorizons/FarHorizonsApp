@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Time:</strong>
+  <%= @point.time %>
+</p>
+
+<p>
+  <strong>X:</strong>
+  <%= @point.x %>
+</p>
+
+<p>
+  <strong>Y:</strong>
+  <%= @point.y %>
+</p>
+
+<p>
+  <strong>Z:</strong>
+  <%= @point.z %>
+</p>
+
+<p>
+  <strong>Vg:</strong>
+  <%= @point.vg %>
+</p>
+
+<p>
+  <strong>Vx:</strong>
+  <%= @point.vx %>
+</p>
+
+<p>
+  <strong>Vy:</strong>
+  <%= @point.vy %>
+</p>
+
+<p>
+  <strong>Vz:</strong>
+  <%= @point.vz %>
+</p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @point.source_id %>
+</p>
+
+<p>
+  <strong>Host:</strong>
+  <%= @point.host_id %>
+</p>
+
+<p>
+  <strong>No edit:</strong>
+  <%= @point.no_edit %>
+</p>
+
+<%= link_to 'Edit', edit_point_path(@point) %> |
+<%= link_to 'Back', points_path %>

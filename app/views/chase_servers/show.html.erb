@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Hostname:</strong>
+  <%= @chase_server.hostname %>
+</p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @chase_server.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @chase_server.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @chase_server.serial_no %>
+</p>
+
+<p>
+  <strong>Sw version:</strong>
+  <%= @chase_server.sw_version %>
+</p>
+
+<p>
+  <strong>Location device:</strong>
+  <%= @chase_server.location_device_id %>
+</p>
+
+<p>
+  <strong>Beacon transmitter:</strong>
+  <%= @chase_server.beacon_transmitter_id %>
+</p>
+
+<p>
+  <strong>Beacon receiver ids:</strong>
+  <%= @chase_server.beacon_receiver_ids %>
+</p>
+
+<p>
+  <strong>Router:</strong>
+  <%= @chase_server.router_id %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @chase_server.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_chase_server_path(@chase_server) %> |
+<%= link_to 'Back', chase_servers_path %>

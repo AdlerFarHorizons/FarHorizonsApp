@@ -1,0 +1,45 @@
+<h1>Listing chase_servers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hostname</th>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Serial no</th>
+      <th>Sw version</th>
+      <th>Location device</th>
+      <th>Beacon transmitter</th>
+      <th>Beacon receiver ids</th>
+      <th>Router</th>
+      <th>Persistent</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @chase_servers.each do |chase_server| %>
+      <tr>
+        <td><%= chase_server.hostname %></td>
+        <td><%= chase_server.make %></td>
+        <td><%= chase_server.model %></td>
+        <td><%= chase_server.serial_no %></td>
+        <td><%= chase_server.sw_version %></td>
+        <td><%= chase_server.location_device_id %></td>
+        <td><%= chase_server.beacon_transmitter_id %></td>
+        <td><%= chase_server.beacon_receiver_ids %></td>
+        <td><%= chase_server.router_id %></td>
+        <td><%= chase_server.persistent %></td>
+        <td><%= link_to 'Show', chase_server %></td>
+        <td><%= link_to 'Edit', edit_chase_server_path(chase_server) %></td>
+        <td><%= link_to 'Destroy', chase_server, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Chase server', new_chase_server_path %>

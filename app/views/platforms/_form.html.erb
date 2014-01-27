@@ -1,0 +1,33 @@
+<%= form_for(@platform) do |f| %>
+  <% if @platform.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@platform.errors.count, "error") %> prohibited this platform from being saved:</h2>
+
+      <ul>
+      <% @platform.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :identifier %><br>
+    <%= f.text_field :identifier %>
+  </div>
+  <div class="field">
+    <%= f.label :beacon_ids %><br>
+    <%= f.text_field :beacon_ids %>
+  </div>
+  <div class="field">
+    <%= f.label :platform_server_id %><br>
+    <%= f.text_field :platform_server_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

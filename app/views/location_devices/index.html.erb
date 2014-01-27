@@ -1,0 +1,37 @@
+<h1>Listing location_devices</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Serial no</th>
+      <th>Driver</th>
+      <th>Port</th>
+      <th>Persistent</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @location_devices.each do |location_device| %>
+      <tr>
+        <td><%= location_device.make %></td>
+        <td><%= location_device.model %></td>
+        <td><%= location_device.serial_no %></td>
+        <td><%= location_device.driver %></td>
+        <td><%= location_device.port %></td>
+        <td><%= location_device.persistent %></td>
+        <td><%= link_to 'Show', location_device %></td>
+        <td><%= link_to 'Edit', edit_location_device_path(location_device) %></td>
+        <td><%= link_to 'Destroy', location_device, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Location device', new_location_device_path %>

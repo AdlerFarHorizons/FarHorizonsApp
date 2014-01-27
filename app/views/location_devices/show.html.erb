@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @location_device.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @location_device.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @location_device.serial_no %>
+</p>
+
+<p>
+  <strong>Driver:</strong>
+  <%= @location_device.driver %>
+</p>
+
+<p>
+  <strong>Port:</strong>
+  <%= @location_device.port %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @location_device.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_location_device_path(@location_device) %> |
+<%= link_to 'Back', location_devices_path %>

@@ -1,0 +1,37 @@
+<h1>Listing routers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Serial no</th>
+      <th>Address</th>
+      <th>Ssid</th>
+      <th>Persistent</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @routers.each do |router| %>
+      <tr>
+        <td><%= router.make %></td>
+        <td><%= router.model %></td>
+        <td><%= router.serial_no %></td>
+        <td><%= router.address %></td>
+        <td><%= router.ssid %></td>
+        <td><%= router.persistent %></td>
+        <td><%= link_to 'Show', router %></td>
+        <td><%= link_to 'Edit', edit_router_path(router) %></td>
+        <td><%= link_to 'Destroy', router, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Router', new_router_path %>

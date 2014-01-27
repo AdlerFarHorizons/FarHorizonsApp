@@ -1,0 +1,25 @@
+<%= form_for(@ground_track) do |f| %>
+  <% if @ground_track.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ground_track.errors.count, "error") %> prohibited this ground_track from being saved:</h2>
+
+      <ul>
+      <% @ground_track.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :source_id %><br>
+    <%= f.text_field :source_id %>
+  </div>
+  <div class="field">
+    <%= f.label :no_edit %><br>
+    <%= f.check_box :no_edit %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

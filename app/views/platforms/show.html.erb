@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @platform.description %>
+</p>
+
+<p>
+  <strong>Identifier:</strong>
+  <%= @platform.identifier %>
+</p>
+
+<p>
+  <strong>Beacon ids:</strong>
+  <%= @platform.beacon_ids %>
+</p>
+
+<p>
+  <strong>Platform server:</strong>
+  <%= @platform.platform_server_id %>
+</p>
+
+<%= link_to 'Edit', edit_platform_path(@platform) %> |
+<%= link_to 'Back', platforms_path %>

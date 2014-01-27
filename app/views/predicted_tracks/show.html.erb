@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @predicted_track.source %>
+</p>
+
+<p>
+  <strong>File path:</strong>
+  <%= @predicted_track.file_path %>
+</p>
+
+<%= link_to 'Edit', edit_predicted_track_path(@predicted_track) %> |
+<%= link_to 'Back', predicted_tracks_path %>

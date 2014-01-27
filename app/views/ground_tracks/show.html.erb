@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Source:</strong>
+  <%= @ground_track.source_id %>
+</p>
+
+<p>
+  <strong>No edit:</strong>
+  <%= @ground_track.no_edit %>
+</p>
+
+<%= link_to 'Edit', edit_ground_track_path(@ground_track) %> |
+<%= link_to 'Back', ground_tracks_path %>

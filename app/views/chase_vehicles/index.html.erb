@@ -1,0 +1,31 @@
+<h1>Listing chase_vehicles</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Identifier</th>
+      <th>Chase server</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @chase_vehicles.each do |chase_vehicle| %>
+      <tr>
+        <td><%= chase_vehicle.description %></td>
+        <td><%= chase_vehicle.identifier %></td>
+        <td><%= chase_vehicle.chase_server_id %></td>
+        <td><%= link_to 'Show', chase_vehicle %></td>
+        <td><%= link_to 'Edit', edit_chase_vehicle_path(chase_vehicle) %></td>
+        <td><%= link_to 'Destroy', chase_vehicle, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Chase vehicle', new_chase_vehicle_path %>

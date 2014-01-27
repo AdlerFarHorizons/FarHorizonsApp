@@ -1,0 +1,29 @@
+<h1>Listing sky_tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>No edit</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sky_tracks.each do |sky_track| %>
+      <tr>
+        <td><%= sky_track.source_id %></td>
+        <td><%= sky_track.no_edit %></td>
+        <td><%= link_to 'Show', sky_track %></td>
+        <td><%= link_to 'Edit', edit_sky_track_path(sky_track) %></td>
+        <td><%= link_to 'Destroy', sky_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sky track', new_sky_track_path %>

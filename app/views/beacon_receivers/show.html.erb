@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @beacon_receiver.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @beacon_receiver.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @beacon_receiver.serial_no %>
+</p>
+
+<p>
+  <strong>Driver:</strong>
+  <%= @beacon_receiver.driver %>
+</p>
+
+<p>
+  <strong>Port:</strong>
+  <%= @beacon_receiver.port %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @beacon_receiver.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_beacon_receiver_path(@beacon_receiver) %> |
+<%= link_to 'Back', beacon_receivers_path %>

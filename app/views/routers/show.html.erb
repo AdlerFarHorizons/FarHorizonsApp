@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @router.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @router.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @router.serial_no %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @router.address %>
+</p>
+
+<p>
+  <strong>Ssid:</strong>
+  <%= @router.ssid %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @router.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_router_path(@router) %> |
+<%= link_to 'Back', routers_path %>

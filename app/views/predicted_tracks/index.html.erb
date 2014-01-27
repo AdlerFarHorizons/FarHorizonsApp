@@ -1,0 +1,29 @@
+<h1>Listing predicted_tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>File path</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @predicted_tracks.each do |predicted_track| %>
+      <tr>
+        <td><%= predicted_track.source %></td>
+        <td><%= predicted_track.file_path %></td>
+        <td><%= link_to 'Show', predicted_track %></td>
+        <td><%= link_to 'Edit', edit_predicted_track_path(predicted_track) %></td>
+        <td><%= link_to 'Destroy', predicted_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Predicted track', new_predicted_track_path %>

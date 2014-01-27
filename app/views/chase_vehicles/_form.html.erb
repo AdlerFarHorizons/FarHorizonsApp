@@ -1,0 +1,29 @@
+<%= form_for(@chase_vehicle) do |f| %>
+  <% if @chase_vehicle.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@chase_vehicle.errors.count, "error") %> prohibited this chase_vehicle from being saved:</h2>
+
+      <ul>
+      <% @chase_vehicle.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :identifier %><br>
+    <%= f.text_field :identifier %>
+  </div>
+  <div class="field">
+    <%= f.label :chase_server_id %><br>
+    <%= f.text_field :chase_server_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

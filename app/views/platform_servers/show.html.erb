@@ -1,0 +1,34 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Hostname:</strong>
+  <%= @platform_server.hostname %>
+</p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @platform_server.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @platform_server.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @platform_server.serial_no %>
+</p>
+
+<p>
+  <strong>Sw version:</strong>
+  <%= @platform_server.sw_version %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @platform_server.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_platform_server_path(@platform_server) %> |
+<%= link_to 'Back', platform_servers_path %>

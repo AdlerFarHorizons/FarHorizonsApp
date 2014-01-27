@@ -1,0 +1,2 @@
+module SkyTracksHelper
+end

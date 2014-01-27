@@ -1,0 +1,37 @@
+<h1>Listing beacon_receivers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Make</th>
+      <th>Model</th>
+      <th>Serial no</th>
+      <th>Driver</th>
+      <th>Port</th>
+      <th>Persistent</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @beacon_receivers.each do |beacon_receiver| %>
+      <tr>
+        <td><%= beacon_receiver.make %></td>
+        <td><%= beacon_receiver.model %></td>
+        <td><%= beacon_receiver.serial_no %></td>
+        <td><%= beacon_receiver.driver %></td>
+        <td><%= beacon_receiver.port %></td>
+        <td><%= beacon_receiver.persistent %></td>
+        <td><%= link_to 'Show', beacon_receiver %></td>
+        <td><%= link_to 'Edit', edit_beacon_receiver_path(beacon_receiver) %></td>
+        <td><%= link_to 'Destroy', beacon_receiver, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Beacon receiver', new_beacon_receiver_path %>

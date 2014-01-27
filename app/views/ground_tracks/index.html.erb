@@ -1,0 +1,29 @@
+<h1>Listing ground_tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>No edit</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ground_tracks.each do |ground_track| %>
+      <tr>
+        <td><%= ground_track.source_id %></td>
+        <td><%= ground_track.no_edit %></td>
+        <td><%= link_to 'Show', ground_track %></td>
+        <td><%= link_to 'Edit', edit_ground_track_path(ground_track) %></td>
+        <td><%= link_to 'Destroy', ground_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Ground track', new_ground_track_path %>

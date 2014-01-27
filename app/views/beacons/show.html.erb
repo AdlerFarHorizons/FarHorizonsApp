@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Make:</strong>
+  <%= @beacon.make %>
+</p>
+
+<p>
+  <strong>Model:</strong>
+  <%= @beacon.model %>
+</p>
+
+<p>
+  <strong>Serial no:</strong>
+  <%= @beacon.serial_no %>
+</p>
+
+<p>
+  <strong>Call sign:</strong>
+  <%= @beacon.call_sign %>
+</p>
+
+<p>
+  <strong>Persistent:</strong>
+  <%= @beacon.persistent %>
+</p>
+
+<%= link_to 'Edit', edit_beacon_path(@beacon) %> |
+<%= link_to 'Back', beacons_path %>
