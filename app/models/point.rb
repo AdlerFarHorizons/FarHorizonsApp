@@ -1,3 +1,6 @@
+##
+# Represents a single Position/Velocity/Time point
+
 class Point
   include MongoMapper::Document
 

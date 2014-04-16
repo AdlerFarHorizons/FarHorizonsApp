@@ -8,7 +8,7 @@ class LocationDevice
   key :port, String
   key :persistent, Boolean, :default => true
     
-  has_one :point
+  has_one :point #this point is persistent. It's fields are updated on each fix
   
   timestamps!
   
