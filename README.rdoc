@@ -56,30 +56,6 @@ Edit Gemfile to add mongo_mapper and redis:
 gem 'mongo_mapper', :git => "git://github.com/mongomapper/mongomapper.git", :tag => "v0.13.0.beta2"
 gem 'redis'
 
-<em>I/O Support</em>
-
-Use ruby-serialport gem for serial port I/O. Add to Gemfile:
-
-gem 'serialport'
-
-NOTE: ruby-serialport seems to conflict with serialport, so find and delete
-ruby-serialport directories in the 2.0@fh gemset directory.
-
-<em>Misc useful gems</em>
-
-Add to Gemfile:
-
-gem 'bson_ext'
-
-# Better ruby console than irb
-gem 'pry'
-
-# Use thin web server instead of spammy webrick
-gem 'thin'
-
-# Uncomment line to use debugger
-gem 'debugger', group: [:development, :test]
-
 run bundle install again:
 
 $ bundle install
@@ -89,6 +65,7 @@ $ bundle install
 Used Rails model generation with mongo_mapper template
 $ rails generate mongo_mapper:model <model> <key:type ...>
 
+
 Used rails built-in scaffolding for initial framework:
 $ rails generate scaffold <model> <key:type ...>
 
@@ -96,8 +73,21 @@ NOTE: The scaffold-generated code uses the blah.update() method in the "update"
 controller action method. This is a private method in MongoMapper and it was
 manually replaced with the blah.set() method.
 
-Until plans are made to use testing features, the scaffold-generated files in
-the test folder have been backed up to test.zip and removed.
+<em>Serial IO with the 'serialport' gem</em>
+
+NOTE: ruby-serialport seems to conflict with serialport, so find and delete
+ruby-serialport directories in the 2.0@fh gemset directory.
+
+<em>Real-time data collection</em>
+
+Managed by script drivers in /bin directory initiated by:
+
+    (pid = fork) ? Process.detach(pid) : exec( "bin/<script name>" )
+
+NOTE: Since the APRS and GPS device drivers need to create points via an API
+rather than form input, We have to bypass the Rails authenticity token
+machinery for the POST (create) method in the points_controller.
+
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
