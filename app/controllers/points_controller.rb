@@ -28,8 +28,15 @@ class PointsController < ApplicationController
 
     respond_to do |format|
       if @point.save
-        format.html { redirect_to @point, notice: 'Point was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @point }
+        update_source_point
+        if add_point_to_track
+          format.html { redirect_to @point, notice: 'Point was successfully added to a track.' }
+          format.json { render action: 'show', status: :created, location: @point }
+        else
+          @point.destroy #Don't retain if not part of an active mission track
+          format.html { redirect_to @point, notice: 'No track, point not created.' }
+          format.json { render json: @point.errors, status: :unprocessable_entity }
+        end
       else
         format.html { render action: 'new' }
         format.json { render json: @point.errors, status: :unprocessable_entity }
@@ -71,4 +78,41 @@ class PointsController < ApplicationController
     def point_params
       params.require(:point).permit(:time, :x, :y, :z, :vg, :vx, :vy, :vz, :source_id, :host_id)
     end
-end
+    
+    def update_source_point
+      source = LocationDevice.find( @point.source_id )
+      source ||= Beacon.find( @point.source_id )
+      source.point.set( point_params )
+    end
+    
+    def add_point_to_track
+      host = ChaseVehicle.find( @point.host_id )
+      host ||= Platform.find( @point.host_id )
+      mission = host.mission
+      if mission.start && !mission.actual_end
+        if host.class.to_s == "Platform"
+          track = host.sky_tracks.select { |x|
+            x.source_id == @point.source_id
+          }.first
+          track ||= SkyTrack.create( :source_id => @point.source_id.to_s,
+                                      :platform => host )
+          track.add_point( @point )
+          track.save
+          return track
+        elsif host.class.to_s == "ChaseVehicle"
+          track = host.ground_track
+          track ||= GroundTrack.create( 
+              :source_id => @point.source_id.to_s,
+              :chase_vehicle => host )
+          track.add_point( @point )
+          track.save
+          return track
+        else
+          return nil
+        end
+      else
+        return nil
+      end
+    end
+    
+  end
