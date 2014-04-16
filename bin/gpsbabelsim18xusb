@@ -1,0 +1,24 @@
+#! /usr/bin/env ruby
+
+start = [41.903221,-87.629212, 316.035217] # [latitude, longitude, elevation in ft MSL]
+km2ft = 33000.0
+mph2fps = 1.47
+rad2deg = 180.0 / Math::PI
+r_earth = 6371.009 * km2ft
+v_bias = [-10.0,50.0] # mph
+v_rand = 5.0 # mph
+interval = 1.0 # seconds
+
+v2delta_lat = ( mph2fps * interval / r_earth ) * rad2deg
+v2delta_lon = ( mph2fps * interval / r_earth ) * Math.cos(start[0] / rad2deg ) * rad2deg
+
+loc = start
+while true do 
+  puts Time.now.ctime
+  latdir = loc[0] > 0 ? "N" : "S"
+  londir = loc[1] > 0 ? "E" : "W"
+  puts "#{"%10.6f" % loc[0].abs}#{latdir} #{"%10.6f" % loc[1].abs}#{londir} #{"%11.6f" % loc[2]}"
+  loc[0] += ( v_bias[0] + v_rand * ( 2 * rand() - 1 ) ) * v2delta_lat
+  loc[1] += ( v_bias[1] + v_rand * ( 2 * rand() - 1 ) ) * v2delta_lon
+  sleep(1)
+end
