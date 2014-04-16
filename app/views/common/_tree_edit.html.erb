@@ -3,7 +3,7 @@
 <%# tree.each_with_index do |z,k| %>
   <%#= "#{k} #{z[0]} #{z[1]} #{z[2]} #{z[3]} #{z[4]} #{z[5] ? z[5]['_id'] : 'nil' }" %><br>
 <%# end %>
-<%= render 'sub_form' %>
+<%= render 'common/branch_edit' %>
 <% prev_klass = '' %>
 <% tree.each_with_index do |branch, ib| %>
   <% level = branch[0] %>
@@ -39,7 +39,7 @@
   <% end %>
   <% if @sub_obj && !@sub_obj.keys['no_edit'] %>
     <div style="border: black solid 2px; margin-top: 5px; margin-left: <%= level*20 %>px">
-    <%= render 'sub_form' %>
+    <%= render 'common/branch_edit' %>
     </div>
   <% end %>
   <% prev_klass = klass %>

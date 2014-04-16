@@ -10,6 +10,8 @@
       <th>Actual launch</th>
       <th>Target end</th>
       <th>Actual end</th>
+      <th>Chase vehicles</th>
+      <th>Platforms</th>
       <th></th>
       <th></th>
       <th></th>
@@ -19,16 +21,23 @@
   <tbody>
     <% @missions.each do |mission| %>
       <tr>
-        <td><%= mission.description %></td>
-        <td><%= mission.identifier %></td>
-        <td><%= mission.start %></td>
-        <td><%= mission.target_launch %></td>
-        <td><%= mission.actual_launch %></td>
-        <td><%= mission.target_end %></td>
-        <td><%= mission.actual_end %></td>
-        <td><%= link_to 'Show', mission %></td>
-        <td><%= link_to 'Edit', edit_mission_path(mission) %></td>
-        <td><%= link_to 'Destroy', mission, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= mission.description %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.identifier %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.start %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.target_launch %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.actual_launch %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.target_end %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.actual_end %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%  mission.chase_vehicles.each do |v|%>
+            <%= v.identifier ? v.identifier + ","  : '' %>
+            <% end %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><% mission.platforms.each do |p| %>
+          <%= p.identifier ? p.identifier + "," : '' %>
+        <% end %>
+        &nbsp&nbsp</td>
+        &nbsp&nbsp<td><%= link_to 'Show', mission %>&nbsp&nbsp&nbsp&nbsp</td>
+        &nbsp&nbsp<td><%= link_to 'Edit', edit_mission_path(mission) %>&nbsp&nbsp&nbsp&nbsp</td>
+        &nbsp&nbsp<td><%= link_to 'Destroy', mission, method: :delete, data: { confirm: 'Are you sure?' } %>&nbsp&nbsp&nbsp&nbsp</td>
       </tr>
     <% end %>
   </tbody>

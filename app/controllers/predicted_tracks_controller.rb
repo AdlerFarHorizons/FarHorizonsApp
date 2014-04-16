@@ -28,7 +28,7 @@ class PredictedTracksController < ApplicationController
 
     respond_to do |format|
       if @predicted_track.save
-        format.html { redirect_to @predicted_track, notice: 'Predicted track was successfully created.' }
+        format.html { redirect_to :back, notice: 'Predicted track was successfully created.' }
         format.json { render action: 'show', status: :created, location: @predicted_track }
       else
         format.html { render action: 'new' }
@@ -42,7 +42,7 @@ class PredictedTracksController < ApplicationController
   def update
     respond_to do |format|
       if @predicted_track.set(predicted_track_params)
-        format.html { redirect_to @predicted_track, notice: 'Predicted track was successfully updated.' }
+        format.html { redirect_to :back, notice: 'Predicted track was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -56,7 +56,7 @@ class PredictedTracksController < ApplicationController
   def destroy
     @predicted_track.destroy
     respond_to do |format|
-      format.html { redirect_to predicted_tracks_url }
+      format.html { redirect_to :back }
       format.json { head :no_content }
     end
   end

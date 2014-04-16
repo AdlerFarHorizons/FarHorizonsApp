@@ -15,10 +15,14 @@ class MissionsController < ApplicationController
   # GET /missions/new
   def new
     @mission = Mission.new
+    @object = @mission
+    render "common/edit"
   end
 
   # GET /missions/1/edit
   def edit
+    @object = @mission
+    render "common/edit"
   end
 
   # POST /missions
@@ -42,7 +46,7 @@ class MissionsController < ApplicationController
   def update
     respond_to do |format|
       if @mission.set(mission_params)
-        format.html { redirect_to @mission, notice: 'Mission was successfully updated.' }
+        format.html { redirect_to :back, notice: 'Mission was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

@@ -28,7 +28,7 @@ class PlatformsController < ApplicationController
 
     respond_to do |format|
       if @platform.save
-        format.html { redirect_to @platform, notice: 'Platform was successfully created.' }
+        format.html { redirect_to :back, notice: 'Platform was successfully created.' }
         format.json { render action: 'show', status: :created, location: @platform }
       else
         format.html { render action: 'new' }
@@ -42,7 +42,7 @@ class PlatformsController < ApplicationController
   def update
     respond_to do |format|
       if @platform.set(platform_params)
-        format.html { redirect_to @platform, notice: 'Platform was successfully updated.' }
+        format.html { redirect_to :back, notice: 'Platform was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -56,7 +56,7 @@ class PlatformsController < ApplicationController
   def destroy
     @platform.destroy
     respond_to do |format|
-      format.html { redirect_to platforms_url }
+      format.html { redirect_to :back }
       format.json { head :no_content }
     end
   end

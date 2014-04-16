@@ -5,7 +5,9 @@
     <tr>
       <th>Description</th>
       <th>Identifier</th>
-      <th>Chase server</th>
+      <th>Chase Server Id</th>
+      <th>Mission</th>
+      <th>Ground track</th>
       <th></th>
       <th></th>
       <th></th>
@@ -18,6 +20,8 @@
         <td><%= chase_vehicle.description %></td>
         <td><%= chase_vehicle.identifier %></td>
         <td><%= chase_vehicle.chase_server_id %></td>
+       <td><%= chase_vehicle.mission %></td>
+        <td><%= chase_vehicle.ground_track %></td>
         <td><%= link_to 'Show', chase_vehicle %></td>
         <td><%= link_to 'Edit', edit_chase_vehicle_path(chase_vehicle) %></td>
         <td><%= link_to 'Destroy', chase_vehicle, method: :delete, data: { confirm: 'Are you sure?' } %></td>

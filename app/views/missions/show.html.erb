@@ -35,5 +35,19 @@
   <%= @mission.actual_end %>
 </p>
 
+<p>
+  <strong>Chase vehicles:</strong>
+  <% @mission.chase_vehicles.each do |v| %>
+    <%= v.identifier %>
+  <% end  %>
+</p>
+
+<p>
+  <strong>Platforms:</strong>
+  <% @mission.platforms.each do |p| %>
+    <%= p.identifier %>
+  <% end %>
+</p>
+
 <%= link_to 'Edit', edit_mission_path(@mission) %> |
 <%= link_to 'Back', missions_path %>

@@ -1,6 +1,8 @@
-<h1>Editing chase_server</h1>
+<% @object = @chase_server%>
+<h1>Editing <%=  @object.class.to_s.titleize %></h1>
+<id="notice">Message:<%= notice %><br><br>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @chase_server %> |
-<%= link_to 'Back', chase_servers_path %>
+<%= link_to 'Show', @object %> |
+<%= link_to 'Back', "/#{@object.class.to_s.pluralize.titleize.downcase.split.join('_')}" %>
