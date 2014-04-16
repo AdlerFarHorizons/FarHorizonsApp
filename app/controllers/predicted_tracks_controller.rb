@@ -69,6 +69,6 @@ class PredictedTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def predicted_track_params
-      params.require(:predicted_track).permit(:source, :file_path)
+      params.require(:predicted_track).permit(:source, :file_path, :platform_id)
     end
 end

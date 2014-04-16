@@ -69,6 +69,6 @@ class GroundTracksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def ground_track_params
-      params.require(:ground_track).permit(:source_id, :no_edit)
+      params.require(:ground_track).permit(:source_id)
     end
 end

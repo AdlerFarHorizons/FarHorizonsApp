@@ -1,1 +1,1 @@
-json.extract! @platform, :id, :description, :identifier, :beacon_ids, :platform_server_id, :created_at, :updated_at
+json.extract! @platform, :description, :identifier, :beacons, :sky_tracks, :created_at, :updated_at

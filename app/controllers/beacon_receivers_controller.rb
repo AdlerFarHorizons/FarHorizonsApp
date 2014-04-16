@@ -69,6 +69,6 @@ class BeaconReceiversController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def beacon_receiver_params
-      params.require(:beacon_receiver).permit(:make, :model, :serial_no, :driver, :port, :persistent)
+      params.require(:beacon_receiver).permit(:make, :model, :serial_no, :driver, :port)
     end
 end

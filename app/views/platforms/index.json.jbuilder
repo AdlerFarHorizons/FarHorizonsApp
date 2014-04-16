@@ -1,4 +1,4 @@
 json.array!(@platforms) do |platform|
-  json.extract! platform, :id, :description, :identifier, :beacon_ids, :platform_server_id
+  json.extract! platform, :description, :identifier, :beacons, :sky_tracks
   json.url platform_url(platform, format: :json)
 end

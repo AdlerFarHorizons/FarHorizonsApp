@@ -1,1 +1,1 @@
-json.extract! @beacon_receiver, :id, :make, :model, :serial_no, :driver, :port, :persistent, :created_at, :updated_at
+json.extract! @beacon_receiver, :make, :model, :serial_no, :driver, :port, :created_at, :updated_at

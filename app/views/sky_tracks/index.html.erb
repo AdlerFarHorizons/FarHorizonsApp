@@ -4,7 +4,8 @@
   <thead>
     <tr>
       <th>Source</th>
-      <th>No edit</th>
+      <th>Platform</th>
+      <th>Points</th>
       <th></th>
       <th></th>
       <th></th>
@@ -15,7 +16,8 @@
     <% @sky_tracks.each do |sky_track| %>
       <tr>
         <td><%= sky_track.source_id %></td>
-        <td><%= sky_track.no_edit %></td>
+        <td><%= sky_track.platform %></td>
+        <td><%= sky_track.points %></td>
         <td><%= link_to 'Show', sky_track %></td>
         <td><%= link_to 'Edit', edit_sky_track_path(sky_track) %></td>
         <td><%= link_to 'Destroy', sky_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>

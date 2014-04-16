@@ -69,6 +69,6 @@ class BeaconsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def beacon_params
-      params.require(:beacon).permit(:make, :model, :serial_no, :call_sign, :persistent)
+      params.require(:beacon).permit(:make, :model, :serial_no, :call_sign)
     end
 end

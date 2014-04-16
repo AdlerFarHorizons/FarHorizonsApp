@@ -1,4 +1,4 @@
 json.array!(@beacons) do |beacon|
-  json.extract! beacon, :id, :make, :model, :serial_no, :call_sign, :persistent
+  json.extract! beacon, :make, :model, :serial_no, :call_sign, :point
   json.url beacon_url(beacon, format: :json)
 end

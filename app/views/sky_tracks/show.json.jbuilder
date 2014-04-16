@@ -1,1 +1,1 @@
-json.extract! @sky_track, :id, :source_id, :no_edit, :created_at, :updated_at
+json.extract! @sky_track, :source_id, :platform, :points, :created_at, :updated_at

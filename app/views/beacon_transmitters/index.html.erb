@@ -9,7 +9,6 @@
       <th>Driver</th>
       <th>Port</th>
       <th>Call sign</th>
-      <th>Persistent</th>
       <th></th>
       <th></th>
       <th></th>
@@ -25,7 +24,6 @@
         <td><%= beacon_transmitter.driver %></td>
         <td><%= beacon_transmitter.port %></td>
         <td><%= beacon_transmitter.call_sign %></td>
-        <td><%= beacon_transmitter.persistent %></td>
         <td><%= link_to 'Show', beacon_transmitter %></td>
         <td><%= link_to 'Edit', edit_beacon_transmitter_path(beacon_transmitter) %></td>
         <td><%= link_to 'Destroy', beacon_transmitter, method: :delete, data: { confirm: 'Are you sure?' } %></td>

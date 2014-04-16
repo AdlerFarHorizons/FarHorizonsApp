@@ -69,6 +69,6 @@ class LocationDevicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_device_params
-      params.require(:location_device).permit(:make, :model, :serial_no, :driver, :port, :persistent)
+      params.require(:location_device).permit(:make, :model, :serial_no, :driver, :port, :point)
     end
 end
