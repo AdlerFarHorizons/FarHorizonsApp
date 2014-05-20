@@ -45,11 +45,25 @@ ruby-serialport directories in the 2.0@fh gemset directory.
 
 <em>Real-time data collection</em>
 
-Managed by script drivers in /bin directory initiated by:
+Managed by script drivers in /bin directory.
 
-    (pid = fork) ? Process.detach(pid) : exec( "bin/<script name>" )
+Initiated by
+(REF: http://stackoverflow.com/questions/11982057):
+
+    Process.detach( pid = spawn( "bin/<script name>" )
+
+Terminated by 
+
+    Process.kill( 'TERM', pid )
+
+"pid" is stored as a key in the model associated with the drive.
 
 NOTE: Since the APRS and GPS device drivers need to create points via an API
 rather than form input, We have to bypass the Rails authenticity token
 machinery for the POST (create) method in the points_controller.
+
+Also, since tracking devices (location_devices, beacons) have a dedicated point
+document associated with them, they have point initialization method invoked
+in after_create and as such, the 'new' method won't initilize, so the 'create'
+method must be called instead.
 
