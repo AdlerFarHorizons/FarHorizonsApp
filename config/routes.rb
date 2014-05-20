@@ -26,6 +26,9 @@ FarHorizonsApp::Application.routes.draw do
   resources :beacon_receivers
 
   resources :beacons
+  
+  post 'location_devices/start/:id' => 'location_devices#start'
+  post 'location_devices/stop/:id' => 'location_devices#stop'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

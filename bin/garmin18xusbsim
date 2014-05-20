@@ -1,13 +1,11 @@
 #! /usr/bin/env ruby
-# Starts the gpsbabel real-time tracking process for the GPS device
+#
+# Starts a simulated gpsbabel session emulating the real-time tracking output
+# for a Garmin GPS18XUSB device ('gpsbabel -T -i garmin,get_posn -f usb:')
 # and posts each reading to the tracking server.
-# and open the template in the editor.
-# Interface between gpsbabel and the server.
 # 
 # Based on  
 # http://stackoverflow.com/questions/1154846/continuously-read-from-stdout-of-external-process-in-ruby
-
-# gpsbabel V 1.3 or greater must be installed
 
 require 'pty'
 require 'net/http'
@@ -59,20 +57,32 @@ end
 @loc_dev_id = ARGV[1] ? ARGV[1] : '52b6a983ec2a234140000006' # 'GPS18XUSBsim'
 @host_id = ARGV[2] ? ARGV[2] : '52af8f771963fd1ab2000013' # Chase Vehicle 'Test0'
 @log_file_name = "log/garmin18xusbsim.log"
+@cmd = "bin/gpsbabelsim18xusb"
+
+unless @serv_uri && @loc_dev_id && @host_id
+  log_entry( "ERROR: Must have three arguments.")
+  puts "ERROR: garmin18xusb driver not started. Requires three arguments " +
+       "ARGS: #{ARGV}"
+  exit
+end
 
 last_log_entry = ""
 log_entry( "---------------")
 log_entry( "---------------")
-log_entry( "Started garmin18xusbsim on device id:#{@loc_dev_id} to server #{@serv_uri}")
+log_entry( "Started #{@cmd} on device id:#{@loc_dev_id} to server #{@serv_uri}")
 
-cmd = "bin/gpsbabelsim18xusb"
 num_lines = 2 # Number of lines per position report
 num_reports = 5 # just post every nth report
 report = ""
 reports = 0
 
+Signal.trap( "TERM" ) do
+  log_entry( "garmin18xusbsim terminated by SIGTERM")
+  exit
+end
+
 begin
-  PTY.spawn( cmd ) do |stdin, stdout, pid|
+  PTY.spawn( @cmd ) do |stdin, stdout, pid|
     count = 0
     report = ""
     begin
@@ -98,13 +108,13 @@ begin
         end
       end
     rescue Errno::EIO
-      log_entry "EIO error: #{( report == "" ) ? "#{cmd} terminated" : report}"
+      log_entry "EIO error: #{( report == "" ) ? "#{@cmd} terminated" : report}"
     end
   end
 rescue Errno::ENOENT
-  log_entry "ENOENT error: Command not found: #{cmd} #{("-" + report unless report == "")}"
+  log_entry "ENOENT error: Command not found: #{@cmd} #{("-" + report unless report == "")}"
 rescue PTY::ChildExited
-  log_entry "The child process exited!"
+  log_entry "#{@cmd} process died unexpectedly!"
 end
 
 

@@ -1,5 +1,6 @@
 class LocationDevicesController < ApplicationController
-  before_action :set_location_device, only: [:show, :edit, :update, :destroy]
+  before_action :set_location_device, only: 
+    [:show, :edit, :update, :destroy, :start, :stop]
 
   # GET /location_devices
   # GET /location_devices.json
@@ -58,6 +59,70 @@ class LocationDevicesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to location_devices_url }
       format.json { head :no_content }
+    end
+  end
+  
+  # /location_devices/start/1
+  # /location_devices/start/1.json
+  def start
+    if @location_device
+      driver = @location_device.driver
+      host = "http://#{request.host_with_port()}"
+      loc = @location_device.id.to_s
+      temp = ChaseServer.where(:location_device_id => loc ).first
+      puts "ChaseServer:#{temp.id}"
+      temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
+      puts "ChaseVehicle:#{temp.id}"
+      unless @location_device.driver_pid
+        if ( (serv = ChaseServer.where( :location_device_id => loc ).first) &&
+             (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )
+          Process.detach( pid = spawn( 
+              "bin/#{@location_device.driver} #{host} #{loc} #{veh.id.to_s}" ) )
+          sleep 2
+          puts "PID:#{pid}"
+          # Test first if process was spawned and then if it's still running
+          if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
+            @location_device.set( :driver_pid => pid )
+            render :inline => "Location Device #{@location_device.id} driver started as PID:#{pid}."
+          else
+            render :inline => "Could not start Location Device #{@location_device.id} driver.", 
+                    status: :accepted
+          end
+        else
+          render :inline => "Failed: Location Device #{@location_device.id} " +
+                            "not attached to a ChaseServer assigned to " +
+                            "a ChaseVehicle.", status: :unprocessable_entity
+        end
+      else
+        render :inline => "Failed: Location Device #{@location_device.id} " +
+                          "driver already running as PID:#{@location_device.driver_pid}",
+                          status: :unprocessable_entity
+      end
+    else
+      render :inline => "Failed: Location Device #{params[:id]} not found.",
+             status: :not_found
+    end
+  end
+  
+  # /location_devices/stop/1
+  # /location_devices/stop/1.json
+  def stop
+    if @location_device
+      if (pid = @location_device.driver_pid) && 
+         `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
+        Process.kill( 'TERM', @location_device.driver_pid )
+        @location_device.set( :driver_pid => nil )
+        render :inline => "Location Device #{@location_device.id} " +
+                          "driver PID:#{@location_device.driver_pid} stopped."
+      else
+        @location_device.set( :driver_pid => nil )
+        render :inline => "Failed: Location Device #{@location_device.id} " +
+                          "driver already stopped",
+                          status: :unprocessable_entity
+      end
+    else
+      render :inline => "Failed: Location Device #{params[:id]} not found.",
+             status: :not_found
     end
   end
 
