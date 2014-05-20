@@ -1,8 +1,10 @@
 <h2></h2>
 <%= form_for @sub_obj do |f| %>
+  <% assocs = @sub_obj.associations %>
+  <% puts "branch:sub_obj=#{@sub_obj.to_s} object=#{@object}" %>
   <% @sub_obj.class.keys.keys.each do | key | %>
-    <% unless ( key == "_id" or key == "updated_at" or key == "created_at" ) %>
-    <% #if !( key.include?("_id") or key == "updated_at" or key == "created_at" ) %>
+    <% unless ( key == "_id" or key == "updated_at" or key == "created_at" or
+                assocs[key.remove("_id").to_sym].to_s.include?("BelongsTo")) %>
       <% class_str = @sub_obj[key].class.to_s %>
       <% if key.include?('_id') %>
         <% unless key.titleize.split.join == @parent_klass %>
@@ -22,8 +24,10 @@
       <% end %>
     <% end %>
   <% end  %>
-  <div class="actions">
-    <%= link_to 'Destroy', @sub_obj, method: :delete, data: { confirm: 'Are you sure?' } %>
-    &nbsp<%= f.submit %>
-  </div>        
+  <% if !@sub_obj.keys['no_edit'] %>
+    <div class="actions">
+      <%= link_to 'Destroy', @sub_obj, method: :delete, data: { confirm: 'Are you sure?' } %>
+      &nbsp<%= f.submit %>
+    </div> 
+  <% end %>
 <% end  %>

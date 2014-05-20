@@ -31,10 +31,12 @@
       <b><%= "#{klass.pluralize.titleize}" %></b>
     <% key = klass.titleize.downcase.split.join('_').to_sym %>
     <% object_name = @parent_klass.titleize.downcase.split.join("_") %>
-    <%= link_to "Add New #{key.to_s.singularize.titleize}", { :controller => key.to_s.pluralize, 
-                             :action => :create, 
-                             key.to_s.singularize.to_sym => { (object_name + '_id').to_sym => parent_id } }, 
-                             :method => :post %>
+    <% unless eval( klass ).keys['no_edit'] %>
+      <%= link_to "Add New #{key.to_s.singularize.titleize}", { :controller => key.to_s.pluralize, 
+                               :action => :create, 
+                               key.to_s.singularize.to_sym => { (object_name + '_id').to_sym => parent_id } }, 
+                               :method => :post %>
+    <% end %>
     </div>
   <% end %>
   <% if @sub_obj && !@sub_obj.keys['no_edit'] %>
