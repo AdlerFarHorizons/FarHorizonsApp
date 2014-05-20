@@ -9,14 +9,14 @@ class Beacon
   
   timestamps!
 
-  has_one :point
+  has_one :point #this point is persistent. It's fields are updated on each fix
 
   after_create :initialize_point
   
   private
 
   def initialize_point
-    self.point = Point.create(:source_id=>self.id)
+    self.point = Point.create( :source_id => self.id.to_s )
     self.point.save
     self.save
   end
