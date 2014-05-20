@@ -11,13 +11,28 @@
 </p>
 
 <p>
-  <strong>Beacons:</strong>
-  <%= @platform.beacons %>
+  <strong>Beacon ids:</strong>
+  <%= @platform.beacon_ids %>
+</p>
+
+<p>
+  <strong>Platform server id:</strong>
+  <%= @platform.platform_server_id %>
+</p>
+
+<p>
+  <strong>Mission:</strong>
+  <%= @platform.mission %>
 </p>
 
 <p>
   <strong>Sky tracks:</strong>
   <%= @platform.sky_tracks %>
+</p>
+
+<p>
+  <strong>Predicted tracks:</strong>
+  <%= @platform.predicted_tracks %>
 </p>
 
 <%= link_to 'Edit', edit_platform_path(@platform) %> |

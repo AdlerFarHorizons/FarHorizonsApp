@@ -41,13 +41,18 @@
 </p>
 
 <p>
-  <strong>Source:</strong>
+  <strong>Source id:</strong>
   <%= @point.source_id %>
 </p>
 
 <p>
-  <strong>Host:</strong>
+  <strong>Host id:</strong>
   <%= @point.host_id %>
+</p>
+
+<p>
+  <strong>No edit:</strong>
+  <%= @point.no_edit %>
 </p>
 
 <%= link_to 'Edit', edit_point_path(@point) %> |

@@ -10,5 +10,10 @@
   <%= @predicted_track.file_path %>
 </p>
 
+<p>
+  <strong>Platform:</strong>
+  <%= @predicted_track.platform %>
+</p>
+
 <%= link_to 'Edit', edit_predicted_track_path(@predicted_track) %> |
 <%= link_to 'Back', predicted_tracks_path %>

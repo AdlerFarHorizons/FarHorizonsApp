@@ -8,6 +8,7 @@
       <th>Serial no</th>
       <th>Driver</th>
       <th>Port</th>
+      <th>Persistent</th>
       <th></th>
       <th></th>
       <th></th>
@@ -22,6 +23,7 @@
         <td><%= beacon_receiver.serial_no %></td>
         <td><%= beacon_receiver.driver %></td>
         <td><%= beacon_receiver.port %></td>
+        <td><%= beacon_receiver.persistent %></td>
         <td><%= link_to 'Show', beacon_receiver %></td>
         <td><%= link_to 'Edit', edit_beacon_receiver_path(beacon_receiver) %></td>
         <td><%= link_to 'Destroy', beacon_receiver, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -37,16 +37,12 @@
 
 <p>
   <strong>Chase vehicles:</strong>
-  <% @mission.chase_vehicles.each do |v| %>
-    <%= v.identifier %>
-  <% end  %>
+  <%= @mission.chase_vehicles %>
 </p>
 
 <p>
   <strong>Platforms:</strong>
-  <% @mission.platforms.each do |p| %>
-    <%= p.identifier %>
-  <% end %>
+  <%= @mission.platforms %>
 </p>
 
 <%= link_to 'Edit', edit_mission_path(@mission) %> |

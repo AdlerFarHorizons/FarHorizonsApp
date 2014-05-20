@@ -28,13 +28,8 @@
         <td><%= mission.actual_launch %>&nbsp&nbsp&nbsp&nbsp</td>
         <td><%= mission.target_end %>&nbsp&nbsp&nbsp&nbsp</td>
         <td><%= mission.actual_end %>&nbsp&nbsp&nbsp&nbsp</td>
-        <td><%  mission.chase_vehicles.each do |v|%>
-            <%= v.identifier ? v.identifier + ","  : '' %>
-            <% end %>&nbsp&nbsp&nbsp&nbsp</td>
-        <td><% mission.platforms.each do |p| %>
-          <%= p.identifier ? p.identifier + "," : '' %>
-        <% end %>
-        &nbsp&nbsp</td>
+        <td><%=  mission.chase_vehicles %>&nbsp&nbsp&nbsp&nbsp</td>
+        <td><%= mission.platforms %>&nbsp&nbsp</td>
         &nbsp&nbsp<td><%= link_to 'Show', mission %>&nbsp&nbsp&nbsp&nbsp</td>
         &nbsp&nbsp<td><%= link_to 'Edit', edit_mission_path(mission) %>&nbsp&nbsp&nbsp&nbsp</td>
         &nbsp&nbsp<td><%= link_to 'Destroy', mission, method: :delete, data: { confirm: 'Are you sure?' } %>&nbsp&nbsp&nbsp&nbsp</td>

@@ -5,6 +5,7 @@
     <tr>
       <th>Source</th>
       <th>File path</th>
+      <th>Platform</th>
       <th></th>
       <th></th>
       <th></th>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= predicted_track.source %></td>
         <td><%= predicted_track.file_path %></td>
+        <td><%= predicted_track.platform %></td>
         <td><%= link_to 'Show', predicted_track %></td>
         <td><%= link_to 'Edit', edit_predicted_track_path(predicted_track) %></td>
         <td><%= link_to 'Destroy', predicted_track, method: :delete, data: { confirm: 'Are you sure?' } %></td>

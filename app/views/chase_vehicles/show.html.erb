@@ -11,28 +11,18 @@
 </p>
 
 <p>
+  <strong>Chase Server:</strong>
+  <%= @chase_vehicle.chase_server_id %>
+</p>
+
+<p>
   <strong>Mission:</strong>
-  <%= ( temp = @chase_vehicle.mission ) ? temp.identifier : 'none' %>
-</p>
-
-<p>
-  <strong>Location device:</strong>
-  <%= @chase_vehicle.location_device.model %>
-</p>
-
-<p>
-  <strong>Beacon receivers:</strong>
-  <%= @chase_vehicle.beacon_receivers %>
-</p>
-
-<p>
-  <strong>Beacon transmitter:</strong>
-  <%= ( temp = @chase_vehicle.beacon_transmitter ) ? temp.model : 'none'  %>
+  <%= @chase_vehicle.mission %>
 </p>
 
 <p>
   <strong>Ground track:</strong>
-  <%= ( temp = @chase_vehicle.ground_track ) ? temp.id : 'none' %>
+  <%= @chase_vehicle.ground_track %>
 </p>
 
 <%= link_to 'Edit', edit_chase_vehicle_path(@chase_vehicle) %> |

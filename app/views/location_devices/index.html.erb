@@ -7,7 +7,9 @@
       <th>Model</th>
       <th>Serial no</th>
       <th>Driver</th>
+      <th>Driver pid</th>
       <th>Port</th>
+      <th>Persistent</th>
       <th>Point</th>
       <th></th>
       <th></th>
@@ -22,7 +24,9 @@
         <td><%= location_device.model %></td>
         <td><%= location_device.serial_no %></td>
         <td><%= location_device.driver %></td>
+        <td><%= location_device.driver_pid %></td>
         <td><%= location_device.port %></td>
+        <td><%= location_device.persistent %></td>
         <td><%= location_device.point %></td>
         <td><%= link_to 'Show', location_device %></td>
         <td><%= link_to 'Edit', edit_location_device_path(location_device) %></td>

@@ -30,5 +30,10 @@
   <%= @beacon_transmitter.call_sign %>
 </p>
 
+<p>
+  <strong>Persistent:</strong>
+  <%= @beacon_transmitter.persistent %>
+</p>
+
 <%= link_to 'Edit', edit_beacon_transmitter_path(@beacon_transmitter) %> |
 <%= link_to 'Back', beacon_transmitters_path %>
