@@ -1,0 +1,15 @@
+#! /usr/bin/env ruby
+
+root = ARGV[0]
+require 'webrick'
+include WEBrick
+
+server = HTTPServer.new(:Port=>2000,:DocumentRoot=>root,
+                        BindAddress: "localhost",
+                        Logger: WEBrick::Log.new("/dev/null"),
+                        AccessLog: [])
+                      
+trap("INT"){ server.shutdown }
+
+server.start
+

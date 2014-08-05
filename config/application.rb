@@ -24,5 +24,12 @@ module FarHorizonsApp
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    # 
+    # Start map file server up if not already running
+    maproot = ( Rails.env == 'development' ) ? 
+              "#{ENV['HOME']}/s3store/farhorizons/maps" :
+              "/var/www/fileservice/farhorizons/maps"
+    cmd = "bin/mapserver #{maproot}"
+    Process.detach( spawn( cmd ) ) if `pgrep -f [m]apserver`.chomp == ""
   end
 end

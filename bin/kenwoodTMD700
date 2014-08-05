@@ -1,0 +1,20 @@
+#! /user/bin/env ruby
+
+# Basic serial io using 'serialport'
+# check to see if you have any remnant of ruby-serialport:
+# cd ~/.rvm
+# find . -name ruby-serialport*
+# Delete the directories you find with the find command.
+# Install serialport if it's not already done:
+# gem install serialport (NOT ruby-serialport !!!)
+
+
+require 'serialport'
+tty_port = '/dev/ttyUSB0' #for example
+baud_rate = 9600
+data_bits = 8
+stop_bits = 1
+parity = SerialPort::NONE
+sp = SerialPort.new( tty_port, baud_rate, data_bits, stop_bits, parity)
+
+sp.write

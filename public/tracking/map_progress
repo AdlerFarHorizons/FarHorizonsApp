@@ -1,0 +1,30 @@
+What I have learned:
+
+Tiles:
+
+	I can get tiles of nice looking maps using http://tile.openstreetmap.org/z/x/y.png. I have written a program ("downloader") that automatically downloads the tiles for the region of interest as a function of zoom level
+
+	each tile is 256x256 and about 10-20KB in size as a png
+
+	z=15 gives fairly nice  resolution on the streets (with local street names).
+
+	It looks like we would need about 65,000 tiles (in zoom level 15) this is about 1-1.5 gigabytes of tile data that needs to be downloaded. At 50Mbytes a day this is 20-30 days.
+
+
+
+Serving the tiles:
+
+tilecache-2.11 is apparently a tileserver/cacher and will send requests to have tiles rendered if they do not yet exist.
+
+with python Paste it can serve as a stand-alone tileserver.
+
+
+Slippy Maps:
+
+The industry standard seems to be OpenLayers. 
+So how do we get everyone to talk to everyone else?
+
+
+http://192.168.0.100/~ggyuk/mappy.html
+http://ggyuk.local:8080/1.0.0/basic/7/65/93.png
+es

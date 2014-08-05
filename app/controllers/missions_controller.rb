@@ -64,6 +64,10 @@ class MissionsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def start
+    
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

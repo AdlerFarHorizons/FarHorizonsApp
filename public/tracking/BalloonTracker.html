@@ -1,0 +1,274 @@
+<html>
+<head>
+  <title>BalloonTracker Example</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="./firebug.js"></script>
+    <script src="OpenLayersDev.js"></script>
+    <script src="jquery.js"></script>
+    <script src="highcharts.js" type="text/javascript"></script>
+    </head>
+    <body>
+<div id="BalloonStats"> </div>
+      <div style="width:100%; height:95%" id="map"></div>
+
+      <input id="toggle-id" type="checkbox"> </input>
+      <label for="toggle-id">Show Only Current Positions?</label>
+
+    <script src="trackChart.js"></script>
+  
+   <script defer="defer" type="text/javascript">
+	
+
+        AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+            'autoSize': true
+        });
+
+
+	function get_my_url(bounds) {
+	var res = this.map.getResolution();
+	var x = Math.round ((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+	var y = Math.round ((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+	var z = this.map.getZoom();
+	
+	var path = z + "/" + x + "/" + y + "." + this.type;
+	var url = this.url;
+	if (url instanceof Array) {
+        url = this.selectUrl(path, url);
+	}
+	return url + path;
+	
+	}
+
+	function plot_track(callsign) {
+	
+	if (callsign=="kc9lig") {var N_old=kc9lig_markers.markers.length;}
+	if (callsign=="kc9lhw") {var N_old=kc9lhw_markers.markers.length;}
+	if (callsign=="wb9sky") {var N_old=wb9sky_markers.markers.length;}
+
+	// start by reading the file
+	var txtFile = new XMLHttpRequest();
+	txtFile.open("POST", "./"+callsign+"track.txt", true);
+	txtFile.onreadystatechange = function() {
+	if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+	if (txtFile.status === 200) {  // Makes sure it's found the file.
+	// Will seperate each line into an array
+	var lines = txtFile.responseText.split("\n"); 
+	if ((lines.length-1)>N_old) {
+	var i=0;
+	for (i=N_old;(lines.length-1)>i;i++){
+	var line_elements = lines[i].split(",");
+	if (callsign=="kc9lig") { addMarker(kc9lig_markers,(new OpenLayers.LonLat(line_elements[1],line_elements[0])).transform(proj, map.getProjectionObject()),AutoSizeFramedCloud,"<div style=\"background-color:white;\">"+"Altitude: "+line_elements[4]+" ft<br>Speed: "+line_elements[3]+" mph<br> Direction: "+line_elements[2]+"</div>",true,true,iconred.clone());}
+	if (callsign=="kc9lhw") { addMarker(kc9lhw_markers,(new OpenLayers.LonLat(line_elements[1],line_elements[0])).transform(proj, map.getProjectionObject()),AutoSizeFramedCloud,"<div style=\"background-color:white;\">"+"Altitude: "+line_elements[4]+" ft<br>Speed: "+line_elements[3]+" mph<br> Direction: "+line_elements[2]+"</div>",true,true,icongreen.clone());}
+	if (callsign=="wb9sky") { addMarker(wb9sky_markers,(new OpenLayers.LonLat(line_elements[1],line_elements[0])).transform(proj, map.getProjectionObject()),AutoSizeFramedCloud,"<div style=\"background-color:white;\">"+"Altitude: "+line_elements[4]+" ft<br>Speed: "+line_elements[3]+" mph<br> Direction: "+line_elements[2]+"</div>",true,true,iconblue.clone());}
+
+	}
+	setCurrent();
+	document.getElementById('BalloonStats').innerHTML="Altitude: "+line_elements[4]+" ft  Speed: "+line_elements[3]+" mph   Direction: "+line_elements[2];
+
+	}
+	}}}
+	txtFile.send(null);
+	}
+
+	function setCurrent()
+	{
+	if (onlyCurrent) {
+	for (i=0;i<kc9lig_markers.markers.length-1;i++) {
+		kc9lig_markers.markers[i].display(false);
+	}
+	for (i=0;i<kc9lhw_markers.markers.length-1;i++) {
+		kc9lhw_markers.markers[i].display(false);
+	}
+	for (i=0;i<wb9sky_markers.markers.length-1;i++) {
+		wb9sky_markers.markers[i].display(false);
+	}
+
+	kc9lig_markers.markers[kc9lig_markers.markers.length-1].display(true);
+
+	} else {
+	for (i=0;i<kc9lig_markers.markers.length;i++) { 
+		kc9lig_markers.markers[i].display(true);}
+	for (i=0;i<kc9lhw_markers.markers.length;i++) { 
+		kc9lhw_markers.markers[i].display(true);}
+	for (i=0;i<wb9sky_markers.markers.length;i++) { 
+		wb9sky_markers.markers[i].display(true);}
+	
+	}
+	}
+	
+	
+	function toggleCurrent() {
+	if (document.getElementById("toggle-id").checked) {
+        onlyCurrent=true;
+	} else {
+        onlyCurrent=false;
+	}
+	setCurrent();
+	}
+
+
+function doVectorStaff() {
+
+        var layer_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+        layer_style.fillOpacity = 0.2;
+        layer_style.graphicOpacity = 1;
+
+       var style_green = {
+                strokeColor: "#FF0000",
+                strokeWidth: 3,
+                strokeDashstyle: "solid",
+                pointRadius: 6,
+                pointerEvents: "visiblePainted"
+            };
+	var vectorLayer = new OpenLayers.Layer.Vector("Simple Geometry", {
+                style: layer_style
+ //               renderers: renderer
+            });
+
+
+
+            // create a line feature from a list of points
+            var pointList = [];
+	var cpoint = new OpenLayers.LonLat(-87.6, 41.1);
+	pointList.push(cpoint.transform(proj, map.getProjectionObject()));
+	cpoint = new OpenLayers.LonLat(-87.6, 41.15);
+	pointList.push(cpoint.transform(proj, map.getProjectionObject()));
+
+            var lineFeature = new OpenLayers.Feature.Vector(
+                new OpenLayers.Geometry.LineString(pointList),null,style_green);
+            map.addLayer(vectorLayer);
+            vectorLayer.addFeatures(lineFeature);
+
+
+
+
+}
+
+        function addMarker(markerlist,ll, popupClass, popupContentHTML, closeBox, overflow,icon) {
+
+            var feature = new OpenLayers.Feature(markerlist, ll); 
+            feature.closeBox = closeBox;
+            feature.popupClass = popupClass;
+            feature.data.popupContentHTML = popupContentHTML;
+            feature.data.overflow = (overflow) ? "auto" : "hidden";
+            feature.data.icon = icon;        
+            feature.data.display = false;        
+
+            var marker = feature.createMarker();
+
+            var markerClick = function (evt) {
+                if (this.popup == null) {
+                    this.popup = this.createPopup(this.closeBox);
+                    map.addPopup(this.popup);
+                    this.popup.show();
+                } else {
+                    this.popup.toggle();
+                }
+                currentPopup = this.popup;
+                OpenLayers.Event.stop(evt);
+            };
+
+            marker.events.register("mousedown", feature, markerClick);
+
+            markerlist.addMarker(marker);
+        }
+
+
+
+
+
+	var options = {
+	projection: "EPSG:900913",
+        units: 'm',
+
+        numZoomLevels: 16,
+        maxResolution: 156543.0339,
+        maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+        20037508.34, 20037508.34)
+	};
+
+	var map = new OpenLayers.Map("map", options);
+	
+	
+	var streets = new OpenLayers.Layer.TMS(
+	"Streets",
+	"maps/",
+        { 'type':'png', 'getURL':get_my_url }
+	);
+
+	var aerial = new OpenLayers.Layer.TMS(
+	"Aerial",
+	"maps/aerial/",
+        { 'type':'png', 'getURL':get_my_url }
+	);
+
+        map.addLayer(streets);
+        map.addLayer(aerial);
+
+
+	var proj = new OpenLayers.Projection("EPSG:4326");
+
+
+        var size = new OpenLayers.Size(8,8);
+        var offset = new OpenLayers.Pixel(-4, -4);
+        var iconred = new OpenLayers.Icon('img/markerSmallred.png',size,offset);
+        var iconblue = new OpenLayers.Icon('img/markerSmallblue.png',size,offset);
+        var icongreen = new OpenLayers.Icon('img/markerSmallgreen.png',size,offset);
+ 
+//	var kc9lhw_markers = new OpenLayers.Layer.Markers("KC9LHW",{projection: proj});
+	var kc9lig_markers = new OpenLayers.Layer.Markers("KC9LIG",{projection: proj}); 
+//        var wb9sky_markers = new OpenLayers.Layer.Markers("WB9SKY",{projection: proj});
+	var kc9lhw_markers = new OpenLayers.Layer.Markers("KC9LHW");
+//	var kc9lig_markers = new OpenLayers.Layer.Markers("KC9LIG"); 
+        var wb9sky_markers = new OpenLayers.Layer.Markers("WB9SKY");
+
+
+        map.addLayer(kc9lhw_markers);
+        map.addLayer(kc9lig_markers);
+        map.addLayer(wb9sky_markers);
+
+	onlyCurrent=false;
+	document.getElementById("toggle-id").onclick = toggleCurrent;
+
+	toggleCurrent();
+
+	plot_track("kc9lig");
+	plot_track("kc9lhw");
+	plot_track("wb9sky");
+
+	setInterval("plot_track(\"kc9lig\")",5000);
+	setInterval("plot_track(\"kc9lhw\")",5000);
+	setInterval("plot_track(\"wb9sky\")",5000);
+
+	var cpoint = new OpenLayers.LonLat(-87.6, 41.1);
+	map.setCenter(cpoint.transform(proj, map.getProjectionObject()),11);
+
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControl(new OpenLayers.Control.ScaleLine({geodesic: true,maxWidth:200}));
+
+
+      </script>
+
+</body>
+</html>
+
+<!--    
+van location data and marker
+
+* direction and distance to latest balloon position along bottom
+
+velocity vector on the latest balloon marker
+
+best estimate of landing position
+
+altitude vs time and and speed versus altitude graphs along side
+
+
+<script src="http://openlayers.org/api/OpenLayers.js"></script>
+
+var marker = new OpenLayers.Marker(punt,icona);
+
+ marker.events.register("mouseover", foo_var, method2);
+
+ marker.events.register("mouseout", foo_var, method2);-->
+

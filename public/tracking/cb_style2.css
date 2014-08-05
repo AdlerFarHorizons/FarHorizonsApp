@@ -1,0 +1,79 @@
+ 
+#messageForm {
+	margin:0px;
+	margin-bottom:1px;
+}
+#userName {
+	width: 150px;
+	height: 22px;
+	border: 1px teal solid;
+}
+#signInName{
+	font-family:Tahoma;
+	font-size:12px;
+	color:orange;
+}
+#logInButton {
+    height: 28px;
+    width: 130px;
+    background-color: teal;
+    border: 5px teal;
+    color: #ffffff;
+    font-weight:bold;
+}
+#logOutButton {
+    height: 28px;
+    width: 150px;
+    background-color: teal;
+    border: 5px teal;
+    color: #ffffff;
+    font-weight:bold;
+    margin-top:2px;
+}
+#logoutbuttonhere {
+    width: 800px;
+    float:left;
+    margin-top:1px;
+}
+#response_msg {
+    width: 800px;
+    float:left;
+    margin-top:1px;
+}
+#oldMessages {
+	font-family:tahoma;
+	font-size:12px;
+	color:black;
+	border: 14px #DCDCDC solid;
+    background-color:#DCDCDC;
+	height: 85px;
+	width: 772px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	float:left;
+    margin-top:5px;
+}
+#message {
+	width: 800px;
+	height: 25px;
+    background-color: #A9A9A9;
+	border: 3px #A9A9A9 solid;
+    border-bottom: 3px teal solid;
+    border-left: 3px #A9A9A9 solid;
+	float:left;
+	margin-top:3px;
+}
+#serverRes{
+	width:150px;
+	height:22px;
+	border: 1px teal solid;
+	float:left;
+	margin:1px;
+}
+#bstats {
+    width:auto;
+    height:50px;
+    padding: 5px;
+}
+
+

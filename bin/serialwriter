@@ -1,0 +1,26 @@
+#! /usr/bin/env ruby
+# Taken from 'examples/miniterm.rb' in 'serialport' distribution
+
+require 'serialport'
+
+tty_port = '/dev/ttyACM0' #for example
+baud_rate = 9600
+data_bits = 8
+stop_bits = 1
+parity = SerialPort::NONE
+sp = SerialPort.new( tty_port, baud_rate, data_bits, stop_bits, parity)
+sp.read_timeout = 0
+
+open("/dev/tty", "r+") { |tty|
+#  tty.sync = true
+#  Thread.new {
+#    while true do
+#      tty.printf("%c", sp.getc)
+#    end
+#  }
+  str = ''
+  while (str.chomp != 'Q') do
+    str = tty.gets.sub("\n", "\r")
+    sp.write(str)
+  end
+}

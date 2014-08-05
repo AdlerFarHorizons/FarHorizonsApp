@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+	xmlns:gx="http://www.google.com/kml/ext/2.2">
+<Document>
+<name>GPS position</name>
+<snippet>Created Thu Aug  1 09:37:20 2013</snippet>
+<LookAt>
+<gx:TimeSpan>
+<begin>2013-08-01T14:32:59Z</begin>
+<end>2013-08-01T14:47:20Z</end>
+</gx:TimeSpan>
+<longitude>-87.628855</longitude>
+<latitude>41.904416</latitude>
+<range>1300.000000</range>
+</LookAt>
+<!-- Normal track style -->
+<Style id="track_n">
+<IconStyle>
+<scale>.5</scale>
+<Icon>
+<href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>
+</Icon>
+</IconStyle>
+<LabelStyle>
+<scale>0</scale>
+</LabelStyle>
+</Style>
+<!-- Highlighted track style -->
+<Style id="track_h">
+<IconStyle>
+<scale>1.2</scale>
+<Icon>
+<href>http://earth.google.com/images/kml-icons/track-directional/track-none.png</href>
+</Icon>
+</IconStyle>
+</Style>
+<StyleMap id="track">
+<Pair>
+<key>normal</key>
+<styleUrl>#track_n</styleUrl>
+</Pair>
+<Pair>
+<key>highlight</key>
+<styleUrl>#track_h</styleUrl>
+</Pair>
+</StyleMap>
+<!-- Normal waypoint style -->
+<Style id="waypoint_n">
+<IconStyle>
+<Icon>
+<href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>
+</Icon>
+</IconStyle>
+</Style>
+<!-- Highlighted waypoint style -->
+<Style id="waypoint_h">
+<IconStyle>
+<scale>1.2</scale>
+<Icon>
+<href>http://maps.google.com/mapfiles/kml/pal4/icon61.png</href>
+</Icon>
+</IconStyle>
+</Style>
+<StyleMap id="waypoint">
+<Pair>
+<key>normal</key>
+<styleUrl>#waypoint_n</styleUrl>
+</Pair>
+<Pair>
+<key>highlight</key>
+<styleUrl>#waypoint_h</styleUrl>
+</Pair>
+</StyleMap>
+<Style id="lineStyle">
+<LineStyle>
+<color>99ffac59</color>
+<width>6</width>
+</LineStyle>
+</Style>
+<Placemark>
+      <name>ESTIMATED Position</name>
+<TimeStamp><when>2013-08-01T14:37:20Z</when></TimeStamp>
+<Style>
+<IconStyle>
+<Icon>
+<href>http://earth.google.com/images/kml-icons/youarehere-60.png</href>
+</Icon>
+</IconStyle>
+</Style>
+<Point>
+<coordinates>-87.628855,41.904416,183.57</coordinates>
+</Point>
+</Placemark>
+<snippet/>
+<description>
+<![CDATA[<table>
+<tr><td><b>Distance</b> 0.0 ft </td></tr>
+<tr><td><b>Min Alt</b> 602.259 ft </td></tr>
+<tr><td><b>Max Alt</b> 602.259 ft </td></tr>
+<tr><td><b>Start Time</b> 2013-08-01T14:32:59Z  </td></tr>
+<tr><td><b>End Time</b> 2013-08-01T14:32:59Z  </td></tr>
+</table>]]>
+</description>
+<TimeSpan>
+<begin>2013-08-01T14:32:59Z</begin>
+<end>2013-08-01T14:32:59Z</end>
+</TimeSpan>
+<Folder>
+<name>Points</name>
+<Placemark>
+        <name>ESTIMATED Position</name>
+<snippet/>
+<description><![CDATA[
+<table>
+<tr><td>Longitude: -87.628855 </td></tr>
+<tr><td>Latitude: 41.904416 </td></tr>
+<tr><td>Altitude: 602.259 ft </td></tr>
+<tr><td>Speed: 0.0 mph </td></tr>
+<tr><td>Heading: 311.9 </td></tr>
+<tr><td>Time: 2013-08-01T14:32:59Z </td></tr>
+</table>
+]]></description>
+<LookAt>
+<longitude>-87.628855</longitude>
+<latitude>41.904416</latitude>
+<tilt>66</tilt>
+</LookAt>
+<TimeStamp><when>2013-08-01T14:32:59Z</when></TimeStamp>
+<styleUrl>#track</styleUrl>
+<Point>
+<coordinates>-87.628855,41.904416,183.57</coordinates>
+</Point>
+</Placemark>
+</Folder>
+<Placemark>
+<name>Path</name>
+<styleUrl>#lineStyle</styleUrl>
+<LineString>
+<tessellate>1</tessellate>
+<coordinates>
+-87.628855,41.904416,183.57
+</coordinates>
+</LineString>
+</Placemark>
+</Document>
+</kml>
