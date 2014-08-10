@@ -1,3 +1,39 @@
 #! /bin/bash
 #
 # Start mongod
+local=$PWD
+
+echo "Start mongo with local logging if not already running"
+if [ $(pgrep -f mongod) ]
+then
+  echo "mongod is already running"
+else
+  echo "mongod not running, starting it up"
+  echo "(you will have to enter sudo password)..."
+  #Delete prior mongodb log(s)
+  sudo rm ./log/mongod.log*
+  sudo mongod --fork --logpath ./log/mongod.log
+  echo "waiting 5 seconds for mongod to start..."
+  sleep 5
+fi
+
+echo "Stopping redis-server if running and starting a local"
+echo "process using local config file and local logging..."
+if [ $(pgrep -f redis-server) ]
+then
+  echo "stopping current redis-server process"
+  echo "(you may have to enter sudo password)..."
+  sudo kill $(pgrep -f redis-server)
+fi
+echo "starting new process..."
+#Delete prior redis console log(s)
+rm ./log/redis-console.log*
+redis-server ./config/redis-fh.conf > ./log/redis-console.log &
+echo "waiting 5 seconds for redis-server to start..."
+sleep 5
+
+echo "starting application..."
+rails server
+
+
+
