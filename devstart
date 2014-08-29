@@ -12,20 +12,18 @@ else
   echo "(you will have to enter sudo password)..."
   #Delete prior mongodb log(s)
   sudo rm ./log/mongod.log*
-  sudo mongod --fork --logpath ./log/mongod.log
+  sudo mongod --fork --dbpath /var/lib/mongodb --logpath ./log/mongod.log
   echo "waiting 5 seconds for mongod to start..."
   sleep 5
 fi
 
-echo "Stopping redis-server if running and starting a local"
-echo "process using local config file and local logging..."
-if [ $(pgrep -f redis-server) ]
+echo "(re)start local instance of redis-server if not already running..."
+if [ $(pgrep -f redis-server.*6380) ]
 then
-  echo "stopping current redis-server process"
-  echo "(you may have to enter sudo password)..."
-  sudo kill $(pgrep -f redis-server)
+  echo "stopping redis-server on port 6380..."
+  kill $(pgrep -f redis-server.*6380)
 fi
-echo "starting new process..."
+echo "Starting new instance of redis-server on port 6380"
 #Delete prior redis console log(s)
 rm ./log/redis-console.log*
 redis-server ./config/redis-fh.conf > ./log/redis-console.log &
@@ -33,7 +31,7 @@ echo "waiting 5 seconds for redis-server to start..."
 sleep 5
 
 echo "starting application..."
-rails server
+rails server --binding 127.0.0.1
 
 
 
