@@ -4,7 +4,7 @@
     <link rel="stylesheet" href="style.css" type="text/css">
     <link rel="stylesheet" type="text/css" href="cb_style3.css">
     <link rel="stylesheet" type="text/css" href="tabs_style2.css">
-    
+
     <!-- Load up the JavaScript Libraries we will need -->
     <!--    <script src="./firebug.js"></script> -->
     <script src="OpenLayers.js"></script>
@@ -16,7 +16,7 @@
 
     <script type="text/javascript" src="ajax.js"></script>
     <script type="text/javascript" src="chatbox2.js"></script>
-    
+
     <script>
         <!-- Parse data from Prediction KML file to show Balloon Burst -->
         function parseData(req) {
@@ -34,7 +34,7 @@
             OpenLayers.loadURL("aPREDICTION.kml", "", null, parseData); <!-- must change KML file everytime before flight -->
         }
     </script>
-    
+
 </head>
 
 <body onload="initialChatLogStatus(); load();">
@@ -46,18 +46,18 @@
 	    <div id="map" style="width:897px; height:602px; border-right: 2px #cccccc solid; border-left: 2px #cccccc solid;"></div>
       </td>
 	  <td>
-      
+
 	    <table width="275px" border="0" cellpadding="0" cellspacing="0">
 	      <tr>
 		<td align="left">
-        
+
         <!-- Beginning of TABS -->
         <div class="tabs">
-        
+
             <div class="tab">
                 <input type="radio" id="tab-1" name="tab-group-1" checked>
                 <label for="tab-1">Current</label>
-           
+
                 <div class="content">
                     <p>
                     <div id="BalloonStats" style="background-image: url(img/mini-hero-bg.png); height:50px; width:270px; padding: 10px;"> </div><BR>
@@ -86,41 +86,41 @@
                     </div>
                     <span id="response_msg"><b></b></span>
                 <!-- end of chat code -->
-                    
+
                     </p>
-                </div> 
+                </div>
             </div>
-        
+
             <div class="tab">
                 <input type="radio" id="tab-2" name="tab-group-1">
                 <label for="tab-2">Charts</label>
-           
+
                 <div class="content">
                     <p>
                     <div id="chart-container-1" style="width:275px; height:250px"></div>
                     <div id="chart-container-2" style="width:275px; height:250px"></div>
                     </p>
-                </div> 
+                </div>
             </div>
-        
+
             <div class="tab">
                 <input type="radio" id="tab-3" name="tab-group-1">
                 <label for="tab-3">Burst</label>
-         
+
                 <div class="content">
                     <p>
                     <div id="line"></div>
                     <div id="outputArea" style="background-image: url(img/mini-hero-bg.png); min-height:400px; width:270px; padding: 10px;">
                         <b>Information from Predictive Track KML file:</b>
                         <div id="output"></div>
-                        
+
                     </div>
                     </p>
-                </div> 
+                </div>
             </div>
         </div>
         <!-- End of TABS -->
-            
+
             </td>
         </tr>
         </table>
@@ -152,9 +152,9 @@
 </table>
 
 
-      
+
 <script defer="defer" type="text/javascript">
-window.onbeforeunload=windowClose;	
+window.onbeforeunload=windowClose;
 <!-- do some preliminary set up -->
 
 
@@ -164,7 +164,7 @@ window.onbeforeunload=windowClose;
 	<!-- this is for the point/packet pop-ups on the maps -->
         AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
         'autoSize': true});
-        
+
 	<!-- this is the default set of options used in many calls -->
 	var options = {
 	projection: "EPSG:900913",
@@ -177,7 +177,7 @@ window.onbeforeunload=windowClose;
 
 	<!-- and create a projection, size, pixel offset and icons for -->
 	<!-- plotting  -->
-    
+
 	var proj = new OpenLayers.Projection("EPSG:4326");
         var size = new OpenLayers.Size(8,8);
         var offset = new OpenLayers.Pixel(-4, -4);
@@ -193,7 +193,7 @@ window.onbeforeunload=windowClose;
         var iconBurst = new OpenLayers.Icon('sunny.png',size2,offset2);
     <!-- end of set up, now start the main work -->
 
-	<!-- start up a map -->	
+	<!-- start up a map -->
 	var map = new OpenLayers.Map("map", options);
 
 	<!-- and create a couple of layers for the map display -->
@@ -217,7 +217,7 @@ window.onbeforeunload=windowClose;
     <!-- Add the Layer with the Prediction Track -->
     <!-- Strategy.Fixed: requests features once and never requests new data -->
 
-    
+
     var predictionTrack = new OpenLayers.Layer.Vector("PREDICTION", {
         strategies: [new OpenLayers.Strategy.Fixed()],
         protocol: new OpenLayers.Protocol.HTTP({
@@ -227,82 +227,117 @@ window.onbeforeunload=windowClose;
         style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
         projection: proj
     });
-    
+
     map.addLayer(predictionTrack);
+    </script>
+    <script>
+<!--    Adds the layer Van 1. Add two points connect them with a line-->
+    var van1 = new OpenLayers.Layer.Vector("Van 1");
 
+      point = new OpenLayers.Geometry.Point(-87, 42);
+      point.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+      van1.addFeatures([new OpenLayers.Feature.Vector(point)]);
+
+      point2 = new OpenLayers.Geometry.Point(-76, 42);
+      point2.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+      van1.addFeatures([new OpenLayers.Feature.Vector(point2)]);
+
+      var geom_line = new OpenLayers.Geometry.LineString([ point, point2 ]);
+      van1.addFeatures([new OpenLayers.Feature.Vector(geom_line)]);
+      map.addLayer(van1);
+      </script>
+    
+    <script>
+<!--    Should eventually to grab the JSON point data off the server, then update the map-->
+    function reloadThis(){
+    var requestedPoint = $.getJSON("http://localhost:3000/location_devices/52b6a983ec2a234140000006.json");
+    console.log(requestedPoint);
+    document.write(JSON.stringify(requestedPoint));
     
     
-	<!-- now create marker layers for the three trackers -->
-	var kc9lhw_markerLayer = new OpenLayers.Layer.Markers("KC9LHW",{projection: proj});
-	var kc9lig_markerLayer = new OpenLayers.Layer.Markers("KC9LIG",{projection: proj}); 
-    var wb9sky_markerLayer = new OpenLayers.Layer.Markers("WB9SKY",{projection: proj});
+<!--    var obj = JSON.parse(requestedPoint);-->
+<!--    document.write(requestedPoint.make);-->
+    alert("hi");
+    };
+    reloadThis();
+    </script>
 
-	var landingLayer = new OpenLayers.Layer.Markers("LANDING",{projection: proj});
-	
-	kc9lhw_markerLayer.id="kc9lhw";
-	kc9lig_markerLayer.id="kc9lig";
-	wb9sky_markerLayer.id="wb9sky";
+<!--    JSON PARSE EXAMPLE-->
+<!--    var obj = jQuery.parseJSON( '{ "name": "John" }' );-->
+<!--    alert( obj.name );-->
 
-	<!-- and add them to the map -->
-    map.addLayer(kc9lhw_markerLayer);
-    map.addLayer(kc9lig_markerLayer);
-    map.addLayer(wb9sky_markerLayer);
+<!--    <script>-->
+<!--	<!-- now create marker layers for the three trackers -->-->
+<!--	var kc9lhw_markerLayer = new OpenLayers.Layer.Markers("KC9LHW",{projection: proj});-->
+<!--	var kc9lig_markerLayer = new OpenLayers.Layer.Markers("KC9LIG",{projection: proj}); -->
+<!--    var wb9sky_markerLayer = new OpenLayers.Layer.Markers("WB9SKY",{projection: proj});-->
 
-    map.addLayer(landingLayer);
+<!--	var landingLayer = new OpenLayers.Layer.Markers("LANDING",{projection: proj});-->
+<!--	-->
+<!--	kc9lhw_markerLayer.id="kc9lhw";-->
+<!--	kc9lig_markerLayer.id="kc9lig";-->
+<!--	wb9sky_markerLayer.id="wb9sky";-->
 
-	var onlyCurrent=false;
-        
+<!--	<!-- and add them to the map -->-->
+<!--    map.addLayer(kc9lhw_markerLayer);-->
+<!--    map.addLayer(kc9lig_markerLayer);-->
+<!--    map.addLayer(wb9sky_markerLayer);-->
 
-	<!-- set up so that the "current point only" click box automatically runs the -->
-	<!-- routine "setCurrent" -->
-	document.getElementById("current-toggle").onclick = setCurrent;
-	document.getElementById("predict-toggle").onclick = setPredict;
+<!--    map.addLayer(landingLayer);-->
+
+<!--	var onlyCurrent=false;-->
+<!--        -->
+
+<!--	<!-- set up so that the "current point only" click box automatically runs the -->-->
+<!--	<!-- routine "setCurrent" -->-->
+<!--	document.getElementById("current-toggle").onclick = setCurrent;-->
+<!--	document.getElementById("predict-toggle").onclick = setPredict;-->
 
 
-	var wind_table = {x:[0,1,2],y:[0,1,2],w:[0,1,2]};
+<!--	var wind_table = {x:[0,1,2],y:[0,1,2],w:[0,1,2]};-->
 
-	readWinds();
+<!--	readWinds();-->
 
 
-    <!-- set up the track objects -->
+<!--    <!-- set up the track objects -->-->
 
-	var kc9ligTrack = {name:"kc9ligTrack",layer:kc9lig_markerLayer,update:do_trackUpdate,
-	                   plot:plot_track2,parse_trackfile:parse_trackfile,
-	                   update_graph:update_graph,track:[],series:0,e_land:estimate_landing};
-	var kc9lhwTrack = {name:"kc9lhwTrack",layer:kc9lhw_markerLayer,update:do_trackUpdate,
-                           plot:plot_track2,parse_trackfile:parse_trackfile,
-	                   update_graph:update_graph,track:[],series:1,e_land:estimate_landing};
-	var wb9skyTrack = {name:"wb9skyTrack",layer:wb9sky_markerLayer,update:do_trackUpdate,
-	                   plot:plot_track2,parse_trackfile:parse_trackfile,
-                           update_graph:update_graph,track:[],series:2,e_land:estimate_landing};
+<!--	var kc9ligTrack = {name:"kc9ligTrack",layer:kc9lig_markerLayer,update:do_trackUpdate,-->
+<!--	                   plot:plot_track2,parse_trackfile:parse_trackfile,-->
+<!--	                   update_graph:update_graph,track:[],series:0,e_land:estimate_landing};-->
+<!--	var kc9lhwTrack = {name:"kc9lhwTrack",layer:kc9lhw_markerLayer,update:do_trackUpdate,-->
+<!--                           plot:plot_track2,parse_trackfile:parse_trackfile,-->
+<!--	                   update_graph:update_graph,track:[],series:1,e_land:estimate_landing};-->
+<!--	var wb9skyTrack = {name:"wb9skyTrack",layer:wb9sky_markerLayer,update:do_trackUpdate,-->
+<!--	                   plot:plot_track2,parse_trackfile:parse_trackfile,-->
+<!--                           update_graph:update_graph,track:[],series:2,e_land:estimate_landing};-->
 
-    kc9ligTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandingpurple.clone());
-    kc9lhwTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandinggreen.clone());
-    wb9skyTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandingblue.clone());
+<!--    kc9ligTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandingpurple.clone());-->
+<!--    kc9lhwTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandinggreen.clone());-->
+<!--    wb9skyTrack.landing=new OpenLayers.Marker((new OpenLayers.LonLat(0,0)).transform(proj, map.getProjectionObject()),iconlandingblue.clone());-->
 
-    kc9ligTrack.landing.display(false);
-    kc9lhwTrack.landing.display(false);
-    wb9skyTrack.landing.display(false);
+<!--    kc9ligTrack.landing.display(false);-->
+<!--    kc9lhwTrack.landing.display(false);-->
+<!--    wb9skyTrack.landing.display(false);-->
 
-    landingLayer.addMarker(kc9ligTrack.landing);
-    landingLayer.addMarker(kc9lhwTrack.landing);
-    landingLayer.addMarker(wb9skyTrack.landing);
-    <!-- update once and then set on a 5 sec cycle -->
+<!--    landingLayer.addMarker(kc9ligTrack.landing);-->
+<!--    landingLayer.addMarker(kc9lhwTrack.landing);-->
+<!--    landingLayer.addMarker(wb9skyTrack.landing);-->
+<!--    <!-- update once and then set on a 5 sec cycle -->-->
 
-	kc9lhwTrack.update();
-	kc9ligTrack.update();
-    wb9skyTrack.update();
+<!--	kc9lhwTrack.update();-->
+<!--	kc9ligTrack.update();-->
+<!--    wb9skyTrack.update();-->
 
-	setInterval("kc9ligTrack.update()",5000); 
-	setInterval("kc9lhwTrack.update()",5000); 
- 	setInterval("wb9skyTrack.update()",5000);
+<!--	setInterval("kc9ligTrack.update()",5000); -->
+<!--	setInterval("kc9lhwTrack.update()",5000); -->
+<!-- 	setInterval("wb9skyTrack.update()",5000);-->
 
     </script>
 
 </body>
 </html>
 
-<!--    
+<!--
 Still to do:
 
 Interface work.
