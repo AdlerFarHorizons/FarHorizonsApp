@@ -13,5 +13,5 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require OpenLayers
+//= require OpenLayers/OpenLayers.js
 //= require_tree .
