@@ -1,0 +1,67 @@
+<h1>Track Page</h1>
+<p>Find me in app/views/track/index.html.erb<br>
+   Note controllers/track_controller index method is called by routes.rb
+   which establishes the page variables to use in the erb script</p>
+
+<p> Here's a div reserved for the map and track display</p>
+
+<div id ="navFrame" style="width:800px; height:500px">
+</div>
+<div>
+
+  <p> Here's an example of using vars passed by the controller</p>
+<h1>Listing sky_tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Platform</th>
+      <!--<th>Points</th>-->
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sky_tracks.each do |sky_track| %>
+      <tr>
+        <td><%= sky_track.source_id %></td>
+        <td><%= sky_track.platform %></td>
+        <!--<td><%= sky_track.points %></td>-->
+        <td><%= link_to 'Show', sky_track %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<h1>Listing ground_tracks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Chase vehicle</th>
+      <!--<th>Points</th>-->
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ground_tracks.each do |ground_track| %>
+      <tr>
+        <td><%= ground_track.source_id %></td>
+        <td><%= ground_track.chase_vehicle %></td>
+        <!--<td><%= ground_track.points %></td>-->
+        <td><%= link_to 'Show', ground_track %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= javascript_include_tag "application" %>
+
+
