@@ -1,0 +1,260 @@
+<html>
+<head>
+  <title>Far Horizons BalloonTracker</title>
+    <!-- Load up the JavaScript Libraries we will need -->
+    <!--    <script src="./firebug.js"></script> -->
+    <script src="OpenLayers.js"></script>
+    <script>
+      //alert( "Jquery Version:" + $.fn.jquery )
+    </script>
+    <script>
+        <!-- Parse data from Prediction KML file to show Balloon Burst -->
+        function parseData(req) {
+          g =  new OpenLayers.Format.KML({extractStyles: true});
+          html = ""
+          features = g.read(req.responseText);
+          for(var feat in features) {
+                html += "<ul>";
+                html += "<li>" +features[feat].attributes.description + "</li>";
+                html += "</ul>"
+          }
+          document.getElementById('output').innerHTML = html;
+        }
+        function load() {
+            OpenLayers.loadURL("aPREDICTION.kml", "", null, parseData); <!-- must change KML file everytime before flight -->
+        }
+    </script>
+
+</head>
+
+<body onload="initialChatLogStatus(); load();">
+  <div id="charts">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+    <!-- set up the map pane -->
+	  <td width="800px">
+	    <div id="map" style="width:897px; height:602px; border-right: 2px #cccccc solid; border-left: 2px #cccccc solid;"></div>
+      </td>
+	  <td>
+
+	    <table width="275px" border="0" cellpadding="0" cellspacing="0">
+	      <tr>
+		<td align="left">
+
+        <!-- Beginning of TABS -->
+        <div class="tabs">
+
+            <div class="tab">
+                <input type="radio" id="tab-1" name="tab-group-1" checked>
+                <label for="tab-1">Current</label>
+
+                <div class="content">
+                    <p>
+                    <div id="BalloonStats" style="background-image: url(img/mini-hero-bg.png); height:50px; width:270px; padding: 10px;"> </div><BR>
+                        <div id="line"></div>
+                    <!-- Beginning of chat code -->
+                    <!-- This is shown only when user needs to log in -->
+                    <div id="logInArea" style="background-image: url(img/mini-hero-bg.png); min-height:70px; width:270px; padding: 10px;">
+                        <form id="logInForm" onsubmit="logInProc();return false">
+                        <b>UserName:</b>
+                        <input id="userName" type="text">
+                        <input id="logInButton" name="logIn" type="submit" value="Log In">
+                        </form>
+                    </div>
+
+                <!-- this area is shown only once logged in -->
+                    <div id="chatArea" style="background-image: url(img/mini-hero-bg.png); min-height:200px; width:270px; padding: 10px;">
+                        <div id="oldMessages"></div>
+                        <form onsubmit="sendMessage();return false" id="messageForm"><br>
+                        <input id="message" type="text" value="TYPE MESSAGE HERE">
+                        </form>
+                        <div id="logoutbuttonhere">
+                            <form onsubmit="logOutProc(); return false">
+                            <input id="logOutButton" name="logOut" type="submit" value="Log Out">
+                            </form>
+                        </div>
+                    </div>
+                    <span id="response_msg"><b></b></span>
+                <!-- end of chat code -->
+
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" id="tab-2" name="tab-group-1">
+                <label for="tab-2">Charts</label>
+
+                <div class="content">
+                    <p>
+                    <div id="chart-container-1" style="width:275px; height:250px"></div>
+                    <div id="chart-container-2" style="width:275px; height:250px"></div>
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" id="tab-3" name="tab-group-1">
+                <label for="tab-3">Burst</label>
+
+                <div class="content">
+                    <p>
+                    <div id="line"></div>
+                    <div id="outputArea" style="background-image: url(img/mini-hero-bg.png); min-height:400px; width:270px; padding: 10px;">
+                        <b>Information from Predictive Track KML file:</b>
+                        <div id="output"></div>
+
+                    </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- End of TABS -->
+
+            </td>
+        </tr>
+        </table>
+        </td>
+    </tr>
+ </table>
+</div>
+
+
+<table width="50%" Border = "0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+    <!-- add in a toggle button for displaying balloon history -->
+    <input id="current-toggle" type="checkbox">
+    <label for="current-toggle">Show Only Current Positions?</label><BR>
+    <!-- add in a toggle button for displaying predicted landing positions -->
+    </td>
+    <td>
+    <input id="predict-toggle" type="checkbox">
+    <label for="predict-toggle">Show Predicted Landing Positions?</label><BR>
+    <!-- add in a button for starting a fake track -->
+    </td>
+    <td>
+    <form id="startFake" onsubmit="startFake();return false">
+    <input id="fakeButton" name="startfake" type="submit" value="Start Fake Track">
+    </form>
+    </td>
+  </tr>
+</table>
+
+
+
+<script defer="defer" type="text/javascript">
+window.onbeforeunload=windowClose;
+<!-- do some preliminary set up -->
+
+
+    var oldaltitude=0;
+    var maxaltitude=0;
+
+	<!-- this is for the point/packet pop-ups on the maps -->
+        AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
+        'autoSize': true});
+
+	<!-- this is the default set of options used in many calls -->
+	var options = {
+	projection: "EPSG:900913",
+        units: 'm',
+        numZoomLevels: 16,
+        maxResolution: 156543.0339,
+        maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
+        20037508.34, 20037508.34)
+	};
+
+	<!-- and create a projection, size, pixel offset and icons for -->
+	<!-- plotting  -->
+
+	var proj = new OpenLayers.Projection("EPSG:4326");
+        var size = new OpenLayers.Size(8,8);
+        var offset = new OpenLayers.Pixel(-4, -4);
+        var size2 = new OpenLayers.Size(12,12);
+        var offset2 = new OpenLayers.Pixel(-6, -6);
+        var iconred = new OpenLayers.Icon('img/markerSmallred.png',size,offset);
+        var iconblue = new OpenLayers.Icon('img/markerSmallblue.png',size,offset);
+        var icongreen = new OpenLayers.Icon('img/markerSmallgreen.png',size,offset);
+        var iconpurple = new OpenLayers.Icon('img/markerSmallpurple.png',size,offset);
+        var iconlandingblue = new OpenLayers.Icon('img/markerLandingblue.png',size2,offset2);
+        var iconlandinggreen = new OpenLayers.Icon('img/markerLandinggreen.png',size2,offset2);
+        var iconlandingpurple = new OpenLayers.Icon('img/markerLandingpurple.png',size2,offset2);
+        var iconBurst = new OpenLayers.Icon('sunny.png',size2,offset2);
+    <!-- end of set up, now start the main work -->
+
+	<!-- start up a map -->
+	var map = new OpenLayers.Map("map", options);
+
+	<!-- and create a couple of layers for the map display -->
+	var streets = new OpenLayers.Layer.TMS("Streets","http://localhost:2000/streets/",
+                     { 'type':'png', 'getURL':get_my_url } );
+	var aerial = new OpenLayers.Layer.TMS("Aerial","http://localhost:2000/aerial/",
+                     { 'type':'png', 'getURL':get_my_url } );
+
+	<!-- add these layers to the map -->
+        map.addLayer(streets);
+        map.addLayer(aerial);
+
+	<!-- we can set the initial center, add a switcher and a scale -->
+	var cpoint = new OpenLayers.LonLat(-87.8, 41.1);
+	map.setCenter(cpoint.transform(proj, map.getProjectionObject()),11);
+	var LaySwitch=(new OpenLayers.Control.LayerSwitcher());
+
+	map.addControl(LaySwitch);
+	map.addControl(new OpenLayers.Control.ScaleLine({geodesic: true,maxWidth:200}));
+
+    <!-- Add the Layer with the Prediction Track -->
+    <!-- Strategy.Fixed: requests features once and never requests new data -->
+
+
+    var predictionTrack = new OpenLayers.Layer.Vector("PREDICTION", {
+        strategies: [new OpenLayers.Strategy.Fixed()],
+        protocol: new OpenLayers.Protocol.HTTP({
+            url: "http://localhost:3000//tracking/aPREDICTION.kml",
+            format: new OpenLayers.Format.KML()
+        }),
+        style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
+        projection: proj
+    });
+
+    map.addLayer(predictionTrack);
+    </script>
+    <script>
+<!--    Adds the layer Van 1. Add two points connect them with a line-->
+    var van1 = new OpenLayers.Layer.Vector("Van 1");
+
+      point = new OpenLayers.Geometry.Point(-88.5, 42);
+      point.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+      van1.addFeatures([new OpenLayers.Feature.Vector(point)]);
+
+      point2 = new OpenLayers.Geometry.Point(-89.253, 41);
+      point2.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
+      van1.addFeatures([new OpenLayers.Feature.Vector(point2)]);
+
+      var geom_line = new OpenLayers.Geometry.LineString([ point, point2 ]);
+      van1.addFeatures([new OpenLayers.Feature.Vector(geom_line)]);
+      map.addLayer(van1);
+      </script>
+    
+    <script>
+<!--    Should eventually to request JSON, parse it, then update the map-->
+    function reloadThis(){
+    var requestedPoint = $.getJSON("http://localhost:3000/location_devices/52b6a983ec2a234140000006.json");
+    console.log(requestedPoint);
+    document.write(JSON.stringify(requestedPoint));
+    
+    
+<!--    var obj = JSON.parse(requestedPoint);-->
+<!--    document.write(requestedPoint.make);-->
+    //alert("hi");
+    };
+    reloadThis();
+    </script>
+
+<!--    JSON PARSE EXAMPLE-->
+<!--    var obj = jQuery.parseJSON( '{ "name": "John" }' );-->
+<!--    alert( obj.name );-->
+
+<!--    <script>-->
+
