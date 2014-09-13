@@ -3,6 +3,8 @@ FarHorizonsApp::Application.routes.draw do
   # Not associated with a model, so needs explicit route
   get 'track/index'
   
+  resources :tracking_home
+  
   resources :sky_tracks
 
   resources :routers
