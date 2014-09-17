@@ -6,5 +6,6 @@
 //= require jquery
 //= require jquery.cookies.2.2.0
 //= require ajax
+//= require ol3
 #//= require chatbox2
 #//= require trackerFunctions2
