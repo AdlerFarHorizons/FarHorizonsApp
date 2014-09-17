@@ -1,33 +1,15 @@
-<html>
-<head>
-  <title>Far Horizons BalloonTracker</title>
-    <!-- Load up the JavaScript Libraries we will need -->
-    <!--    <script src="./firebug.js"></script> -->
-    <script src="OpenLayers.js"></script>
-    <script>
-      //alert( "Jquery Version:" + $.fn.jquery )
-    </script>
-    <script>
-        <!-- Parse data from Prediction KML file to show Balloon Burst -->
-        function parseData(req) {
-          g =  new OpenLayers.Format.KML({extractStyles: true});
-          html = ""
-          features = g.read(req.responseText);
-          for(var feat in features) {
-                html += "<ul>";
-                html += "<li>" +features[feat].attributes.description + "</li>";
-                html += "</ul>"
-          }
-          document.getElementById('output').innerHTML = html;
-        }
-        function load() {
-            OpenLayers.loadURL("aPREDICTION.kml", "", null, parseData); <!-- must change KML file everytime before flight -->
-        }
-    </script>
-
-</head>
-
-<body onload="initialChatLogStatus(); load();">
+<!--example from openlayers.org-->
+<!doctype html>
+<html lang="en">
+  <head>
+    <style>
+      .map {
+        height: 400px;
+        width: 100%;
+      }
+    </style>
+    <title>OpenLayers 3 example</title>
+  </head>
   <div id="charts">
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -140,121 +122,33 @@
     </td>
   </tr>
 </table>
-
-
-
-<script defer="defer" type="text/javascript">
-window.onbeforeunload=windowClose;
-<!-- do some preliminary set up -->
-
-
-    var oldaltitude=0;
-    var maxaltitude=0;
-
-	<!-- this is for the point/packet pop-ups on the maps -->
-        AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, {
-        'autoSize': true});
-
-	<!-- this is the default set of options used in many calls -->
-	var options = {
-	projection: "EPSG:900913",
-        units: 'm',
-        numZoomLevels: 16,
-        maxResolution: 156543.0339,
-        maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34,
-        20037508.34, 20037508.34)
-	};
-
-	<!-- and create a projection, size, pixel offset and icons for -->
-	<!-- plotting  -->
-
-	var proj = new OpenLayers.Projection("EPSG:4326");
-        var size = new OpenLayers.Size(8,8);
-        var offset = new OpenLayers.Pixel(-4, -4);
-        var size2 = new OpenLayers.Size(12,12);
-        var offset2 = new OpenLayers.Pixel(-6, -6);
-        var iconred = new OpenLayers.Icon('img/markerSmallred.png',size,offset);
-        var iconblue = new OpenLayers.Icon('img/markerSmallblue.png',size,offset);
-        var icongreen = new OpenLayers.Icon('img/markerSmallgreen.png',size,offset);
-        var iconpurple = new OpenLayers.Icon('img/markerSmallpurple.png',size,offset);
-        var iconlandingblue = new OpenLayers.Icon('img/markerLandingblue.png',size2,offset2);
-        var iconlandinggreen = new OpenLayers.Icon('img/markerLandinggreen.png',size2,offset2);
-        var iconlandingpurple = new OpenLayers.Icon('img/markerLandingpurple.png',size2,offset2);
-        var iconBurst = new OpenLayers.Icon('sunny.png',size2,offset2);
-    <!-- end of set up, now start the main work -->
-
-	<!-- start up a map -->
-	var map = new OpenLayers.Map("map", options);
-
-	<!-- and create a couple of layers for the map display -->
-	var streets = new OpenLayers.Layer.TMS("Streets","http://localhost:2000/streets/",
-                     { 'type':'png', 'getURL':get_my_url } );
-	var aerial = new OpenLayers.Layer.TMS("Aerial","http://localhost:2000/aerial/",
-                     { 'type':'png', 'getURL':get_my_url } );
-
-	<!-- add these layers to the map -->
-        map.addLayer(streets);
-        map.addLayer(aerial);
-
-	<!-- we can set the initial center, add a switcher and a scale -->
-	var cpoint = new OpenLayers.LonLat(-87.8, 41.1);
-	map.setCenter(cpoint.transform(proj, map.getProjectionObject()),11);
-	var LaySwitch=(new OpenLayers.Control.LayerSwitcher());
-
-	map.addControl(LaySwitch);
-	map.addControl(new OpenLayers.Control.ScaleLine({geodesic: true,maxWidth:200}));
-
-    <!-- Add the Layer with the Prediction Track -->
-    <!-- Strategy.Fixed: requests features once and never requests new data -->
-
-
-    var predictionTrack = new OpenLayers.Layer.Vector("PREDICTION", {
-        strategies: [new OpenLayers.Strategy.Fixed()],
-        protocol: new OpenLayers.Protocol.HTTP({
-            url: "http://localhost:3000//tracking/aPREDICTION.kml",
-            format: new OpenLayers.Format.KML()
-        }),
-        style: {strokeColor: "green", strokeWidth: 5, strokeOpacity: 0.5},
-        projection: proj
-    });
-
-    map.addLayer(predictionTrack);
+<!-- ************************END HTML SETUP************************* -->
+<!-- start maps config -->
+    <script type="text/javascript">
+    //Define layers start
+    var baseLayer = new ol.layer.Tile({source: new ol.source.MapQuest({layer: 'sat'})});
+    var skyTrackLayer1 = new ol.layer.Tile({source: new ol.source.MapQuest({layer: 'sat'})});
+    //Define layers end
+    //Map add start
+      var map = new ol.Map({
+        target: 'map',
+        layers: [baseLayer,skyTrackLayer1],
+        view: new ol.View({
+          center: ol.proj.transform([37.41, 8.82], 'EPSG:4326', 'EPSG:3857'),
+          zoom: 4
+        })
+      });
+      //Map add end
+      //Map options start
+      var zoomSlider=(new ol.control.ZoomSlider());
+      map.addControl(zoomSlider);
+      //Map options end
+      var startPoint = new ol.Feature({
+        geometry: new ol.geom.Polygon(polyCoords),
+        labelPoint: new ol.geom.Point(labelCoords),
+        name: 'My Polygon'
+      });
+      //skyTrackLayer1.drawFeature(yourChangedFeature);
     </script>
-    <script>
-<!--    Adds the layer Van 1. Add two points connect them with a line-->
-    var van1 = new OpenLayers.Layer.Vector("Van 1");
-
-      point = new OpenLayers.Geometry.Point(-88.5, 42);
-      point.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-      van1.addFeatures([new OpenLayers.Feature.Vector(point)]);
-
-      point2 = new OpenLayers.Geometry.Point(-89.253, 41);
-      point2.transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject());
-      van1.addFeatures([new OpenLayers.Feature.Vector(point2)]);
-
-      var geom_line = new OpenLayers.Geometry.LineString([ point, point2 ]);
-      van1.addFeatures([new OpenLayers.Feature.Vector(geom_line)]);
-      map.addLayer(van1);
-      </script>
-    
-    <script>
-<!--    Should eventually to request JSON, parse it, then update the map-->
-    function reloadThis(){
-    var requestedPoint = $.getJSON("http://localhost:3000/location_devices/52b6a983ec2a234140000006.json");
-    console.log(requestedPoint);
-    document.write(JSON.stringify(requestedPoint));
-    
-    
-<!--    var obj = JSON.parse(requestedPoint);-->
-<!--    document.write(requestedPoint.make);-->
-    //alert("hi");
-    };
-    reloadThis();
-    </script>
-
-<!--    JSON PARSE EXAMPLE-->
-<!--    var obj = jQuery.parseJSON( '{ "name": "John" }' );-->
-<!--    alert( obj.name );-->
-
-<!--    <script>-->
-
+    </body>
+</html>
