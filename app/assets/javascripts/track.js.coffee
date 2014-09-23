@@ -157,6 +157,30 @@ vectorLayer.addFeatures [
   #polygonFeature
 ]
 
+# LN - How to add a point to lineFeature "in-place" and update the layer after
+# the feature has already been added to the layer.
+
+# Create a new point. Here I'm just using a clone of current value of tmpPoint, 
+# which happens to be the center of the map and is already transformed properly
+newPoint = tmpPoint.clone()
+
+# To find out exactly how to address the line feature points array I had to use
+# console.log since the API for OpenLayers.Geometry.LineString says it's a 
+# property called "points", but that doesn't exist. It's actually addressed as
+# "components" as you can see when you look at what we set as the "geometry" 
+# argument (the first argument) when we invoked the constructor to create the
+# lineFeature:
+console.log lineFeature.geometry
+lineFeature.geometry.components.push newPoint
+
+# In spite of all the noise on the interweb about refreshing a vector layer
+# involving adding a refresh strategy to the vector layer and using the
+# the refresh() method therein, I tried the following obvious approach based on
+# the redraw method that all Layer subclasses inherit from Layer:
+vectorLayer.redraw()
+# NOTE: There are functions listed in Layer.Vector that can refresh even
+# individual feature on the layer, but I didn't explore them.
+
 # GET'ing from a server route in JSON format using jQuery.
 # NOTE: the variable name '$' standard shorthand for 'jQuery'
 url = '/ground_tracks'
