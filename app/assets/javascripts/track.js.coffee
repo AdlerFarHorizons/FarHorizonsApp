@@ -59,6 +59,16 @@ style_green =
   pointerEvents: "visiblePainted"
   title: "this is a green line"
 
+#
+#    * Red style
+#    
+style_red =
+  strokeColor: "#FF0000"
+  strokeWidth: 3
+  strokeDashstyle: "dashdot"
+  pointRadius: 6
+  pointerEvents: "visiblePainted"
+  title: "this is a red line"
 
 #
 #    * Mark style
@@ -102,47 +112,49 @@ dst = map.getProjectionObject() # EPSG:900913 (a.k.a. EPSG:3857) x/y => meters
 # them into another variable for transforming to the OSM projection since the 
 # transformation is done "in place" and will modify the original variable as 
 # well if you used an equate to initialize it.
-pointRef = new OpenLayers.Geometry.Point(-111.04, 45.68)
-point1 = pointRef.clone() # LN - used for projection
-pointFeature1 = new OpenLayers.Feature.Vector(point1.transform(src, dst), null, style_blue)
-point2 = new OpenLayers.Geometry.Point(-105.04, 49.68)
-pointFeature2 = new OpenLayers.Feature.Vector(point2.transform(src, dst), null, style_green)
-point3 = new OpenLayers.Geometry.Point(-105.04, 49.68)
-pointFeature3 = new OpenLayers.Feature.Vector(point3.transform(src, dst), null, style_mark)
+pointRef = new OpenLayers.Geometry.Point(-87.6278, 41.8819 ) # Chicago
+#point1 = pointRef.clone() # LN - used for projection
+#pointFeature1 = new OpenLayers.Feature.Vector(pointRef.clone().transform(src, dst), null, style_blue)
+#point2 = new OpenLayers.Geometry.Point(-105.04, 49.68)
+#pointFeature2 = new OpenLayers.Feature.Vector(point2.transform(src, dst), null, style_green)
+#point3 = new OpenLayers.Geometry.Point(-105.04, 49.68)
+#pointFeature3 = new OpenLayers.Feature.Vector(point3.transform(src, dst), null, style_mark)
 
 # create a line feature from a list of points
 pointList = []
 tmpPoint = pointRef.clone()
-p = 0
+temp = tmpPoint.clone()
+pointList.push temp.transform( src, dst )
+p = 1
 
 while p < 15
   tmpPoint = new OpenLayers.Geometry.Point(tmpPoint.x + Math.random(1), tmpPoint.y + Math.random(1))
-  temp = tmpPoint.clone()
-  pointList.push temp.transform(src, dst)
+  pointList.push tmpPoint.clone().transform(src, dst)
   ++p
-lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList), null, style_green)
+lineFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.LineString(pointList), null, style_red)
 
-# create a polygon feature from a linear ring of points
-pointList = []
-p = 0
-
-while p < 6
-  a = p * (2 * Math.PI) / 7
-  r = Math.random(1) + 1
-  newPoint = new OpenLayers.Geometry.Point(pointRef.x + (r * Math.cos(a)), pointRef.y + (r * Math.sin(a)))
-  pointList.push newPoint.transform(src, dst)
-  ++p
-pointList.push pointList[0]
-linearRing = new OpenLayers.Geometry.LinearRing(pointList)
-polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]))
+## create a polygon feature from a linear ring of points
+#pointList = []
+#p = 0
+#
+#while p < 6
+#  a = p * (2 * Math.PI) / 7
+#  r = Math.random(1) + 1
+#  newPoint = new OpenLayers.Geometry.Point(pointRef.x + (r * Math.cos(a)), pointRef.y + (r * Math.sin(a)))
+#  pointList.push newPoint.transform(src, dst)
+#  ++p
+#pointList.push pointList[0]
+#linearRing = new OpenLayers.Geometry.LinearRing(pointList)
+#polygonFeature = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Polygon([linearRing]))
 map.addLayer vectorLayer
-map.setCenter new OpenLayers.LonLat(point1.x, point1.y), 5
+tmpPoint = pointRef.clone().transform( src, dst )
+map.setCenter new OpenLayers.LonLat(tmpPoint.x, tmpPoint.y), 5
 vectorLayer.addFeatures [
-  pointFeature1
-  pointFeature3
-  pointFeature2
+  #pointFeature1
+  #pointFeature3
+  #pointFeature2
   lineFeature
-  polygonFeature
+  #polygonFeature
 ]
 
 # GET'ing from a server route in JSON format using jQuery.
