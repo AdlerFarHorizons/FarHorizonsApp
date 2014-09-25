@@ -1,7 +1,7 @@
 FarHorizonsApp::Application.routes.draw do
   
   # Not associated with a model, so needs explicit route
-  get 'track/index'
+  get 'track_example/index'
   
   resources :sky_tracks
 
