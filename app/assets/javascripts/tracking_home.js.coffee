@@ -3,7 +3,6 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 //= require highcharts
 //= require testChart
-//= require jquery
 //= require jquery.cookies.2.2.0
 //= require ajax
 //= require ol3
