@@ -13,5 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require jquery.cookies.2.2.0
+//= require highcharts
+//= require OpenLayers3/ol3
+//= require ajax
 //= require OpenLayers/OpenLayers.js
 //= require_tree .
