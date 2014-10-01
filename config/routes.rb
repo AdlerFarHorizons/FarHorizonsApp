@@ -1,7 +1,9 @@
 FarHorizonsApp::Application.routes.draw do
   
   # Not associated with a model, so needs explicit route
-  get 'track/index'
+  get 'track_example' => 'track_example#index'
+  
+  get 'tracking_home' => 'tracking_home#index'
   
   resources :tracking_home
   
