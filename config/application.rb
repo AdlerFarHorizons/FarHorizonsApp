@@ -31,5 +31,6 @@ module FarHorizonsApp
               "/var/www/fileservice/farhorizons/maps"
     cmd = "bin/mapserver #{maproot}"
     Process.detach( spawn( cmd ) ) if `pgrep -f [m]apserver`.chomp == ""
+    debugger if ENV["DEBUG"]
   end
 end
