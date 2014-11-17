@@ -77,7 +77,7 @@ report = ""
 reports = 0
 
 Signal.trap( "TERM" ) do
-  log_entry( "garmin18xusbsim terminated by SIGTERM")
+  log_entry( "garmin18xusb terminated by SIGTERM")
   exit
 end
 
