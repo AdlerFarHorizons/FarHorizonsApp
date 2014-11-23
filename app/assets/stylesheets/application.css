@@ -10,4 +10,5 @@
  *
  *= require_self
  *= require_tree .
+ *= require OpenLayers3/ol3
  */

@@ -170,7 +170,7 @@ newPoint = tmpPoint.clone()
 # "components" as you can see when you look at what we set as the "geometry" 
 # argument (the first argument) when we invoked the constructor to create the
 # lineFeature:
-console.log lineFeature.geometry
+#console.log lineFeature.geometry
 lineFeature.geometry.components.push newPoint
 
 # In spite of all the noise on the interweb about refreshing a vector layer
@@ -185,8 +185,8 @@ vectorLayer.redraw()
 # NOTE: the variable name '$' standard shorthand for 'jQuery'
 url = '/ground_tracks'
 $.getJSON url, (data) ->
-  # 'data' contains all graound tracks in the data base, so it is an array
-  console.log data  
+  # 'data' contains all ground tracks in the data base, so it is an array
+  #console.log data  
   # Picking the last point from the first track returned:
   lastpoint = data[0].points[data[0].points.length - 1]
   
