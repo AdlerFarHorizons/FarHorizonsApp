@@ -1,7 +1,7 @@
 class GroundTrack
   include MongoMapper::Document
 
-  key :source_id, String
+  key :source_sn, String # LocationDevice serial number
   key :no_edit, Boolean, :default => true
   
   belongs_to :chase_vehicle
