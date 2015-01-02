@@ -12,8 +12,7 @@ class Point
   key :vx, Float
   key :vy, Float
   key :vz, Float
-  key :source_id, String # LocationDevice or Beacon
-  key :host_id, String # ChaseVehicle or Platform  
+  key :source_sn, String # LocationDevice or Beacon serial_no
   key :no_edit, Boolean, :default => true
 
   timestamps!

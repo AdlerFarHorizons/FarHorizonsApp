@@ -16,7 +16,7 @@ class Beacon
   private
 
   def initialize_point
-    self.point = Point.create( :source_id => self.id.to_s )
+    self.point = Point.create( :source_sn => self.serial_no )
     self.point.save
     self.save
   end
