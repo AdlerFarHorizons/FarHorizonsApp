@@ -76,12 +76,12 @@ class PointsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def point_params
-      params.require(:point).permit(:time, :x, :y, :z, :vg, :vx, :vy, :vz, :source_id, :host_id)
+      params.require(:point).permit(:time, :x, :y, :z, :vg, :vx, :vy, :vz, :source_sn)
     end
     
     def update_source_point
-      source = LocationDevice.find( @point.source_id )
-      source ||= Beacon.find( @point.source_id )
+      source = LocationDevice.find( @point.source_sn )
+      source ||= Beacon.find( @point.source_sn )
       source.point.set( point_params )
     end
     
@@ -92,9 +92,9 @@ class PointsController < ApplicationController
       if mission.start && !mission.actual_end
         if host.class.to_s == "Platform"
           track = host.sky_tracks.select { |x|
-            x.source_id == @point.source_id
+            x.source_sn == @point.source_sn
           }.first
-          track ||= SkyTrack.create( :source_id => @point.source_id.to_s,
+          track ||= SkyTrack.create( :source_sn => @point.source_sn.to_s,
                                       :platform => host )
           track.add_point( @point )
           track.save
@@ -102,7 +102,7 @@ class PointsController < ApplicationController
         elsif host.class.to_s == "ChaseVehicle"
           track = host.ground_track
           track ||= GroundTrack.create( 
-              :source_id => @point.source_id.to_s,
+              :source_sn => @point.source_sn.to_s,
               :chase_vehicle => host )
           track.add_point( @point )
           track.save

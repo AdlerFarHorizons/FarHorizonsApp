@@ -30,7 +30,7 @@
   <tbody>
     <% @sky_tracks.each do |sky_track| %>
       <tr>
-        <td><%= sky_track.source_id %></td>
+        <td><%= sky_track.source_sn %></td>
         <td><%= sky_track.platform %></td>
         <!--<td><%= sky_track.points %></td>-->
         <td><%= link_to 'Show', sky_track %></td>
@@ -56,7 +56,7 @@
   <tbody>
     <% @ground_tracks.each do |ground_track| %>
       <tr>
-        <td><%= ground_track.source_id %></td>
+        <td><%= ground_track.source_sn %></td>
         <td><%= ground_track.chase_vehicle %></td>
         <!--<td><%= ground_track.points %></td>-->
         <td><%= link_to 'Show', ground_track %></td>
