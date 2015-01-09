@@ -19,6 +19,8 @@ class ChaseVehiclesController < ApplicationController
 
   # GET /chase_vehicles/1/edit
   def edit
+    @object = @chase_vehicle
+    render "common/edit"
   end
 
   # POST /chase_vehicles

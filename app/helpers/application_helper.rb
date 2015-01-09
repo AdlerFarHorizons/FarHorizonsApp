@@ -3,14 +3,18 @@ module ApplicationHelper
   def assoc_tree( obj )
     # Create level 1 tree
     result = []
-    assocs = obj.associations.keys
+    assocs = []
+    obj.associations.keys.each do |x|
+      assocs << x unless obj.associations[x].class.to_s.include?("BelongsTo")
+    end
     # Add pseudo-associations: identified by key ending in '_id(s)'
     # but exclude '_id' itself and the parent id if there's a 'belongs to'
     # association.
-    obj.keys.keys.select { |x| 
+    obj.keys.keys.select { |x|
       !x.eql?( '_id' ) && 
-      !x.eql?( x[1].underscore + '_id' ) && 
+      !obj.associations[x.split("_id")[0].to_sym].class.to_s.include?("BelongsTo") && 
       x.singularize.end_with?( '_id' ) }.each {|x| assocs << x.to_sym}
+    puts "Level 1 assocs:#{assocs.to_s}"
     assocs.each do |x|
       parent_class = obj.class.to_s
       parent_id = obj.id.to_s
@@ -18,6 +22,7 @@ module ApplicationHelper
       klass_key = is_pseudo ? 
                   x.to_s.singularize.rpartition( '_id' )[0].to_sym : x
       assoc_klass = klass_key.to_s.singularize.titleize.split.join
+      puts "assoc_klass:#{assoc_klass.to_s}"
       if is_pseudo
         ids = eval( 'obj.' + x.to_s )
         assoc_objs = eval( assoc_klass + '.find( ids )' ) 
@@ -28,12 +33,12 @@ module ApplicationHelper
         assoc_type = x.to_s.end_with?( 's' ) ? 'Many' : 'One'
       else
         assoc_type = 
-          assoc_objs.association.to_s.split(":")[6].split('Association')[0]
+          eval(parent_class).associations[x].to_s.split(":")[6].split('Association')[0]
       end
       has_objs = false # Flag used to allow at least a nil placeholder
       unless assoc_objs.class == Array
         result << [1, parent_class, parent_id, assoc_type, 
-                   assoc_objs.class.to_s, assoc_objs ]
+                   assoc_klass, assoc_objs ]
         has_objs = true
       else
         assoc_objs.each do |y|
@@ -44,6 +49,7 @@ module ApplicationHelper
       result << [1, parent_class, parent_id, assoc_type, assoc_klass, 
                  nil] unless has_objs
     end
+    puts "***result:"
     result.each do |r|
       puts r.to_s
     end
@@ -78,7 +84,7 @@ module ApplicationHelper
         unless eval(sub_klass).keys['no_edit']
           if ( assoc == 'One' )
             if is_pseudo
-              ids = eval( 'object.' + y.to_s )
+              ids = object ? eval( 'object.' + y.to_s ) : nil
               assoc_objs = eval( sub_klass + '.find( ids )' )
             else
               assoc_objs = object ? eval( 'object.' + y.to_s ) : nil
@@ -90,8 +96,8 @@ module ApplicationHelper
           end
           if assoc == 'Many'
             if is_pseudo
-              ids = eval( 'object.' + y.to_s )
-              assoc_objs = eval( sub_klass + '.find( ids )' )
+              ids = object ? eval( 'object.' + y.to_s ) : nil
+              assoc_objs = ids ? eval( sub_klass ).find( ids ) : []
             else
               assoc_objs = object ? eval( 'object.' + y.to_s ) : []
             end
