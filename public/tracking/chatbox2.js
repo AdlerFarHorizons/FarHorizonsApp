@@ -50,6 +50,7 @@ function logInProc(){
     // talk to the server and sign in
     logID=logInForm.userName.value;
     response_msg.innerHTML="valid name, sending to server";
+    // this next line of code is puzzling...
     data="user=" + logInForm.userName.value +"&oper=signin"
 	Ajax_Send("POST","users2.php",data,checkSignIn);
     return false;
@@ -62,6 +63,7 @@ function checkSignIn(res){
 	return false;
     }
     if(res=="signin"){
+// CODE IS HAVING A HANG-UP HERE?
 	logInArea.style.display="none";
 	chatArea.style.display="block";
 	response_msg.innerHTML="Signed in with ";
