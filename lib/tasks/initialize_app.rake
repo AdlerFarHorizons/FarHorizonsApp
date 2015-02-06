@@ -8,9 +8,17 @@ task :reset_app => :environment do
   end
 end
 
+task :initialize_app => :environment do
+  unless Rails.env.production?
+    Rake::Task['reset_db'].execute
+    Rake::Task['set_db_indices'].execute
+  else
+    puts "Can't use this task in production environment"
+  end
+end
 # Ensure unique serial numbers for persistent objects and
 # unique identifier for mission
-task :reset_db_indices => :environment do
+task :clear_db_indices => :environment do
   unless Rails.env.production?
     # Clear out all indices first
     Dir.foreach("app/models") do |x|
@@ -21,7 +29,11 @@ task :reset_db_indices => :environment do
         klass.drop_indexes()
       end
     end
+  end
+end
 
+task :set_db_indices => :environment do
+  unless Rails.env.production?
     # Re-set indexes
     puts "Resetting indices..."
     Mission.ensure_index [[ :identifier, 1 ]], :unique => true
