@@ -68,21 +68,24 @@ class LocationDevicesController < ApplicationController
     if @location_device
       driver = @location_device.driver
       host = "http://#{request.host_with_port()}"
-      loc = @location_device.id.to_s
+      loc = @location_device.id.to_s      
       temp = ChaseServer.where(:location_device_id => loc ).first
+      speedup = params[:speedup]
       puts "ChaseServer:#{temp.id}"
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
       puts "ChaseVehicle:#{temp.id}"
       unless @location_device.driver_pid
         if ( (serv = ChaseServer.where( :location_device_id => loc ).first) &&
              (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )
-          Process.detach( pid = spawn( 
-              "bin/#{@location_device.driver} #{host} #{loc} #{veh.id.to_s}" ) )
+          Process.detach( spawn( 
+              "bin/#{@location_device.driver} #{host} #{loc} #{veh.ident} #{speedup}" ) )
           sleep 2
+          pid = `pgrep -f "[r]uby bin\/#{@location_device.driver}"`.chomp     
           puts "PID:#{pid}"
           # Test first if process was spawned and then if it's still running
           if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
-            @location_device.set( :driver_pid => pid )
+            @location_device.driver_pid = pid
+            @location_device.save
             render :inline => "Location Device #{@location_device.id} driver started as PID:#{pid}."
           else
             render :inline => "Could not start Location Device #{@location_device.id} driver.", 
@@ -111,11 +114,13 @@ class LocationDevicesController < ApplicationController
       if (pid = @location_device.driver_pid) && 
          `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
         Process.kill( 'TERM', @location_device.driver_pid )
-        @location_device.set( :driver_pid => nil )
+        @location_device.driver_pid = nil
+        @location_device.save
         render :inline => "Location Device #{@location_device.id} " +
                           "driver PID:#{@location_device.driver_pid} stopped."
       else
-        @location_device.set( :driver_pid => nil )
+        @location_device.driver_pid = nil
+        @location_device.save
         render :inline => "Failed: Location Device #{@location_device.id} " +
                           "driver already stopped",
                           status: :unprocessable_entity
@@ -134,6 +139,6 @@ class LocationDevicesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def location_device_params
-      params.require(:location_device).permit(:make, :model, :serial_no, :driver, :port, :point)
+      params.require(:location_device).permit(:make, :model, :serial_no, :driver, :port)
     end
 end
