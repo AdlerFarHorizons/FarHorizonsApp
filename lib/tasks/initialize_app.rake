@@ -1,8 +1,10 @@
 
 task :reset_app => :environment do
   unless Rails.env.production?
-    Rake::Task['reset_db_indices'].execute
+    Rake::Task['clear_db_indices'].execute
+    Rake::Task['set_db_indices'].execute
     Rake::Task['reset_db'].execute
+    Rake::Task['reset_redis'].execute
   else
     puts "Can't use this task in production environment"
   end
@@ -10,12 +12,14 @@ end
 
 task :initialize_app => :environment do
   unless Rails.env.production?
-    Rake::Task['reset_db'].execute
     Rake::Task['set_db_indices'].execute
+    Rake::Task['reset_db'].execute
+    Rake::Task['reset_redis'].execute
   else
     puts "Can't use this task in production environment"
   end
 end
+
 # Ensure unique serial numbers for persistent objects and
 # unique identifier for mission
 task :clear_db_indices => :environment do
@@ -36,7 +40,7 @@ task :set_db_indices => :environment do
   unless Rails.env.production?
     # Re-set indexes
     puts "Resetting indices..."
-    Mission.ensure_index [[ :identifier, 1 ]], :unique => true
+    Mission.ensure_index [[ :ident, 1 ]], :unique => true
     LocationDevice.ensure_index [[ :serial_no, 1 ]], :unique => true
     Beacon.ensure_index [[ :serial_no, 1]], :unique => true
     BeaconReceiver.ensure_index [[ :serial_no, 1 ]], :unique => true
