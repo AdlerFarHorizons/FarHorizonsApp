@@ -34,34 +34,28 @@ def update( data, uri )
   end
 end
 
-def loc_str_to_hash( loc_str )
-  # "Tue Oct 15 19:06:14 2013 41.889395N  87.578110W  316.035217"
-  temp = loc_str.split( " " )
-  time = Time.parse( loc_str )
-  temp = loc_str.split( " " )
-  { :time => time, :x => temp[5], :y => temp[6], :z => temp[7], 
-    :source_id => @source_id, :host_id => @host_id }  
-end
-
 def loc_str_to_json( loc_str )
   # "Tue Oct 15 19:06:14 2013 41.889395N  87.578110W  316.035217"
   temp = loc_str.split( " " )
   time = Time.parse( loc_str )
   temp = loc_str.split( " " )
-  { :time => time, :x => temp[5], :y => temp[6], :z => temp[7], 
-    :source_id => @loc_dev_id, :host_id => @host_id }.to_json  
+  lat = temp[5][0..temp[5].length-2].to_f * ( temp[5].end_with?('N') ? 1 : -1 )
+  lon = temp[6][0..temp[6].length-2].to_f * ( temp[6].end_with?('E') ? 1 : -1 )
+  alt = temp[7].to_f
+  { :time => time, :lat => lat, :alt => alt, :lon => lon, 
+    :id_source => @id_source, :ident => @ident }.to_json  
 end
 
-
-@serv_uri = ARGV[0] ? ARGV[0] : 'http://localhost:3000'
-@loc_dev_id = ARGV[1] ? ARGV[1] : '52b6a983ec2a234140000006' # 'GPS18XUSBsim'
-@host_id = ARGV[2] ? ARGV[2] : '52af8f771963fd1ab2000013' # Chase Vehicle 'Test0'
+@serv_uri = ARGV[0] # host uri, e.g., http://localhost:3000
+@id_source = ARGV[1] # location_device id
+@ident = ARGV[2] # ChaseVehicle ident
+@speedup = ARGV[3] ? ARGV[3].to_i : 1.0 # Simulation speed factor
 @log_file_name = "log/garmin18xusbsim.log"
-@cmd = "bin/gpsbabelsim18xusb"
+@cmd = "bin/gpsbabelsim18xusb #{@speedup.to_s}"
 
-unless @serv_uri && @loc_dev_id && @host_id
-  log_entry( "ERROR: Must have three arguments.")
-  puts "ERROR: garmin18xusb driver not started. Requires three arguments " +
+unless @serv_uri && @id_source
+  log_entry( "ERROR: Must have two arguments.")
+  puts "ERROR: garmin18xusb driver not started. Requires two arguments " +
        "ARGS: #{ARGV}"
   exit
 end
@@ -69,10 +63,10 @@ end
 last_log_entry = ""
 log_entry( "---------------")
 log_entry( "---------------")
-log_entry( "Started #{@cmd} on device id:#{@loc_dev_id} to server #{@serv_uri}")
+log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
 
 num_lines = 2 # Number of lines per position report
-num_reports = 5 # just post every nth report
+num_reports = 10 # just post every nth report
 report = ""
 reports = 0
 
@@ -98,6 +92,7 @@ begin
             log_entry( result ) unless result == last_log_entry
             last_log_entry = result
             reports = 0
+            puts report
           else
             reports += 1
           end
@@ -116,5 +111,3 @@ rescue Errno::ENOENT
 rescue PTY::ChildExited
   log_entry "#{@cmd} process died unexpectedly!"
 end
-
-

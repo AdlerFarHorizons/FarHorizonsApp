@@ -1,0 +1,175 @@
+#! /usr/bin/env ruby
+
+# Simulates APRS tracker coordinate data filtered and parsed from serial port 
+# packets.
+
+require 'pty'
+require 'net/http'
+require 'time'
+require 'json'
+
+def log_entry entry
+  log_file = File.new( @log_file_name, 'a' )
+  log_file.puts "#{Time.now.utc} #{entry}"
+  log_file.close
+end
+
+def update( data, uri )
+  begin
+    req = Net::HTTP::Post.new(uri.path, 
+          initheader = {'Content-Type' =>'application/json'} )
+    #req.set_form_data( data )
+    req.body = data
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    result = "#{res.code} #{res.message} #{uri.to_s}"
+  rescue Errno::ECONNREFUSED
+    result = "Server not available: #{uri.to_s}"
+  rescue
+    result = "Bad request #{uri.to_s} #{data}"
+  end
+end
+
+def aprs_str_to_json( aprs_str )
+  # "WB9SKY-11>APOT02,KA9SCF-15,WIDE1,K9ESV-10,WIDE2*,qAR,W9TMW:/151435z4058.42N/08754.43WO103/024 12.1V 21CTest/A=023677"
+  # "WB9SKY-11>APBL10,N9IO*,WIDE2-1:!4106.07N/08755.13WO317/025/A=005243Adler High Altitude Balloon"
+  # "KC9LHW-11>APBL10,WIDE1-1,WIDE2-1:!4106.18N/08755.31WO309/022/A=005939Adler Planetarium Balloon"
+  puts "aprs_str:#{aprs_str}"
+  call_sign = aprs_str.split(">")[0]
+  puts "@filter:#{@filter} class:#{@filter.class}"
+  if @filter.include?( call_sign.split("-")[0] )
+    temp = aprs_str.split(":")[1]
+    data_type = temp[0]
+    lat = ( temp[1..2].to_f + temp[3..7].to_f / 60.0 ) * ( temp[8] == "N" ? 1 : -1 )
+    lon = ( temp[10..12].to_f + temp[13..17].to_f / 60.0 ) * ( temp[18] == "E" ? 1 : -1 )
+    course = temp[20..22].to_i
+    speed = temp[24..26].to_f * @knots2mps
+    sym_id = temp[19]
+    sym_code = temp[27]
+    alt = temp.split("A=")[1][0..5].to_f * @ft2m
+    { :time => @sim_time, :lat => lat, :alt => alt, :lon => lon, 
+      :heading => course, :vg => speed, :id_source => @id_source, 
+      :ident => call_sign }.to_json  
+  end
+end
+
+def position_to_aprs( position, call_sign )
+  lat_dir_str = position[0] > 0 ? "N" : "S"
+  lat_deg = position[0].abs.floor
+  lat_deg_str = lat_deg.to_s
+  while lat_deg_str.length < 2
+    lat_deg_str = "0" + lat_deg_str
+  end
+  lat_min = ( ( ( ( position[0].abs - lat_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
+  lat_str = lat_deg_str + lat_min.to_s[2..5].insert(2,'.') + lat_dir_str
+  puts "lat:#{position[0]} lat_deg_str:#{lat_deg_str} lat_min:#{lat_min} lat_str:#{lat_str}"
+  lon_dir_str = position[1] > 0 ? "E" : "W"
+  lon_deg = position[1].abs.floor
+  lon_deg_str = lon_deg.to_s
+  while lon_deg_str.length < 3
+    lon_deg_str = "0" + lon_deg_str
+  end
+  lon_min = ( ( ( ( position[1].abs - lon_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
+  lon_str = lon_deg_str + lon_min.to_s[2..5].insert(2,'.') + lon_dir_str
+  puts "lon:#{position[1]} lon_deg_str:#{lon_deg_str} lon_min:#{lon_min} lon_str:#{lon_str}"
+  alt_str = ( ( ( ( position[2]/@ft2m + 0.5 ).floor * 10 ) + 1 ) / 1e7 ).to_s[2..7]
+  puts "alt:#{position[2]/@ft2m} alt_str:#{alt_str}"
+  dir_str = ( ( ( ( position[3] + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s[2..4]
+  spd_str = ( ( ( ( position[4]/@knots2mps + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s[2..4]
+  
+  "#{call_sign}>APBL10,N9IO*,WIDE2-1:!#{lat_str}/#{lon_str}O#{dir_str}" +
+   "/#{spd_str}/A=#{alt_str}#{@comment}"
+end
+
+def wind_speed( alt ) 
+  @wind_ampl * Math.sin( alt / @wind_scale ) + @wind_grad * alt
+end
+
+def update_sim( pos )
+  prev_pos = pos
+  pos[2] += ( @isBurst ? @descent_rate : @ascent_rate ) * @t_samp
+  if pos[2] < 200.0
+    pos = prev_pos
+    pos[2] = 200.0
+    pos[3] = 0.0
+    pos[4] = 0.0
+  else
+    pos[0] += ( wind_speed( pos[2] ) * Math.sin( @wind_angle * @deg2rad ) * @t_samp / @lat_scale )
+    pos[1] += ( wind_speed( pos[2] ) * Math.cos( @wind_angle * @deg2rad ) * @t_samp * ( Math.cos( pos[0]) / @lat_scale ) )
+    pos[3] = @wind_angle
+    pos[4] = wind_speed( pos[2] )
+  end
+  @sim_time += @t_samp
+  @isBurst = @isBurst ? @isBurst : pos[2] > @burst_alt
+  #puts pos.to_s
+end
+puts "ARGV:#{ARGV.to_s}"
+@serv_uri = ARGV[0] # host uri, e.g., http://localhost:3000
+@id_source = ARGV[1] # beacon_receiver id
+@filter = JSON.parse(ARGV[2]) # Array of call signs
+@speedup = ARGV[3] ? ARGV[3].to_i : 1 # Simulation speed factor
+@uri = URI( "#{@serv_uri}/points" )
+@log_file_name = "log/kenwoodTMD700sim.log"
+
+# Sim parameters
+@call_sign = 'KC9LIG-11' #'WB9SKY-11'
+@comment = "Adler High Altitude Balloon"
+@period = 12 # Number of sim samples between APRS reports.
+@t_samp = 5 # seconds
+@sim_time = 0 # accelerated time starting at real start time 
+@ascent_rate = 6.0 # m/s
+@descent_rate = -12.0 # m/s
+@burst_alt = 3E4 # m
+@isBurst = false
+@wind_ampl = 25.0 # m/s
+@wind_grad = 5.5E-4 # m/s/m
+@wind_scale = 3.7E4 # m
+@wind_angle = 30.0 # degrees
+@start_lat = 42.0 # degrees
+@start_lon = -89.9 # degrees
+@start_alt = 300.0 # m
+@earth_radius = 6.7E6 # m
+@lat_scale = 1.124E5 # m/deg
+@knots2mps = 0.51444444444 # m/s
+@ft2m = 0.3048 # m
+@deg2rad = 3.1415927 / 180.0 # rad
+
+unless @serv_uri && @id_source && @filter
+  log_entry( "ERROR: Must have three arguments.")
+  puts "ERROR: kenwoodTMD700sim driver not started. Requires three arguments " +
+       "ARGS: #{ARGV}"
+  exit
+end
+
+last_log_entry = ""
+log_entry( "---------------")
+log_entry( "---------------")
+log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
+
+Signal.trap( "TERM" ) do
+  log_entry( "kenwoodTMD700sim terminated by SIGTERM")
+  exit
+end
+
+position = [@start_lat, @start_lon, @start_alt]
+@isBurst = false
+@sim_time = Time.now()
+samp_count = 0
+while true do
+  samp_count +=1
+  update_sim( position )
+  if samp_count == @period
+    form_data = aprs_str_to_json( position_to_aprs( position, @call_sign ) )
+    result = update( form_data, @uri )
+    #puts form_data
+    log_entry( result ) unless result == last_log_entry
+    last_log_entry = result
+    samp_count = 0
+  end
+  sleep 1.0 * @t_samp / @speedup
+end
+
+
+
+
