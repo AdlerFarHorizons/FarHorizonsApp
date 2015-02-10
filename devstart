@@ -1,16 +1,16 @@
 #! /bin/bash
 #
-if [ $1 == '--help' ]
+if [ "$1" == '--help' ]
 then
   echo "Start from a terminal with: ./devstart [--help | --debug]"
   echo "Starts services if necessary and then the FarHorizonsApp application."
   echo "  Options:"
-  echo "    --debug    Enter command line debugging (ruby debugge\) on startup."
+  echo "    --debug    Enter command line debugging (ruby debugger) on startup."
   exit
 fi
 # Start mongod
 local=$PWD
-if [ $1 == '--debug' ]
+if [ "$1" == '--debug' ]
 then
   export DEBUG=""
 fi
@@ -34,12 +34,18 @@ then
   echo "stopping redis-server on port 6380..."
   kill $(pgrep -f redis-server.*6380)
 fi
+sleep 2
 echo "Starting new instance of redis-server on port 6380"
 #Delete prior redis console log(s)
 rm ./log/redis-console.log*
 redis-server ./config/redis-fh.conf > ./log/redis-console.log &
 echo "waiting 5 seconds for redis-server to start..."
 sleep 5
+
+echo "(Re-)starting map file server on port 2000"
+pkill -f [m]apserver
+sleep 2
+bin/mapserver $HOME/s3store/farhorizons/maps &
 
 echo "starting application..."
 rails server --binding 127.0.0.1
