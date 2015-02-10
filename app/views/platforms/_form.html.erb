@@ -1,46 +1,25 @@
-<% @sub_obj = @object %>
-<% tree = assoc_tree(@object) %>
-<%# tree.each_with_index do |z,k| %>
-  <%#= "#{k} #{z[0]} #{z[1]} #{z[2]} #{z[3]} #{z[4]} #{z[5] ? z[5]['_id'] : 'nil' }" %><br>
-<%# end %>
-<%= render 'sub_form' %>
-<% prev_klass = '' %>
-<% tree.each_with_index do |branch, ib| %>
-  <% level = branch[0] %>
-  <% @parent_klass = branch[1] %>
-  <% parent_id = branch[2] %>
-  <% assoc_type = branch[3] %>
-  <% klass = branch[4] %>
-  <% @sub_obj = branch[5] %>
-  <!-- Heading only if no previous klass at same level after level went up -->
-  <% index = 1 %>
-  <% delta_level = 0 %>
-  <% not_first = false %>
-  <% until ( ( ib - index ) < 0 || delta_level > 0 ) %>
-     <%  prior_branch = tree[ib - index] %>
-     <%  prior_klass = ib == 0 ? '' : prior_branch[4] %>
-     <%  delta_level = ib == 0 ? -1 : level - prior_branch[0] %>
-     <%  not_first = not_first || ( ( klass == prior_klass ) && ( delta_level == 0 ) ) %>
-     <!--<br><%= "#{ib} #{klass} #{index} #{prior_klass} #{delta_level} #{not_first} #{@parent_klass}" %>-->
-     <% #puts "#{ib} #{klass} #{index} #{prior_klass} #{delta_level} #{not_first} #{@parent_klass}" %>
-     <%  index +=1 %>
-  <% end %>
-  <!--<br><%= "#{not_first}" %>-->
-  <% if !not_first %>
-    <div style="border: black solid 2px; margin-top: 5px; margin-left: <%= (level-1)*20 %>px">
-      <b><%= "#{klass.pluralize.titleize}" %></b>
-    <% key = klass.titleize.downcase.split.join('_').to_sym %>
-    <% object_name = @parent_klass.titleize.downcase.split.join("_") %>
-    <%= link_to "Add New #{key.to_s.singularize.titleize}", { :controller => key.to_s.pluralize, 
-                             :action => :create, 
-                             key.to_s.singularize.to_sym => { (object_name + '_id').to_sym => parent_id } }, 
-                             :method => :post %>
+<%= form_for(@platform) do |f| %>
+  <% if @platform.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@platform.errors.count, "error") %> prohibited this platform from being saved:</h2>
+
+      <ul>
+      <% @platform.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
     </div>
   <% end %>
-  <% if @sub_obj && !@sub_obj.keys['no_edit'] %>
-    <div style="border: black solid 2px; margin-top: 5px; margin-left: <%= level*20 %>px">
-    <%= render 'sub_form' %>
-    </div>
-  <% end %>
-  <% prev_klass = klass %>
+
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :ident %><br>
+    <%= f.text_field :ident %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
 <% end %>
