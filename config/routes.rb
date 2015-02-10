@@ -1,5 +1,7 @@
 FarHorizonsApp::Application.routes.draw do
   
+  get 'welcome/index'
+
   # Not associated with a model, so needs explicit route
   get 'track_example' => 'track_example#index'
   
@@ -27,20 +29,23 @@ FarHorizonsApp::Application.routes.draw do
 
   resources :chase_servers
 
-  resources :beacon_transmitters
-
   resources :beacon_receivers
 
   resources :beacons
   
   post 'location_devices/start/:id' => 'location_devices#start'
+  post 'location_devices/start/:id/:speedup' => 'location_devices#start' # for sim drivers
   post 'location_devices/stop/:id' => 'location_devices#stop'
+
+  post 'beacon_receivers/start/:id' => 'beacon_receivers#start'
+  post 'beacon_receivers/start/:id/:speedup' => 'beacon_receivers#start' # for sim drivers
+  post 'beacon_receivers/stop/:id' => 'beacon_receivers#stop'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'welcome#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
