@@ -15,7 +15,7 @@
   <tbody>
     <% @ground_tracks.each do |ground_track| %>
       <tr>
-        <td><%= ground_track.source_sn %></td>
+        <td><%= ground_track.id_source %></td>
         <td><%= ground_track.chase_vehicle %></td>
         <td><%= ground_track.points %></td>
         <td><%= link_to 'Show', ground_track %></td>

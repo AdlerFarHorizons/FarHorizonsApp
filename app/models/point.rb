@@ -21,8 +21,8 @@ class Point
   key :vg, Float, :default => 0.0 
   key :heading, Float, :default => 0.0
   
-  key :source_sn, String # LocationDevice or Beacon serial_no
-  key :handle, String # APRS call sign, beacon ID or vehicle handle
+  key :id_source, String # LocationDevice or Beacon id
+  key :ident, String # beacon ident or vehicle ident 
   key :no_edit, Boolean, :default => true
 
   timestamps!

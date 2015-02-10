@@ -16,18 +16,13 @@
 </p>
 
 <p>
-  <strong>Call sign:</strong>
-  <%= @beacon.call_sign %>
+  <strong>Ident:</strong>
+  <%= @beacon.ident %>
 </p>
 
 <p>
   <strong>Persistent:</strong>
   <%= @beacon.persistent %>
-</p>
-
-<p>
-  <strong>Point:</strong>
-  <%= @beacon.point %>
 </p>
 
 <%= link_to 'Edit', edit_beacon_path(@beacon) %> |

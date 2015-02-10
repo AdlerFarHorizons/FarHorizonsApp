@@ -69,7 +69,7 @@ class PlatformsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def platform_params
-      params.require(:platform).permit(:description, :identifier, :mission_id,
+      params.require(:platform).permit(:description, :ident, :mission_id,
                                        :platform_server_id, :beacon_ids)
     end
 end

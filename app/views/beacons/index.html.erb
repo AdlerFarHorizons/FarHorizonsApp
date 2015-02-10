@@ -6,9 +6,8 @@
       <th>Make</th>
       <th>Model</th>
       <th>Serial no</th>
-      <th>Call sign</th>
+      <th>Ident</th>
       <th>Persistent</th>
-      <th>Point</th>
       <th></th>
       <th></th>
       <th></th>
@@ -21,9 +20,8 @@
         <td><%= beacon.make %></td>
         <td><%= beacon.model %></td>
         <td><%= beacon.serial_no %></td>
-        <td><%= beacon.call_sign %></td>
+        <td><%= beacon.ident %></td>
         <td><%= beacon.persistent %></td>
-        <td><%= beacon.point %></td>
         <td><%= link_to 'Show', beacon %></td>
         <td><%= link_to 'Edit', edit_beacon_path(beacon) %></td>
         <td><%= link_to 'Destroy', beacon, method: :delete, data: { confirm: 'Are you sure?' } %></td>
