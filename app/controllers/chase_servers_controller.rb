@@ -69,6 +69,6 @@ class ChaseServersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chase_server_params
-      params.require(:chase_server).permit(:hostname, :make, :model, :serial_no, :sw_version, :location_device_id, :beacon_transmitter_id, :beacon_receiver_ids, :router_id, :persistent)
+      params.require(:chase_server).permit(:hostname, :make, :model, :serial_no, :sw_version, :location_device_id, :beacon_receiver_ids, :router_id, :persistent)
     end
 end
