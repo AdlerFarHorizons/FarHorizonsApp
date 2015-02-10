@@ -1,17 +1,7 @@
 
-task :reset_app => :environment do
-  unless Rails.env.production?
-    Rake::Task['clear_db_indices'].execute
-    Rake::Task['set_db_indices'].execute
-    Rake::Task['reset_db'].execute
-    Rake::Task['reset_redis'].execute
-  else
-    puts "Can't use this task in production environment"
-  end
-end
-
 task :initialize_app => :environment do
   unless Rails.env.production?
+    Rake::Task['clear_db_indices'].execute
     Rake::Task['set_db_indices'].execute
     Rake::Task['reset_db'].execute
     Rake::Task['reset_redis'].execute
@@ -30,7 +20,11 @@ task :clear_db_indices => :environment do
         model = x.split('.rb')[0]
         klass = eval(model.titleize.split.join)
         puts "Dropping indices for:klass:#{klass.to_s.pluralize}"
-        klass.drop_indexes()
+        begin
+          klass.drop_indexes()
+        rescue Exception => e
+          puts e.message
+        end
       end
     end
   end
