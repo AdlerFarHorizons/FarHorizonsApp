@@ -1,6 +1,8 @@
-<h1>Editing beacon_receiver</h1>
+<% @object = @beacon_receiver%>
+<h1>Editing <%=  @object.class.to_s.titleize %></h1>
+<id="notice">Message:<%= notice %><br><br>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @beacon_receiver %> |
-<%= link_to 'Back', beacon_receivers_path %>
+<%= link_to 'Show', @object %> |
+<%= link_to 'Back', "/#{@object.class.to_s.pluralize.titleize.downcase.split.join('_')}" %>

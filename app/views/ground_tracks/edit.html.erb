@@ -1,6 +1,8 @@
-<h1>Editing ground_track</h1>
+<% @object = @ground_track%>
+<h1>Editing <%=  @object.class.to_s.titleize %></h1>
+<id="notice">Message:<%= notice %><br><br>
 
 <%= render 'form' %>
 
-<%= link_to 'Show', @ground_track %> |
-<%= link_to 'Back', ground_tracks_path %>
+<%= link_to 'Show', @object %> |
+<%= link_to 'Back', "/#{@object.class.to_s.pluralize.titleize.downcase.split.join('_')}" %>
