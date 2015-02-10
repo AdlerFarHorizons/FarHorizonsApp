@@ -28,7 +28,6 @@ class PointsController < ApplicationController
 
     respond_to do |format|
       if @point.save
-        update_source_point
         if add_point_to_track
           format.html { redirect_to @point, notice: 'Point was successfully added to a track.' }
           format.json { render action: 'show', status: :created, location: @point }
@@ -76,34 +75,37 @@ class PointsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def point_params
-      params.require(:point).permit(:time, :x, :y, :z, :vg, :vx, :vy, :vz, :source_sn)
-    end
-    
-    def update_source_point
-      source = LocationDevice.find( @point.source_sn )
-      source ||= Beacon.find( @point.source_sn )
-      source.point.set( point_params )
+      params.require(:point).permit(:time, :x, :y, :z, :vx, :vy, :vz, :lat, 
+        :lon, :alt, :vg, :heading, :id_source, :ident)
     end
     
     def add_point_to_track
-      host = ChaseVehicle.find( @point.host_id )
-      host ||= Platform.find( @point.host_id )
+      device = LocationDevice.find( @point.id_source )
+      device ||= Beacon.find_by_ident( @point.ident )
+      chase_serv = ChaseServer.find_by_location_device_id( device.id.to_s )
+      host = chase_serv ? 
+             ChaseVehicle.find_by_chase_server_id( chase_serv.id.to_s ) : nil
+      host ||= Platform.find_by_beacon_ids( device.id.to_s )
+      puts "device.id:#{device.id.to_s} #{Platform.find_by_beacon_ids( device.id.to_s )}"
+      puts "device:#{device.to_s} host:#{host}"
       mission = host.mission
       if mission.start && !mission.actual_end
         if host.class.to_s == "Platform"
+          puts "host:#{host.id.to_s} point:#{@point.id.to_s}"
           track = host.sky_tracks.select { |x|
-            x.source_sn == @point.source_sn
+            x.id_source == device.id.to_s
           }.first
-          track ||= SkyTrack.create( :source_sn => @point.source_sn.to_s,
-                                      :platform => host )
+          track ||= SkyTrack.create( :id_source => device.id.to_s,
+                                      :platform => host, :ident => @point.ident )
           track.add_point( @point )
           track.save
+          host.sky_tracks << track unless track.platform
+          host.save
           return track
         elsif host.class.to_s == "ChaseVehicle"
           track = host.ground_track
-          track ||= GroundTrack.create( 
-              :source_sn => @point.source_sn.to_s,
-              :chase_vehicle => host )
+          track ||= GroundTrack.create( :id_source => @point.id_source.to_s,
+                                        :chase_vehicle => host, :ident => @point.ident )
           track.add_point( @point )
           track.save
           return track
