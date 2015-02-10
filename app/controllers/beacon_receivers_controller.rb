@@ -1,5 +1,7 @@
 class BeaconReceiversController < ApplicationController
-  before_action :set_beacon_receiver, only: [:show, :edit, :update, :destroy]
+  before_action :set_beacon_receiver, only: 
+    [:show, :edit, :update, :destroy, :start, :stop]
+
 
   # GET /beacon_receivers
   # GET /beacon_receivers.json
@@ -61,6 +63,75 @@ class BeaconReceiversController < ApplicationController
     end
   end
 
+  # /beacon_receivers/start/1
+  # /beacon_receivers/start/1.json
+  def start
+    if @beacon_receiver
+      driver = @beacon_receiver.driver
+      host = "http://#{request.host_with_port()}"
+      bcnrcvr = @beacon_receiver.id.to_s
+      speedup = params[:speedup]
+      temp = ChaseServer.where(:beacon_receiver_ids => bcnrcvr ).first
+      puts "ChaseServer:#{temp.id}"
+      temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
+      puts "ChaseVehicle:#{temp.id}"
+      unless @beacon_receiver.driver_pid
+        if ( (serv = ChaseServer.where( :beacon_receiver_ids => bcnrcvr ).first) &&
+             (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )
+          Process.detach( spawn( 
+              "bin/#{@beacon_receiver.driver} #{host} #{bcnrcvr} '#{RedisConnection.get('beacon_filter')}' #{speedup} " ) )
+          sleep 2
+          pid = `pgrep -f "[r]uby bin\/#{@beacon_receiver.driver}"`.chomp     
+          puts "PID:#{pid}"
+          # Test first if process was spawned and then if it's still running
+          if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
+            @beacon_receiver.driver_pid = pid
+            @beacon_receiver.save
+            render :inline => "Beacon Receiver #{@beacon_receiver.id} driver started as PID:#{pid}."
+          else
+            render :inline => "Could not start Beacon Receiver #{@beacon_receiver.id} driver.", 
+                    status: :accepted
+          end
+        else
+          render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
+                            "not attached to a ChaseServer assigned to " +
+                            "a ChaseVehicle.", status: :unprocessable_entity
+        end
+      else
+        render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
+                          "driver already running as PID:#{@beacon_receiver.driver_pid}",
+                          status: :unprocessable_entity
+      end
+    else
+      render :inline => "Failed: Beacon Receiver #{params[:id]} not found.",
+             status: :not_found
+    end
+  end
+  
+  # /beacon_receivers/stop/1
+  # /beacon_receivers/stop/1.json
+  def stop
+    if @beacon_receiver
+      if (pid = @beacon_receiver.driver_pid) && 
+         `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
+        Process.kill( 'TERM', @beacon_receiver.driver_pid )
+        @beacon_receiver.driver_pid = nil
+        @beacon_receiver.save
+        render :inline => "Beacon Receiver #{@beacon_receiver.id} " +
+                          "driver PID:#{@beacon_receiver.driver_pid} stopped."
+      else
+        @beacon_receiver.driver_pid = nil
+        @beacon_receiver.save
+        render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
+                          "driver already stopped",
+                          status: :unprocessable_entity
+      end
+    else
+      render :inline => "Failed: Beacon Receiver #{params[:id]} not found.",
+             status: :not_found
+    end
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_beacon_receiver
