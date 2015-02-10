@@ -1,7 +1,8 @@
 class SkyTrack
   include MongoMapper::Document
 
-  key :source_sn, String # Beacon serial_no
+  key :id_source, String # Beacon id
+  key :ident, String
   key :no_edit, Boolean, :default => true
   
   belongs_to :platform

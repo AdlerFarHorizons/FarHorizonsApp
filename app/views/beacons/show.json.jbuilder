@@ -1,1 +1,1 @@
-json.extract! @beacon, :make, :model, :serial_no, :call_sign, :persistent, :point, :created_at, :updated_at
+json.extract! @beacon, :make, :model, :serial_no, :ident, :persistent, :created_at, :updated_at

@@ -1,1 +1,1 @@
-json.extract! @ground_track, :source_sn, :chase_vehicle, :points, :created_at, :updated_at
+json.extract! @ground_track, :id_source, :chase_vehicle, :points, :created_at, :updated_at

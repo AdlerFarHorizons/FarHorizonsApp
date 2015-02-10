@@ -1,4 +1,4 @@
 json.array!(@chase_vehicles) do |chase_vehicle|
-  json.extract! chase_vehicle, :description, :identifier, :mission, :location_device, :beacon_receivers, :beacon_transmitter, :ground_track
+  json.extract! chase_vehicle, :description, :ident, :mission, :location_device, :beacon_receivers, :ground_track
   json.url chase_vehicle_url(chase_vehicle, format: :json)
 end

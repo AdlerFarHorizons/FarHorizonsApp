@@ -2,7 +2,7 @@ class Mission
   include MongoMapper::Document
 
   key :description, String
-  key :identifier, String
+  key :ident, String
   key :start, Time
   key :target_launch, Time
   key :actual_launch, Time

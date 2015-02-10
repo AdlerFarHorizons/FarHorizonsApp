@@ -71,7 +71,7 @@ class ChaseVehiclesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def chase_vehicle_params
-      params.require(:chase_vehicle).permit(:description, :identifier, 
+      params.require(:chase_vehicle).permit(:description, :ident, 
                                             :mission_id, :chase_server_id )
     end
 end
