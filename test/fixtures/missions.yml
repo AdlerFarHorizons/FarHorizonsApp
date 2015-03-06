@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: 
+  identifier: 
+  start: 
+  target_launch: 
+  actual_launch: 
+  target_end: 
+  actual_end: 
+
+two:
+  description: 
+  identifier: 
+  start: 
+  target_launch: 
+  actual_launch: 
+  target_end: 
+  actual_end: 

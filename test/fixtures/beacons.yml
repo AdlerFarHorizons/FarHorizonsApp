@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  make: 
+  model: 
+  serial_no: 
+  call_sign: 
+  persistent: false
+
+two:
+  make: 
+  model: 
+  serial_no: 
+  call_sign: 
+  persistent: false

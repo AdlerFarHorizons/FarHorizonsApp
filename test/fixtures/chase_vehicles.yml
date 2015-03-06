@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: 
+  identifier: 
+  chase_server_id: 
+
+two:
+  description: 
+  identifier: 
+  chase_server_id: 

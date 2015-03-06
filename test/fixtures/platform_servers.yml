@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  hostname: 
+  make: 
+  model: 
+  serial_no: 
+  sw_version: 
+  persistent: false
+
+two:
+  hostname: 
+  make: 
+  model: 
+  serial_no: 
+  sw_version: 
+  persistent: false
