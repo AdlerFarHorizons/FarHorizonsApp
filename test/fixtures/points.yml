@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  time: 
+  x: 
+  'y': 
+  z: 
+  vg: 
+  vx: 
+  vy: 
+  vz: 
+  source_id: 
+  host_id: 
+  no_edit: false
+
+two:
+  time: 
+  x: 
+  'y': 
+  z: 
+  vg: 
+  vx: 
+  vy: 
+  vz: 
+  source_id: 
+  host_id: 
+  no_edit: false

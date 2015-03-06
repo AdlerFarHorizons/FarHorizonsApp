@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  description: 
+  identifier: 
+  beacon_ids: 
+  platform_server_id: 
+
+two:
+  description: 
+  identifier: 
+  beacon_ids: 
+  platform_server_id: 

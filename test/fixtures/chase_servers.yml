@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  hostname: 
+  make: 
+  model: 
+  serial_no: 
+  sw_version: 
+  location_device_id: 
+  beacon_transmitter_id: 
+  beacon_receiver_ids: 
+  router_id: 
+  persistent: false
+
+two:
+  hostname: 
+  make: 
+  model: 
+  serial_no: 
+  sw_version: 
+  location_device_id: 
+  beacon_transmitter_id: 
+  beacon_receiver_ids: 
+  router_id: 
+  persistent: false
