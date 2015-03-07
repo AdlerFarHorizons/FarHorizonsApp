@@ -7,6 +7,8 @@ FarHorizonsApp::Application.routes.draw do
   
   get 'tracking_home' => 'tracking_home#index'
   
+  get 'tracker' => 'tracker#index'
+
   resources :sky_tracks
 
   resources :routers
