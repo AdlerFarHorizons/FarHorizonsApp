@@ -19,13 +19,17 @@
 //= require turbolinks
 //
 // Required custom libraries (lib/assets/javascripts/)
-// 
+//= require trackerFunctions2
+//
 // Required vendor libraries (app/vendor/javascripts/)
 //= require jquery.cookies.2.2.0
 //= require highcharts
 //= require OpenLayers3/ol3
-//= require ajax
-//= require OpenLayers/OpenLayers.js
+// require ajax # Not strictly needed. Use jQuery or jQuery.ajax() instead.
+//= require OpenLayers/OpenLayers
 //
 // This takes care of everything in app/assets/javascripts
-//= require_tree .
+// NOTE: 'require_tree .'  is disabled because it causes double loading. 
+// Page-specific app/assets/javascripts files are included explicitly in 
+// their corresponding view html along with this file.
+// require_tree .
