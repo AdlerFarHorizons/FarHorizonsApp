@@ -25,13 +25,13 @@ parseData = (req) ->
   return
 
 load = ->
-  OpenLayers.loadURL 'aPREDICTION.kml', '', null, parseData
+  OpenLayers.loadURL 'data/aPREDICTION.kml', '', null, parseData
 
   ### must change KML file everytime before flight ###
 
   return
 
-window.onbeforeunload = windowClose
+#window.onbeforeunload = windowClose
 
 ### do some preliminary set up ###
 
@@ -60,13 +60,13 @@ size = new (OpenLayers.Size)(8, 8)
 offset = new (OpenLayers.Pixel)(-4, -4)
 size2 = new (OpenLayers.Size)(12, 12)
 offset2 = new (OpenLayers.Pixel)(-6, -6)
-iconred = new (OpenLayers.Icon)('img/markerSmallred.png', size, offset)
-iconblue = new (OpenLayers.Icon)('img/markerSmallblue.png', size, offset)
-icongreen = new (OpenLayers.Icon)('img/markerSmallgreen.png', size, offset)
-iconpurple = new (OpenLayers.Icon)('img/markerSmallpurple.png', size, offset)
-iconlandingblue = new (OpenLayers.Icon)('img/markerLandingblue.png', size2, offset2)
-iconlandinggreen = new (OpenLayers.Icon)('img/markerLandinggreen.png', size2, offset2)
-iconlandingpurple = new (OpenLayers.Icon)('img/markerLandingpurple.png', size2, offset2)
+iconred = new (OpenLayers.Icon)('assets/markerSmallred.png', size, offset)
+iconblue = new (OpenLayers.Icon)('assets/markerSmallblue.png', size, offset)
+icongreen = new (OpenLayers.Icon)('assets/markerSmallgreen.png', size, offset)
+iconpurple = new (OpenLayers.Icon)('assets/markerSmallpurple.png', size, offset)
+iconlandingblue = new (OpenLayers.Icon)('assets/markerLandingblue.png', size2, offset2)
+iconlandinggreen = new (OpenLayers.Icon)('assets/markerLandinggreen.png', size2, offset2)
+iconlandingpurple = new (OpenLayers.Icon)('assets/markerLandingpurple.png', size2, offset2)
 iconBurst = new (OpenLayers.Icon)('sunny.png', size2, offset2)
 
 ### end of set up, now start the main work ###
@@ -77,10 +77,10 @@ map = new (OpenLayers.Map)('map', options)
 
 ###and create a couple of layers for the map display ###
 
-streets = new (OpenLayers.Layer.TMS)('Streets', 'maps/',
+streets = new (OpenLayers.Layer.TMS)('Streets', 'assets/maps/streets/',
   'type': 'png'
   'getURL': get_my_url)
-aerial = new (OpenLayers.Layer.TMS)('Aerial', 'maps/aerial/',
+aerial = new (OpenLayers.Layer.TMS)('Aerial', 'assets/maps/aerial/',
   'type': 'png'
   'getURL': get_my_url)
 
@@ -106,7 +106,7 @@ map.addControl new (OpenLayers.Control.ScaleLine)(
 predictionTrack = new (OpenLayers.Layer.Vector)('PREDICTION',
   strategies: [ new (OpenLayers.Strategy.Fixed) ]
   protocol: new (OpenLayers.Protocol.HTTP)(
-    url: 'aPREDICTION.kml'
+    url: 'data/aPREDICTION.kml'
     format: new (OpenLayers.Format.KML))
   style:
     strokeColor: 'green'
@@ -155,7 +155,7 @@ wind_table =
     1
     2
   ]
-readWinds()
+#readWinds()
 
 ### set up the track objects ###
 
@@ -201,12 +201,12 @@ landingLayer.addMarker wb9skyTrack.landing
 
 ### update once and then set on a 5 sec cycle ###
 
-kc9lhwTrack.update()
-kc9ligTrack.update()
-wb9skyTrack.update()
-setInterval 'kc9ligTrack.update()', 5000
-setInterval 'kc9lhwTrack.update()', 5000
-setInterval 'wb9skyTrack.update()', 5000
+#kc9lhwTrack.update()
+#kc9ligTrack.update()
+#wb9skyTrack.update()
+#setInterval 'kc9ligTrack.update()', 5000
+#setInterval 'kc9lhwTrack.update()', 5000
+#setInterval 'wb9skyTrack.update()', 5000
 
 ###    
 Still to do:
