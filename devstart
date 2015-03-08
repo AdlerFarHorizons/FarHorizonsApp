@@ -1,16 +1,16 @@
 #! /bin/bash
 #
-if [ $1 == '--help' ]
+if [ "$1" == '--help' ]
 then
   echo "Start from a terminal with: ./devstart [--help | --debug]"
   echo "Starts services if necessary and then the FarHorizonsApp application."
   echo "  Options:"
-  echo "    --debug    Enter command line debugging (ruby debugge\) on startup."
+  echo "    --debug    Enter command line debugging (ruby debugger) on startup."
   exit
 fi
 # Start mongod
 local=$PWD
-if [ $1 == '--debug' ]
+if [ "$1" == '--debug' ]
 then
   export DEBUG=""
 fi
