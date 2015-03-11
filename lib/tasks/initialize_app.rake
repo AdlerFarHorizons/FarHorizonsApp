@@ -79,7 +79,7 @@ task :reset_redis => :environment do
   unless Rails.env.production?
     RedisConnection.flushdb()
     RedisConnection.set( 'beacon_filter',
-                         ['WB9SKY-11', 'KC9LIG-11', 'KC9LHW-11'])
+                         ['WB9SKY', 'KC9LIG', 'KC9LHW'])
   else
     puts "Can't use this task in production environment"
   end
