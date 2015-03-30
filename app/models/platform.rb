@@ -11,5 +11,11 @@ class Platform
   belongs_to :mission
   has_many :sky_tracks
   has_many :predicted_tracks
+  
+  # Methods for pseudo-associations
+  
+  def platform_server
+    PlatformServer.find( platform_server_id )
+  end
 
 end

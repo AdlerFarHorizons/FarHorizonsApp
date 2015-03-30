@@ -12,5 +12,23 @@ class ChaseServer
   key :persistent, Boolean, :default => true
   
   timestamps!
+  
+  # Methods for pseudo-associations
+  
+  def location_device
+    LocationDevice.find( location_device_id )
+  end
+  
+  def beacon_receivers
+    result = []
+    beacon_receiver_ids.each do |x| 
+      result << BeaconReceiver.find( x )
+    end
+    result
+  end
+  
+  def router
+    Router.find( router_id )
+  end
 
 end
