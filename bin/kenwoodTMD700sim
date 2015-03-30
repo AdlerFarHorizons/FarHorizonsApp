@@ -37,7 +37,7 @@ def aprs_str_to_json( aprs_str )
   # "KC9LHW-11>APBL10,WIDE1-1,WIDE2-1:!4106.18N/08755.31WO309/022/A=005939Adler Planetarium Balloon"
   puts "aprs_str:#{aprs_str}"
   call_sign = aprs_str.split(">")[0]
-  puts "@filter:#{@filter} class:#{@filter.class}"
+  #puts "@filter:#{@filter} class:#{@filter.class}"
   if @filter.include?( call_sign.split("-")[0] )
     temp = aprs_str.split(":")[1]
     data_type = temp[0]
@@ -55,28 +55,25 @@ def aprs_str_to_json( aprs_str )
 end
 
 def position_to_aprs( position, call_sign )
-  lat_dir_str = position[0] > 0 ? "N" : "S"
-  lat_deg = position[0].abs.floor
-  lat_deg_str = lat_deg.to_s
-  while lat_deg_str.length < 2
-    lat_deg_str = "0" + lat_deg_str
-  end
-  lat_min = ( ( ( ( position[0].abs - lat_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
-  lat_str = lat_deg_str + lat_min.to_s[2..5].insert(2,'.') + lat_dir_str
-  puts "lat:#{position[0]} lat_deg_str:#{lat_deg_str} lat_min:#{lat_min} lat_str:#{lat_str}"
-  lon_dir_str = position[1] > 0 ? "E" : "W"
-  lon_deg = position[1].abs.floor
+  lat_dir_str = position[1] > 0 ? "N" : "S"
+  lat_deg = position[1].abs.floor
+  lat_deg_str = lat_deg.to_s.rjust( 2, '0' )
+  lat_min = ( ( ( ( position[1].abs - lat_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
+  lat_str = lat_deg_str + lat_min.to_s.ljust(6,'0')[2..5].insert(2,'.') + lat_dir_str
+  #puts "lat:#{position[1]} lat_deg_str:#{lat_deg_str} lat_min:#{lat_min} lat_str:#{lat_str}"
+  lon_dir_str = position[0] > 0 ? "E" : "W"
+  lon_deg = position[0].abs.floor
   lon_deg_str = lon_deg.to_s
   while lon_deg_str.length < 3
     lon_deg_str = "0" + lon_deg_str
   end
-  lon_min = ( ( ( ( position[1].abs - lon_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
-  lon_str = lon_deg_str + lon_min.to_s[2..5].insert(2,'.') + lon_dir_str
-  puts "lon:#{position[1]} lon_deg_str:#{lon_deg_str} lon_min:#{lon_min} lon_str:#{lon_str}"
-  alt_str = ( ( ( ( position[2]/@ft2m + 0.5 ).floor * 10 ) + 1 ) / 1e7 ).to_s[2..7]
-  puts "alt:#{position[2]/@ft2m} alt_str:#{alt_str}"
-  dir_str = ( ( ( ( position[3] + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s[2..4]
-  spd_str = ( ( ( ( position[4]/@knots2mps + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s[2..4]
+  lon_min = ( ( ( ( position[0].abs - lon_deg ) * 60.0 * 100.0 + 0.5 ).floor ) ) / 10000.0
+  lon_str = lon_deg_str + lon_min.to_s.ljust(6,'0')[2..5].insert(2,'.') + lon_dir_str
+  #puts "lon:#{position[0]} lon_deg_str:#{lon_deg_str} lon_min:#{lon_min} lon_str:#{lon_str}"
+  alt_str = ( ( ( ( position[2]/@ft2m + 0.5 ).floor * 10 ) + 1 ) / 1e7 ).to_s.ljust(8,'0')[2..7]
+  #puts "alt:#{position[2]/@ft2m} alt_str:#{alt_str}"
+  dir_str = ( ( ( ( position[3] + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s.ljust(5,'0')[2..4]
+  spd_str = ( ( ( ( position[4]/@knots2mps + 0.5 ).floor * 10 ) + 1 ) / 1e4 ).to_s.ljust(5,'0')[2..4]
   
   "#{call_sign}>APBL10,N9IO*,WIDE2-1:!#{lat_str}/#{lon_str}O#{dir_str}" +
    "/#{spd_str}/A=#{alt_str}#{@comment}"
@@ -115,8 +112,8 @@ puts "ARGV:#{ARGV.to_s}"
 # Sim parameters
 @call_sign = 'KC9LIG-11' #'WB9SKY-11'
 @comment = "Adler High Altitude Balloon"
-@period = 12 # Number of sim samples between APRS reports.
-@t_samp = 5 # seconds
+@period = 6 # Number of sim samples between APRS reports.
+@t_samp = 10 # seconds
 @sim_time = 0 # accelerated time starting at real start time 
 @ascent_rate = 6.0 # m/s
 @descent_rate = -12.0 # m/s
@@ -125,10 +122,13 @@ puts "ARGV:#{ARGV.to_s}"
 @wind_ampl = 25.0 # m/s
 @wind_grad = 5.5E-4 # m/s/m
 @wind_scale = 3.7E4 # m
-@wind_angle = 30.0 # degrees
-@start_lat = 42.0 # degrees
-@start_lon = -89.9 # degrees
-@start_alt = 300.0 # m
+@wind_angle = 110.0 # degrees
+
+# Koerner Aviation
+@start_lat = 41.1000322 # degrees
+@start_lon = -87.9167100 # degrees
+@start_alt = 434.3 # m
+
 @earth_radius = 6.7E6 # m
 @lat_scale = 1.124E5 # m/deg
 @knots2mps = 0.51444444444 # m/s
@@ -152,9 +152,10 @@ Signal.trap( "TERM" ) do
   exit
 end
 
-position = [@start_lat, @start_lon, @start_alt]
+position = [@start_lon, @start_lat, @start_alt]
 @isBurst = false
 @sim_time = Time.now()
+count = 0
 samp_count = 0
 while true do
   samp_count +=1
@@ -166,6 +167,8 @@ while true do
     log_entry( result ) unless result == last_log_entry
     last_log_entry = result
     samp_count = 0
+    puts "count:#{count}"
+    count += 1
   end
   sleep 1.0 * @t_samp / @speedup
 end
