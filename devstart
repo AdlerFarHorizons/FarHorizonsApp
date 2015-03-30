@@ -1,18 +1,35 @@
 #! /bin/bash
 #
-if [ "$1" == '--help' ]
+if [ "$1" == '' ]
 then
-  echo "Start from a terminal with: ./devstart [--help | --debug]"
-  echo "Starts services if necessary and then the FarHorizonsApp application."
-  echo "  Options:"
-  echo "    --debug    Enter command line debugging (ruby debugger) on startup."
+  echo 
+  echo "devstart - Starts services if necessary and then the FarHorizonsApp"
+  echo "application in (default) development mode either as server or console."
+  echo 
+  echo "Run from a terminal with format:"
+  echo
+  echo "./devstart [ console | server [debug] ]"
+  echo
+  echo "Optional 'debug' following 'server' will enter command line debugging" 
+  echo "(ruby 'byebug' debugger) on startup."
+  echo 
+  echo "No arguments produces this handy help output (obviously)"
+  echo
   exit
 fi
 # Start mongod
 local=$PWD
-if [ "$1" == '--debug' ]
+if [ "$1" == 'server' ]
 then
-  export DEBUG=""
+  CMD="rails server --binding 127.0.0.1"
+  if [ "$2" == 'debug' ]
+  then
+    export DEBUG=""
+  fi
+fi
+if [ "$1" == 'console' ]
+then
+  CMD="rails console"
 fi
 echo "Start mongo with local logging if not already running"
 if [ $(pgrep -f mongod) ]
@@ -48,7 +65,7 @@ sleep 5
 #bin/mapserver $HOME/s3store/farhorizons/maps &
 
 echo "starting application..."
-rails server --binding 127.0.0.1
+$CMD
 
 
 
