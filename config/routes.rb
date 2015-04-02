@@ -8,7 +8,9 @@ FarHorizonsApp::Application.routes.draw do
   get 'tracking_home' => 'tracking_home#index'
   
   get 'tracker' => 'tracker#index'
-
+  get 'chase_vehicle_location/:id' => 'chase_vehicles#location'
+  get 'platform_tracks/:id' => 'platforms#tracks'
+  
   resources :sky_tracks
 
   resources :routers

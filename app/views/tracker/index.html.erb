@@ -8,6 +8,29 @@
   Javascript includes covered with ruby helper functions at end of file.
 -->
 
+<!-- Define some ruby objects to add to a data hash accessible to the js -->
+<% server = ChaseServer.where( :hostname => get_hostname ).first  %>
+<% beacon_receivers = server.beacon_receivers %>
+<% location_device = server.location_device %>
+<% this_vehicle = ChaseVehicle.where( :chase_server_id => server.id.to_s ).first %>
+<% mission = Mission.all.select { |x| x.chase_vehicles.include?( ChaseVehicle.find( this_vehicle.id ) ) }.first  %>
+<% other_vehicles = mission.chase_vehicles.collect {|x| x if x.id != this_vehicle.id }  %>
+<% platforms = mission.platforms  %>
+
+<!--  The hash is included in properties of an empty div. Note that the ruby
+      underscore keys are accesed as camelcase in the js hash -->
+<%= content_tag 'div', '', 
+  id: 'data', 
+    data: {
+      server: server,
+      beacon_rcvrs: beacon_receivers,
+      loc_dev: location_device,
+      mission: mission, 
+      this_vehicle: this_vehicle,
+      other_vehicles: other_vehicles,
+      platforms: platforms
+    } %>
+
 <div id="charts">
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -100,26 +123,26 @@
 </div>
 
 
-<table width="50%" Border = "0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td>
-    <!-- add in a toggle button for displaying balloon history -->
-    <input id="current-toggle" type="checkbox">
-    <label for="current-toggle">Show Only Current Positions?</label><BR>
-    <!-- add in a toggle button for displaying predicted landing positions -->
-    </td>
-    <td>
-    <input id="predict-toggle" type="checkbox">
-    <label for="predict-toggle">Show Predicted Landing Positions?</label><BR>
-    <!-- add in a button for starting a fake track -->
-    </td>
-    <td>
-    <form id="startFake" onsubmit="startFake();return false">
-    <input id="fakeButton" name="startfake" type="submit" value="Start Fake Track">
-    </form>
-    </td>
-  </tr>
-</table>
+<div id='control' style ="width:800px; height:100px">
+    <p>
+        &nbsp;&nbsp;Location Device:
+        <button id='locSimStart' type='button'>Start</button>
+        <button id='locSimEnd' type='button'>End</button>
+        <a id="locDriver"></a><br>
+    </p>
+    <p>
+        Beacon Receiver:
+        <button id='beaconSimStart' type='button'>Start</button>
+        <button id='beaconSimEnd' type='button'>End</button>
+        <a id="beaconDriver"></a><br>
+    </p>
+    <p id='simSpeed'>
+        Simulation Speed Factor:
+        <input type='radio' name='simSpeedFactor' value='1'>1
+        <input type='radio' name='simSpeedFactor' value='5'>5
+        <input type='radio' name='simSpeedFactor' value='10' checked>10
+    </p>
+</div>
 
 <!-- Javascript includes: This page script plus vendor and other library 
   includes from application.js directives -->

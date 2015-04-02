@@ -1,6 +1,27 @@
 class PlatformsController < ApplicationController
-  before_action :set_platform, only: [:show, :edit, :update, :destroy]
+  before_action :set_platform, only: [:show, :edit, :update, :destroy, :tracks]
 
+ # GET /tracks/1
+  def tracks
+    time = params[:after_time] ? Time.parse(params[:after_time]) : Time.at(0)
+    tracks = @platform.sky_tracks
+    result = tracks.collect do |track|
+      points = track.points.where( :time => { :$gt => time } ).sort( :time, :asc )
+      puts "points:#{points.count}"
+      points.count == 0 ? nil :
+        { :ident => track.ident, 
+          :last_time => points.last.time.utc.to_s, 
+          :points => points.collect { |point| {
+            :time => point.time, :lat => point.lat, :lon => point.lon,
+            :alt => point.alt, :heading => point.heading, :vg => point.vg,
+            :ident => point.ident } }
+        }
+      
+    end
+    puts "result:#{result}"
+    render json: result
+  end
+  
   # GET /platforms
   # GET /platforms.json
   def index

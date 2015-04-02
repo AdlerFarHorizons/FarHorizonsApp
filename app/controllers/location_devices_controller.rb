@@ -74,6 +74,12 @@ class LocationDevicesController < ApplicationController
       puts "ChaseServer:#{temp.id}"
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
       puts "ChaseVehicle:#{temp.id}"
+      
+      # Delete previous simulated tracks if sim driver
+      if driver.end_with?( 'sim' )
+        GroundTrack.where( :id_source => loc ).each { |x| x.destroy() }
+      end
+      
       unless @location_device.driver_pid
         if ( (serv = ChaseServer.where( :location_device_id => loc ).first) &&
              (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )

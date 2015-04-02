@@ -1,6 +1,21 @@
 class ChaseVehiclesController < ApplicationController
-  before_action :set_chase_vehicle, only: [:show, :edit, :update, :destroy]
+  before_action :set_chase_vehicle, only: [:show, :edit, :update, :destroy,
+    :location]
 
+  # GET /chase_vehicle_location/1
+  def location
+    time = params[:after_time] ? Time.parse(params[:after_time]) : Time.at(0)
+    track = @chase_vehicle.ground_track
+    point = track ? track.points.where( :time => { :$gt => time } )
+                      .sort( :time, :asc ).last
+                  : nil
+    render json:  
+          point ? { :time => point.time,:lat => point.lat, :lon => point.lon,
+                    :alt => point.alt, :heading => point.heading, 
+                    :vg => point.vg, :ident => point.ident }
+                : nil
+  end
+  
   # GET /chase_vehicles
   # GET /chase_vehicles.json
   def index
