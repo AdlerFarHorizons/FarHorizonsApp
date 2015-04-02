@@ -75,9 +75,17 @@ class BeaconReceiversController < ApplicationController
       puts "ChaseServer:#{temp.id}"
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
       puts "ChaseVehicle:#{temp.id}"
+      
+      # Delete previous simulated tracks if sim driver
+      if driver.end_with?( 'sim' )
+        platform_ids = temp.mission.platforms.collect { |x| x.id.to_s }
+        SkyTrack.all.select { |x| platform_ids.include?(x.platform_id.to_s) }.each { |x| x.destroy() }
+      end
+      
       unless @beacon_receiver.driver_pid
         if ( (serv = ChaseServer.where( :beacon_receiver_ids => bcnrcvr ).first) &&
              (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )
+          
           Process.detach( spawn( 
               "bin/#{@beacon_receiver.driver} #{host} #{bcnrcvr} '#{RedisConnection.get('beacon_filter')}' #{speedup} " ) )
           sleep 2
