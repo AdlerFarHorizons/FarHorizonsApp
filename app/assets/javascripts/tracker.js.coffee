@@ -209,7 +209,7 @@ style_van.graphicHeight = 16
 style_van.graphicXOffset = -style_van.graphicWidth / 2 # default is -(style_van.graphicWidth/2);
 style_van.graphicYOffset = -style_van.graphicHeight / 2
 # LN - Path to vendor assets is 'assets/<path beneath javascripts>
-style_van.externalGraphic = "assets/map.icons/van.png"
+style_van.externalGraphic = "assets/van.png"
 # title only works in Firefox and Internet Explorer
 style_van.title = "this is a test tooltip"
 

@@ -1,4 +1,8 @@
 module ApplicationHelper
+  
+  def get_hostname()
+    Rails.env.development? ? 'fhsim' : Socket.gethostname
+  end
 
   def assoc_tree( obj )
     # Create level 1 tree
