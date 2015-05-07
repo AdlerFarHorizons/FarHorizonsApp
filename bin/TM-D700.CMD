@@ -21,6 +21,9 @@ AI 1!AI 1
 TC 1
 ;Select TNC PKT mode.
 TNC 2!TNC 2
+;Special cmd for driver ^W<seconds to wait 0-9>
+;Allows time for the TN command to execute
+^W5
 ;Select band 'A'.
 BC 0,0!BC 0,0
 ;Set the frequency to 144.390.
