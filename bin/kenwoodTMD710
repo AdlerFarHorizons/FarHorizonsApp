@@ -120,7 +120,7 @@ begin
   sp = SerialPort.new( 
     tty_port, baud_rate, data_bits, stop_bits, parity)
 
-  init = File.open( "bin/TM-D700.CMD", 'r' )
+  init = File.open( "bin/TM-D710.CMD", 'r' )
   line = ""
   while !init.eof? && line != "[INIT_COMMANDS]"
     line = init.readline().chomp()

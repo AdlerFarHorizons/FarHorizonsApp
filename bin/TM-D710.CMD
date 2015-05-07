@@ -18,12 +18,20 @@ UNPROTO_COMMAND="UNPROTO "
 NO_BEACON_COMMAND=BEACON EVERY 0
 
 [INIT_COMMANDS]
+;Added by LN - Supposedly need three ctl-c to get into command mode
+^C
+^C
+^C
+;LN - TC Undocumented as far as I can tell. For 700, it's enabling control mode.
 TC 1
 ;Enable TNC on band A
 TN 2,0
 ;Use TN 2,1 for band B
 ;Use TN 2,2 for A=TX and B=RX
 ;Use TN 2,3 for A=RX and B=TX
+;Special cmd for driver ^W<seconds to wait 0-9>
+;Allows time for the TN command to execute
+^W5
 ;ECHO or E
 ;values OFF/ON
 ;default ON
