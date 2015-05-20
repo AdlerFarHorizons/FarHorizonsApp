@@ -35,31 +35,26 @@ def update( data, uri )
   end
 end
 
-def loc_str_to_hash( loc_str )
-  # "Tue Oct 15 19:06:14 2013 41.889395N  87.578110W  316.035217"
-  temp = loc_str.split( " " )
-  time = Time.parse( loc_str )
-  temp = loc_str.split( " " )
-  { :time => time, :x => temp[5], :y => temp[6], :z => temp[7], 
-    :source_id => @source_id, :host_id => @host_id }  
-end
-
 def loc_str_to_json( loc_str )
   # "Tue Oct 15 19:06:14 2013 41.889395N  87.578110W  316.035217"
   temp = loc_str.split( " " )
   time = Time.parse( loc_str )
   temp = loc_str.split( " " )
-  { :time => time, :x => temp[5], :y => temp[6], :z => temp[7], 
-    :source_id => @loc_dev_id, :host_id => @host_id }.to_json  
+  lat = temp[5][0..temp[5].length-2].to_f * ( temp[5].end_with?('N') ? 1 : -1 )
+  puts "lat: #{temp[5]} : #{lat.to_s}"
+  lon = temp[6][0..temp[6].length-2].to_f * ( temp[6].end_with?('E') ? 1 : -1 )
+  alt = temp[7].to_f
+  { :time => time, :lat => lat, :alt => alt, :lon => lon, 
+    :id_source => @id_source, :ident => @ident }.to_json  
 end
 
-@serv_uri = ARGV[0]
-@loc_dev_id = ARGV[1]
-@host_id = ARGV[2]
+@serv_uri = ARGV[0] # host uri, e.g., http://localhost:3000
+@id_source = ARGV[1] # location_device id
+@ident = ARGV[2] # ChaseVehicle ident
 @log_file_name = "log/garmin18xusb.log"
 @cmd = "gpsbabel -T -i garmin,get_posn -f usb:"
 
-unless @serv_uri && @loc_dev_id && @host_id
+unless @serv_uri && @id_source && @ident
   log_entry( "ERROR: Must have three arguments.")
   puts "ERROR: garmin18xusb driver not started. Requires three arguments " +
        "ARGS: #{ARGV}"
@@ -69,10 +64,10 @@ end
 last_log_entry = ""
 log_entry( "---------------")
 log_entry( "---------------")
-log_entry( "Started #{@cmd} on device id:#{@loc_dev_id} to server #{@serv_uri}")
+log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
 
 num_lines = 2 # Number of lines per position report
-num_reports = 5 # just post every nth report
+num_reports = 10 # just post every nth report
 report = ""
 reports = 0
 
@@ -92,7 +87,7 @@ begin
         report += line
         if count == num_lines - 1 
           if reports == num_reports - 1
-            
+            log_entry( report )
             uri = URI( "#{@serv_uri}/points" )
             form_data = loc_str_to_json( report )
             result = update( form_data, uri )
