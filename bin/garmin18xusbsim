@@ -53,9 +53,9 @@ end
 @log_file_name = "log/garmin18xusbsim.log"
 @cmd = "bin/gpsbabelsim18xusb #{@speedup.to_s}"
 
-unless @serv_uri && @id_source
-  log_entry( "ERROR: Must have two arguments.")
-  puts "ERROR: garmin18xusb driver not started. Requires two arguments " +
+unless @serv_uri && @id_source && @ident
+  log_entry( "ERROR: Must have three arguments.")
+  puts "ERROR: garmin18xusbsim driver not started. Requires three arguments " +
        "ARGS: #{ARGV}"
   exit
 end

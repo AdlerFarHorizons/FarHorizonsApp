@@ -36,9 +36,9 @@ def aprs_str_to_json( aprs_str )
   # "WB9SKY-11>APBL10,N9IO*,WIDE2-1:!4106.07N/08755.13WO317/025/A=005243Adler High Altitude Balloon"
   # "KC9LHW-11>APBL10,WIDE1-1,WIDE2-1:!4106.18N/08755.31WO309/022/A=005939Adler Planetarium Balloon"
   puts "aprs_str:#{aprs_str}"
-  call_sign = aprs_str.split(">")[0]
+  call_sign = aprs_str.split("-")[0]
   #puts "@filter:#{@filter} class:#{@filter.class}"
-  if @filter.include?( call_sign.split("-")[0] )
+  if @filter.include?( call_sign )
     temp = aprs_str.split(":")[1]
     data_type = temp[0]
     lat = ( temp[1..2].to_f + temp[3..7].to_f / 60.0 ) * ( temp[8] == "N" ? 1 : -1 )

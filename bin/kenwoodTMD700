@@ -40,39 +40,80 @@ def aprs_str_to_json( aprs_str )
   # "WB9SKY-11>APOT02,KA9SCF-15,WIDE1,K9ESV-10,WIDE2*,qAR,W9TMW:/151435z4058.42N/08754.43WO103/024 12.1V 21CTest/A=023677"
   # "WB9SKY-11>APBL10,N9IO*,WIDE2-1:!4106.07N/08755.13WO317/025/A=005243Adler High Altitude Balloon"
   # "KC9LHW-11>APBL10,WIDE1-1,WIDE2-1:!4106.18N/08755.31WO309/022/A=005939Adler Planetarium Balloon"
-  puts "aprs_str:#{aprs_str}"
-  call_sign = aprs_str.split(">")[0]
+  #puts "APRS String:#{aprs_str}"
+  call_sign = aprs_str.split("-")[0]
+  #puts "call_sign:#{call_sign}"
   #puts "@filter:#{@filter} class:#{@filter.class}"
-  if @filter.include?( call_sign.split("-")[0] )
-    temp = aprs_str.split(":")[1]
-    data_type = temp[0]
-    lat = ( temp[1..2].to_f + temp[3..7].to_f / 60.0 ) * ( temp[8] == "N" ? 1 : -1 )
-    lon = ( temp[10..12].to_f + temp[13..17].to_f / 60.0 ) * ( temp[18] == "E" ? 1 : -1 )
-    course = temp[20..22].to_i
-    speed = temp[24..26].to_f * @knots2mps
-    sym_id = temp[19]
-    sym_code = temp[27]
-    alt = temp.split("A=")[1][0..5].to_f * @ft2m
-    { :time => @sim_time, :lat => lat, :alt => alt, :lon => lon, 
-      :heading => course, :vg => speed, :id_source => @id_source, 
-      :ident => call_sign }.to_json  
+  log_entry( aprs_str )
+  if @filter.include?( call_sign )
+    #puts "call_sign true:#{call_sign}"
+    temp = aprs_str.split(":")
+    preamble = temp[0]
+    info = temp[1][1..temp[1].length - 1]
+    data_type = temp[1][0]
+    if data_type != "/" && data_type != "!"
+      return nil
+    else
+      time = Time.now.utc # Default if "position without timestamp"    
+      # Remove time string if "position with timestamp" and use only if HMS
+      if data_type == "/"
+        if info[6] == "h" || info[6] == "z"
+          t_str = info[0..6]
+        else
+          t_str = info[0..7]          
+        end
+        info.sub!( t_str, "" )
+        if t_str[6] == "h"
+          # Correct date if necessary when time near midnight
+          hr = t_str[0..1].to_i
+          if hr == 0 && time.hr == 23
+            time += 3600
+          end
+          if hr == 23 && time.hr == 0
+            time -= 3600
+          end        
+          time = Time.utc( time.year, time.month, time.day,
+                           t_str[0..1].to_i, t_str[2..3].to_i, t_str[4..5].to_i )
+        end
+      end
+      
+      lat = ( info[0..1].to_f + info[2..6].to_f / 60.0 ) * ( info[7] == "N" ? 1 : -1 )
+      lon = ( info[9..11].to_f + info[12..16].to_f / 60.0 ) * ( info[17] == "E" ? 1 : -1 )
+      course = info[19..21].to_i
+      speed = info[23..25].to_f * @knots2mps
+      sym_id = info[18]
+      sym_code = info[26]
+      alt = info.split("A=")[1][0..5].to_f * @ft2m
+      { :time => time, :lat => lat, :alt => alt, :lon => lon, 
+        :heading => course, :vg => speed, :id_source => @id_source, 
+        :ident => call_sign }.to_json
+      end
+  else
+    #puts "return nil"
+    return nil
   end
 end
 
 def char_in( c )
   result = nil
+  #puts "char:#{c.ord}"
   if c == "\n" || c == "\r"
+    #puts "1"
     if !@eol_flag
+      #puts "2"
       result = @msg
       @msg = ""
       @eol_flag = true
     else
+      #puts "3"
       @eol_flag = false
     end
   else
+    #puts "4"
     @msg += c
     @eol_flag = false
   end
+  #puts "5"
   return result
 end
 #puts "start"
@@ -99,20 +140,20 @@ parity = SerialPort::NONE
 
 #puts "init"
 
-#unless @serv_uri && @id_source && @filter
-#  log_entry( "ERROR: Must have three arguments.")
-#  puts "ERROR: kenwoodTMD710 driver not started. Requires three arguments " +
-#       "ARGS: #{ARGV}"
-#  exit
-#end
-#
+unless @serv_uri && @id_source && @filter
+  log_entry( "ERROR: Must have three arguments.")
+  puts "ERROR: kenwoodTMD700 driver not started. Requires three arguments. " +
+       "ARGS: #{ARGV}"
+  exit
+end
+
 last_log_entry = ""
 log_entry( "---------------")
 log_entry( "---------------")
 log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
 #puts "log started"
 Signal.trap( "TERM" ) do
-  log_entry( "kenwoodTMD710 terminated by SIGTERM")
+  log_entry( "kenwoodTMD700 terminated by SIGTERM")
   exit
 end
 #puts "init radio"
@@ -124,18 +165,24 @@ begin
   line = ""
   while !init.eof? && line != "[INIT_COMMANDS]"
     line = init.readline().chomp()
-    #puts line
+    puts line
   end
 
   Thread.new {
     while true do
-      result = char_in( sp.getc )
-      puts result if result
-#      form_data = aprs_str_to_json( result ) if msg_check( result )
-#      result = update( form_data, @uri )
-#      puts form_data
-#      log_entry( result ) unless result == last_log_entry
-#      last_log_entry = result
+      temp = sp.getc
+      #temp = "\n" unless temp
+      #puts "char:#{temp}"
+      line_rcvd = char_in( temp )
+      #puts "temp:#{temp.ord} result:#{result}"
+      if line_rcvd
+        puts "line_rcvd:#{line_rcvd}"
+        form_data = aprs_str_to_json( line_rcvd )
+        result = update( form_data, @uri ) if form_data
+        puts form_data
+        log_entry( result ) unless result == last_log_entry
+        last_log_entry = result
+      end
     end
   }
   line = init.readline().chomp()
@@ -151,6 +198,8 @@ begin
       end
     end
     line = init.readline().chomp()
+    puts line
+    log_entry( line )
   end
   while true do
     

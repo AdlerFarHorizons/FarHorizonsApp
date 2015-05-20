@@ -6,6 +6,11 @@ speedup = ARGV[0] ? ARGV[0].to_f : 1.0
 start_lat = 41.1000322 # degrees
 start_lon = -87.9167100 # degrees
 start_alt = 434.3 # m
+#
+# Adler Planetarium
+#start_lat = 41.8664
+#start_lon = -87.6067
+#start_alt = 330
 
 ft2m = 0.3048 # m
 km2ft = 1000.0 / ft2m
