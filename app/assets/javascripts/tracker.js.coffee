@@ -12,6 +12,7 @@
 
 
 ###  Parse data from Prediction KML file to show Balloon Burst ###
+host = window.location.host
 
 parseData = (req) ->
   g = new (OpenLayers.Format.KML)(extractStyles: true)
@@ -50,7 +51,8 @@ options =
   numZoomLevels: 16
   maxResolution: 156543.0339
   maxExtent: new (OpenLayers.Bounds)(-20037508.34, -20037508.34, 20037508.34, 20037508.34)
-  controls: []
+  controls: [new OpenLayers.Control.PanZoomBar,
+             new OpenLayers.Control.Navigation({dragPanOptions: {enableKinetic: true}})]
 
 ###and create a projection, size, pixel offset and icons for ###
 
@@ -101,7 +103,6 @@ cpoint = new (OpenLayers.LonLat)( start_lon, start_lat )
 map.setCenter cpoint.transform(proj, dst), 11
 LaySwitch = new (OpenLayers.Control.LayerSwitcher)
 map.addControl LaySwitch
-map.addControl new OpenLayers.Control.PanZoom
 map.addControl new (OpenLayers.Control.ScaleLine)(
   geodesic: true
   maxWidth: 200)
@@ -234,7 +235,6 @@ locDev = $('#data').data( 'locDev' )
 
 updateVehicleLocation = ( vehicleId ) ->
   $.getJSON urlVehicleLoc + vehicleId, (data) ->
-  
     if data and data['time'] isnt thisVehicleLastTime
       vehicleLayer.destroyFeatures( [ thisVehicleLocation ] ) if thisVehicleLocation
       tmpPoint = new OpenLayers.Geometry.Point( data['lon'], data['lat'] )
@@ -329,7 +329,7 @@ timerId =
     updateVehicleLocation(thisVehicleId)
     updatePlatformTracks( 0 )
     #clearInterval( timerId ) if count++ is 2
-  , 5000
+  , 10000
 
 $('#control #locSimStart').click ->
   if isSim
@@ -340,12 +340,12 @@ $('#control #locSimStart').click ->
 
   speedup = $("#simSpeed input[type='radio']:checked").val()
 
-  url = 'http://localhost:3000/location_devices/start/' + locDev.id + '/' + speedup
+  url = 'http://' + host + '/location_devices/start/' + locDev.id + '/' + speedup
   $.post url, (data) ->
     $('#control #locDriver').html(data)
 
 $('#control #locSimEnd').click ->
-  url = 'http://localhost:3000/location_devices/stop/' + locDev.id
+  url = 'http://' + host + '/location_devices/stop/' + locDev.id
   $.post url, (data) ->
     $('#control #locDriver').html(data)
 
@@ -361,14 +361,14 @@ $('#control #beaconSimStart').click ->
   speedup = $("#simSpeed input[type='radio']:checked").val()
   
   for rcvr in beaconRcvrs  
-    url = 'http://localhost:3000/beacon_receivers/start/' + rcvr.id + '/' + speedup
+    url = 'http://' + host + '/beacon_receivers/start/' + rcvr.id + '/' + speedup
     $.post url, (data) ->
       $('#control #beaconDriver').html(data)
       #console.log 'Sim Start'
 
 $('#control #beaconSimEnd').click ->
   for rcvr in beaconRcvrs
-    url = 'http://localhost:3000/beacon_receivers/stop/' + rcvr.id
+    url = 'http://' + host + '/beacon_receivers/stop/' + rcvr.id
     #console.log 'Sim End'
     $.post url, (data) ->
       $('#control #beaconDriver').html(data)
