@@ -86,12 +86,9 @@ class PointsController < ApplicationController
       host = chase_serv ? 
              ChaseVehicle.find_by_chase_server_id( chase_serv.id.to_s ) : nil
       host ||= Platform.find_by_beacon_ids( device.id.to_s )
-      puts "device.id:#{device.id.to_s} #{Platform.find_by_beacon_ids( device.id.to_s )}"
-      puts "device:#{device.to_s} host:#{host}"
       mission = host.mission
       if mission.start && !mission.actual_end
         if host.class.to_s == "Platform"
-          puts "host:#{host.id.to_s} point:#{@point.id.to_s}"
           track = host.sky_tracks.select { |x|
             x.id_source == device.id.to_s
           }.first

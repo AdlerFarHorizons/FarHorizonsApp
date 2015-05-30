@@ -18,7 +18,6 @@ module ApplicationHelper
       !x.eql?( '_id' ) && 
       !obj.associations[x.split("_id")[0].to_sym].class.to_s.include?("BelongsTo") && 
       x.singularize.end_with?( '_id' ) }.each {|x| assocs << x.to_sym}
-    puts "Level 1 assocs:#{assocs.to_s}"
     assocs.each do |x|
       parent_class = obj.class.to_s
       parent_id = obj.id.to_s
@@ -26,7 +25,6 @@ module ApplicationHelper
       klass_key = is_pseudo ? 
                   x.to_s.singularize.rpartition( '_id' )[0].to_sym : x
       assoc_klass = klass_key.to_s.singularize.titleize.split.join
-      puts "assoc_klass:#{assoc_klass.to_s}"
       if is_pseudo
         ids = eval( 'obj.' + x.to_s )
         assoc_objs = eval( assoc_klass + '.find( ids )' ) 
@@ -53,9 +51,7 @@ module ApplicationHelper
       result << [1, parent_class, parent_id, assoc_type, assoc_klass, 
                  nil] unless has_objs
     end
-    puts "***result:"
     result.each do |r|
-      puts r.to_s
     end
     
     # Drill down
@@ -83,7 +79,6 @@ module ApplicationHelper
                         .to_s.split(":")[6].split('Association')[0]
         end
         sub_klass = klass_key.to_s.singularize.titleize.split.join
-        puts "klass:#{klass} klass_key:#{klass_key} object:#{object}"
         parent_id = object ? object.id.to_s : nil
         unless eval(sub_klass).keys['no_edit']
           if ( assoc == 'One' )
