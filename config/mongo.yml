@@ -20,5 +20,3 @@ test:
 production:
   <<: *defaults
   database: far_horizons
-  username: <%= ENV['MONGO_USERNAME'] %>
-  password: <%= ENV['MONGO_PASSWORD'] %>

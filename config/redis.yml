@@ -14,3 +14,4 @@ production:
   host: localhost
   thread_safe: true
   port: 6380
+  db: 11
