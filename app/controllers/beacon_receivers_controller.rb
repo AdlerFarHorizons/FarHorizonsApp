@@ -72,9 +72,7 @@ class BeaconReceiversController < ApplicationController
       bcnrcvr = @beacon_receiver.id.to_s
       speedup = params[:speedup]
       temp = ChaseServer.where(:beacon_receiver_ids => bcnrcvr ).first
-      puts "ChaseServer:#{temp.id}"
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
-      puts "ChaseVehicle:#{temp.id}"
       
       # Delete previous simulated tracks if sim driver
       if driver.end_with?( 'sim' )
@@ -90,7 +88,7 @@ class BeaconReceiversController < ApplicationController
               "bin/#{@beacon_receiver.driver} #{host} #{bcnrcvr} '#{RedisConnection.get('beacon_filter')}' #{speedup} " ) )
           sleep 2
           pid = `pgrep -f "[r]uby bin\/#{@beacon_receiver.driver}"`.chomp     
-          puts "PID:#{pid}"
+          #puts "PID:#{pid}"
           # Test first if process was spawned and then if it's still running
           if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
             @beacon_receiver.driver_pid = pid

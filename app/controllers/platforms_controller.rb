@@ -7,7 +7,6 @@ class PlatformsController < ApplicationController
     tracks = @platform.sky_tracks
     result = tracks.collect do |track|
       points = track.points.where( :time => { :$gt => time } ).sort( :time, :asc )
-      puts "points:#{points.count}"
       points.count == 0 ? nil :
         { :ident => track.ident, 
           :last_time => points.last.time.utc.to_s, 
@@ -18,7 +17,6 @@ class PlatformsController < ApplicationController
         }
       
     end
-    puts "result:#{result}"
     render json: result
   end
   

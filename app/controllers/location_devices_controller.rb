@@ -71,9 +71,7 @@ class LocationDevicesController < ApplicationController
       loc = @location_device.id.to_s      
       temp = ChaseServer.where(:location_device_id => loc ).first
       speedup = params[:speedup]
-      puts "ChaseServer:#{temp.id}"
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
-      puts "ChaseVehicle:#{temp.id}"
       
       # Delete previous simulated tracks if sim driver
       if driver.end_with?( 'sim' )
@@ -87,7 +85,6 @@ class LocationDevicesController < ApplicationController
               "bin/#{@location_device.driver} #{host} #{loc} #{veh.ident} #{speedup}" ) )
           sleep 2
           pid = `pgrep -f "[r]uby bin\/#{@location_device.driver}"`.chomp     
-          puts "PID:#{pid}"
           # Test first if process was spawned and then if it's still running
           if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
             @location_device.driver_pid = pid
