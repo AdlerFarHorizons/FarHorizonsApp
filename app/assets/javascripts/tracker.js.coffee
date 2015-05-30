@@ -81,10 +81,10 @@ map = new (OpenLayers.Map)('map', options)
 ###and create a couple of layers for the map display ###
 
 # NOTE: Path to stuff in app/assets/images is 'assets/<path beneath app/assets>
-streets = new (OpenLayers.Layer.TMS)('Streets', 'assets/map.tiles/streets/',
+streets = new (OpenLayers.Layer.TMS)('Streets', 'http://localhost:2000/streets/', #'assets/map.tiles/streets/',
   'type': 'png'
   'getURL': get_my_url)
-aerial = new (OpenLayers.Layer.TMS)('Aerial', 'assets/map.tiles/aerial/',
+aerial = new (OpenLayers.Layer.TMS)('Aerial', 'http://localhost:2000/aerial/', #'assets/map.tiles/aerial/',
   'type': 'png'
   'getURL': get_my_url)
 
