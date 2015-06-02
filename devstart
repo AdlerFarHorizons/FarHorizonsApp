@@ -17,8 +17,9 @@ then
   echo
   exit
 fi
-# Start mongod
-local=$PWD
+
+hostname = "127.0.0.1"
+
 if [ "$1" == 'server' ]
 then
   CMD="rails server --binding 127.0.0.1"
@@ -27,6 +28,7 @@ then
     export DEBUG=""
   fi
 fi
+
 if [ "$1" == 'console' ]
 then
   CMD="rails console"
@@ -52,6 +54,7 @@ then
   kill $(pgrep -f redis-server.*6380)
 fi
 sleep 2
+
 echo "Starting new instance of redis-server on port 6380"
 #Delete prior redis console log(s)
 rm ./log/redis-console.log*
@@ -62,7 +65,7 @@ sleep 5
 echo "(Re-)starting map file server on port 2000"
 pkill -f [m]apserver
 sleep 2
-bin/mapserver /data/map.tiles &
+bin/mapserver $hostname /data/map.tiles &
 
 echo "starting application..."
 $CMD
