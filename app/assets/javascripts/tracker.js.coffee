@@ -10,10 +10,10 @@
   ruby helper functions at end of that file.
 ###
 
+hostname = window.location.hostname
+port = window.location.port
 
 ###  Parse data from Prediction KML file to show Balloon Burst ###
-host = window.location.host
-
 parseData = (req) ->
   g = new (OpenLayers.Format.KML)(extractStyles: true)
   html = ''
@@ -81,10 +81,10 @@ map = new (OpenLayers.Map)('map', options)
 ###and create a couple of layers for the map display ###
 
 # NOTE: Path to stuff in app/assets/images is 'assets/<path beneath app/assets>
-streets = new (OpenLayers.Layer.TMS)('Streets', 'http://localhost:2000/streets/', #'assets/map.tiles/streets/',
+streets = new (OpenLayers.Layer.TMS)('Streets', 'http://' + hostname + ':' + '2000' + '/streets/', #'assets/map.tiles/streets/',
   'type': 'png'
   'getURL': get_my_url)
-aerial = new (OpenLayers.Layer.TMS)('Aerial', 'http://localhost:2000/aerial/', #'assets/map.tiles/aerial/',
+aerial = new (OpenLayers.Layer.TMS)('Aerial', 'http://' + hostname + ':' + '2000' + '/aerial/', #'assets/map.tiles/aerial/',
   'type': 'png'
   'getURL': get_my_url)
 
@@ -340,12 +340,12 @@ $('#control #locSimStart').click ->
 
   speedup = $("#simSpeed input[type='radio']:checked").val()
 
-  url = 'http://' + host + '/location_devices/start/' + locDev.id + '/' + speedup
+  url = 'http://' + hostname + ':' + port + '/location_devices/start/' + locDev.id + '/' + speedup
   $.post url, (data) ->
     $('#control #locDriver').html(data)
 
 $('#control #locSimEnd').click ->
-  url = 'http://' + host + '/location_devices/stop/' + locDev.id
+  url = 'http://' + hostname + ':' + port + '/location_devices/stop/' + locDev.id
   $.post url, (data) ->
     $('#control #locDriver').html(data)
 
@@ -361,14 +361,14 @@ $('#control #beaconSimStart').click ->
   speedup = $("#simSpeed input[type='radio']:checked").val()
   
   for rcvr in beaconRcvrs  
-    url = 'http://' + host + '/beacon_receivers/start/' + rcvr.id + '/' + speedup
+    url = 'http://' + hostname + ':' + port + '/beacon_receivers/start/' + rcvr.id + '/' + speedup
     $.post url, (data) ->
       $('#control #beaconDriver').html(data)
       #console.log 'Sim Start'
 
 $('#control #beaconSimEnd').click ->
   for rcvr in beaconRcvrs
-    url = 'http://' + host + '/beacon_receivers/stop/' + rcvr.id
+    url = 'http://' + hostname + ':' + port + '/beacon_receivers/stop/' + rcvr.id
     #console.log 'Sim End'
     $.post url, (data) ->
       $('#control #beaconDriver').html(data)
