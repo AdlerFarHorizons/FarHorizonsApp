@@ -24,7 +24,18 @@ module FarHorizonsApp
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    # 
-    debugger if ENV["DEBUG"]
+
+    debugger if ENV["DEBUG"] && Rails.env.development?
+    
+    # Start support services
+    pid = `pgrep -f redis-server.*6380`.chomp
+    unless pid
+      Process.detach( spawn( 
+          "redis-server ./config/redis-fh.conf > ./log/redis-console.log" ) )
+    end
+    pid = `pgrep -f mapserver`.chomp
+    unless pid
+      Process.detach( spawn( "bin/mapserver localhost /data/map.tiles" ) )
+    end
   end
 end
