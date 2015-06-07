@@ -28,12 +28,12 @@ module FarHorizonsApp
     debugger if ENV["DEBUG"] && Rails.env.development?
     
     # Start support services
-    pid = `pgrep -f redis-server.*6380`.chomp
+    pid = `ps x | grep redis-server.*6380 | grep -v grep`.split[0]
     unless pid
       Process.detach( spawn( 
           "redis-server ./config/redis-fh.conf > ./log/redis-console.log" ) )
     end
-    pid = `pgrep -f mapserver`.chomp
+    pid = `ps x | grep mapserver | grep -v grep`.split[0]
     unless pid
       Process.detach( spawn( "bin/mapserver localhost /data/map.tiles" ) )
     end
