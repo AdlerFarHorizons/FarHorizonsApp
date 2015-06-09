@@ -33,9 +33,9 @@ module FarHorizonsApp
       Process.detach( spawn( 
           "redis-server ./config/redis-fh.conf > ./log/redis-console.log" ) )
     end
-    pid = `ps x | grep mapserver | grep -v grep`.split[0]
+    pid = `ps x | grep "mapserver #{Socket.gethostname}" | grep -v grep`.split[0]
     unless pid
-      Process.detach( spawn( "bin/mapserver localhost /data/map.tiles" ) )
+      Process.detach( spawn( "bin/mapserver #{Socket.gethostname} /data/map.tiles" ) )
     end
   end
 end
