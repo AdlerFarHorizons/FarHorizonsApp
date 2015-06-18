@@ -1,3 +1,6 @@
+# In dev mode, a separate instance of redis is used on a non-default port
+# with a local dump file to operate independently of any existing redis service
+# on the workstation.
 development:
   host: localhost
   thread_safe: true
@@ -10,8 +13,10 @@ test:
   port: 6380
   db: 2
 
+# In production, redis runs as a service on the default port and is shared
+# between the app and the slanger (pusher) service, assumed to be using db 0
 production:
   host: localhost
   thread_safe: true
-  port: 6380
+  port: 6379
   db: 11

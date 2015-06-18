@@ -20,3 +20,6 @@
 nbproject
 /.project
 map.tiles/
+
+# Ignore pre-compiled assets
+public/assets/
