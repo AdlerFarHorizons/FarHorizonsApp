@@ -41,7 +41,8 @@ def aprs_str_to_json( aprs_str )
   # "WB9SKY-11>APBL10,N9IO*,WIDE2-1:!4106.07N/08755.13WO317/025/A=005243Adler High Altitude Balloon"
   # "KC9LHW-11>APBL10,WIDE1-1,WIDE2-1:!4106.18N/08755.31WO309/022/A=005939Adler Planetarium Balloon"
   #puts "APRS String:#{aprs_str}"
-  call_sign = aprs_str.split("-")[0]
+  source = aprs_str.split(">")[0]
+  call_sign = source.split("-")[0]
   #puts "call_sign:#{call_sign}"
   #puts "@filter:#{@filter} class:#{@filter.class}"
   log_entry( aprs_str )
@@ -86,7 +87,7 @@ def aprs_str_to_json( aprs_str )
       alt = info.split("A=")[1][0..5].to_f * @ft2m
       { :time => time, :lat => lat, :alt => alt, :lon => lon, 
         :heading => course, :vg => speed, :id_source => @id_source, 
-        :ident => call_sign }.to_json
+        :ident => source }.to_json
       end
   else
     #puts "return nil"
