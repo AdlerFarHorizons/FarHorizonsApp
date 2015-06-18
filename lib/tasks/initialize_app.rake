@@ -1,19 +1,30 @@
 
 task :initialize_app => :environment do
-  unless Rails.env.production?
+  if Rails.env.development?
+    puts "Initializing app for development mode"
+    Rake::Task['clear_db_indices'].execute
+    Rake::Task['set_db_indices'].execute
+    Rake::Task['reset_db'].execute
+    Rake::Task['reset_redis'].execute
+  elsif Rails.env.production?
+    puts "Initializing app for production mode"
     Rake::Task['clear_db_indices'].execute
     Rake::Task['set_db_indices'].execute
     Rake::Task['reset_db'].execute
     Rake::Task['reset_redis'].execute
   else
-    puts "Can't use this task in production environment"
+    puts "Initializing app for test mode"
+    Rake::Task['clear_db_indices'].execute
+    Rake::Task['set_db_indices'].execute
+    Rake::Task['reset_db'].execute
+    Rake::Task['reset_redis'].execute    
   end
 end
 
 # Ensure unique serial numbers for persistent objects and
 # unique identifier for mission
 task :clear_db_indices => :environment do
-  unless Rails.env.production?
+  #unless Rails.env.production?
     # Clear out all indices first
     Dir.foreach("app/models") do |x|
       if x.end_with?(".rb")
@@ -27,11 +38,11 @@ task :clear_db_indices => :environment do
         end
       end
     end
-  end
+  #end
 end
 
 task :set_db_indices => :environment do
-  unless Rails.env.production?
+  #unless Rails.env.production?
     # Re-set indexes
     puts "Resetting indices..."
     Mission.ensure_index [[ :ident, 1 ]], :unique => true
@@ -42,14 +53,14 @@ task :set_db_indices => :environment do
     Router.ensure_index [[ :serial_no, 1 ]], :unique => true
     PlatformServer.ensure_index [[ :serial_no, 1 ]], :unique => true
     puts "Done."
-  else
-    puts "Can't use this task in production environment"
-  end
+  #else
+    #puts "Can't use this task in production environment"
+  #end
 end
 
 task :reset_db => :environment do
   # Clears and re-sets collections represented in app/models only
-  unless Rails.env.production? 
+  #unless Rails.env.production? 
   # Clear database first
     Dir.foreach("app/models") do |x|
       if x.end_with?('.rb')
@@ -70,17 +81,17 @@ task :reset_db => :environment do
       puts "creating object:#{klass}"
       klass.create( JSON.parse(json_data) )
     end
-  else
-    puts "Can't use this task in production environment"
-  end
+  #else
+    #puts "Can't use this task in production environment"
+  #end
 end  
 
 task :reset_redis => :environment do
-  unless Rails.env.production?
+  #unless Rails.env.production?
     RedisConnection.flushdb()
     RedisConnection.set( 'beacon_filter',
                          ['WB9SKY', 'KC9LIG', 'KC9LHW'])
-  else
-    puts "Can't use this task in production environment"
-  end
+  #else
+    #puts "Can't use this task in production environment"
+  #end
 end
