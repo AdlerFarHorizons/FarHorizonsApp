@@ -44,7 +44,7 @@ maxaltitude = 0
 AutoSizeFramedCloud = OpenLayers.Class(OpenLayers.Popup.FramedCloud, 'autoSize': true)
 
 ###this is the default set of options used in many calls ###
-
+OpenLayers.ImgPath = "/assets/OpenLayers/img/"
 options = 
   projection: 'EPSG:900913'
   units: 'm'
@@ -81,10 +81,11 @@ map = new (OpenLayers.Map)('map', options)
 ###and create a couple of layers for the map display ###
 
 # NOTE: Path to stuff in app/assets/images is 'assets/<path beneath app/assets>
-streets = new (OpenLayers.Layer.TMS)('Streets', 'http://' + hostname + ':' + '2000' + '/streets/', #'assets/map.tiles/streets/',
+mapPort = $('#data').data( 'mapPort' )
+streets = new (OpenLayers.Layer.TMS)('Streets', 'http://' + hostname + ':' + mapPort.toString() + '/streets/', #'assets/map.tiles/streets/',
   'type': 'png'
   'getURL': get_my_url)
-aerial = new (OpenLayers.Layer.TMS)('Aerial', 'http://' + hostname + ':' + '2000' + '/aerial/', #'assets/map.tiles/aerial/',
+aerial = new (OpenLayers.Layer.TMS)('Aerial', 'http://' + hostname + ':' + mapPort.toString() + '/aerial/', #'assets/map.tiles/aerial/',
   'type': 'png'
   'getURL': get_my_url)
 
