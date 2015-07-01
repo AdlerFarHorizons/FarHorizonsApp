@@ -28,14 +28,21 @@ module FarHorizonsApp
     debugger if ENV["DEBUG"] && Rails.env.development?
     
     # Start support services
-    pid = `ps x | grep redis-server.*6380 | grep -v grep`.split[0]
-    unless pid
-      Process.detach( spawn( 
-          "redis-server ./config/redis-fh.conf > ./log/redis-console.log" ) )
-    end
-    pid = `ps x | grep "mapserver #{Socket.gethostname}" | grep -v grep`.split[0]
-    unless pid
-      Process.detach( spawn( "bin/mapserver #{Socket.gethostname} /data/map.tiles" ) )
+
+    # In production mode, Redis assumed to be a running system service on
+    # port 6379, Map tile service assumed to be Apache service on port 2000.
+    # In dev mode, both are run as local  on ports 6380 and 2001,
+    # respectively.
+    unless Rails.env.production?
+      pid = `ps x | grep redis-server.*6380 | grep -v grep`.split[0]
+      unless pid
+        Process.detach( spawn( 
+            "redis-server ./config/redis-fh.conf > ./log/redis-console.log" ) )
+      end
+      pid = `ps x | grep "mapserver #{Socket.gethostname}" | grep -v grep`.split[0]
+      unless pid
+        Process.detach( spawn( "bin/mapserver #{Socket.gethostname} /data/map.tiles" ) )
+      end
     end
   end
 end

@@ -16,12 +16,14 @@
 <% mission = Mission.all.select { |x| x.chase_vehicles.include?( ChaseVehicle.find( this_vehicle.id ) ) }.first  %>
 <% other_vehicles = mission.chase_vehicles.collect {|x| x if x.id != this_vehicle.id }  %>
 <% platforms = mission.platforms  %>
+<% map_port = Rails.env.development? ? 2001 : 2000 %>
 
 <!--  The hash is included in properties of an empty div. Note that the ruby
       underscore keys are accesed as camelcase in the js hash -->
 <%= content_tag 'div', '', 
   id: 'data', 
     data: {
+      map_port: map_port,
       server: server,
       beacon_rcvrs: beacon_receivers,
       loc_dev: location_device,
