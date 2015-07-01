@@ -5,7 +5,7 @@ root = ARGV[1]
 require 'webrick'
 include WEBrick
 
-server = HTTPServer.new(:Port=>2000,:DocumentRoot=>root,
+server = HTTPServer.new(:Port=>2001,:DocumentRoot=>root,
                         BindAddress: hostname,
                         Logger: WEBrick::Log.new("/dev/null"),
                         AccessLog: [])
