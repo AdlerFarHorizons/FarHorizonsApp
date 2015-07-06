@@ -89,24 +89,24 @@ class LocationDevicesController < ApplicationController
           if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
             @location_device.driver_pid = pid
             @location_device.save
-            render :inline => "Location Device #{@location_device.id} driver started as PID:#{pid}."
+            render :inline => "Location Device #{@location_device.id} " +
+                              "driver started as PID:#{pid}."
           else
-            render :inline => "Could not start Location Device #{@location_device.id} driver.", 
-                    status: :accepted
+            render :inline => "Could not start Location Device " +
+                              "#{@location_device.id} driver."
           end
         else
           render :inline => "Failed: Location Device #{@location_device.id} " +
                             "not attached to a ChaseServer assigned to " +
-                            "a ChaseVehicle.", status: :unprocessable_entity
+                            "a ChaseVehicle."
         end
       else
         render :inline => "Failed: Location Device #{@location_device.id} " +
-                          "driver already running as PID:#{@location_device.driver_pid}",
-                          status: :unprocessable_entity
+                          "driver already running as " +
+                          "PID:#{@location_device.driver_pid}"
       end
     else
-      render :inline => "Failed: Location Device #{params[:id]} not found.",
-             status: :not_found
+      render :inline => "Failed: Location Device #{params[:id]} not found."
     end
   end
   
@@ -125,12 +125,10 @@ class LocationDevicesController < ApplicationController
         @location_device.driver_pid = nil
         @location_device.save
         render :inline => "Failed: Location Device #{@location_device.id} " +
-                          "driver already stopped",
-                          status: :unprocessable_entity
+                          "driver already stopped"
       end
     else
-      render :inline => "Failed: Location Device #{params[:id]} not found.",
-             status: :not_found
+      render :inline => "Failed: Location Device #{params[:id]} not found."
     end
   end
 
