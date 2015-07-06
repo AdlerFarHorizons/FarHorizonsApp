@@ -48,7 +48,7 @@ OpenLayers.ImgPath = "/assets/OpenLayers/img/"
 options = 
   projection: 'EPSG:900913'
   units: 'm'
-  numZoomLevels: 16
+  numZoomLevels: 17
   maxResolution: 156543.0339
   maxExtent: new (OpenLayers.Bounds)(-20037508.34, -20037508.34, 20037508.34, 20037508.34)
   controls: [new OpenLayers.Control.PanZoomBar,
