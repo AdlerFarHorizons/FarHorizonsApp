@@ -26,8 +26,9 @@ FarHorizonsApp::Application.configure do
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true #false
+  # NOTE: This flag is set true until I can figure out how to get non-image assets pre-compiled
+  # Fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = true #NOTE: Normal production setting --> false
 
   # Generate digests for assets URLs.
   config.assets.digest = true
