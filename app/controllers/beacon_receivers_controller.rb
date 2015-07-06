@@ -93,24 +93,24 @@ class BeaconReceiversController < ApplicationController
           if pid && `ps -p "#{pid.to_s}" -o pid --no-header`.to_i > 0
             @beacon_receiver.driver_pid = pid
             @beacon_receiver.save
-            render :inline => "Beacon Receiver #{@beacon_receiver.id} driver started as PID:#{pid}."
+            render :inline => "Beacon Receiver #{@beacon_receiver.id} " +
+                              "driver started as PID:#{pid}."
           else
-            render :inline => "Could not start Beacon Receiver #{@beacon_receiver.id} driver.", 
-                    status: :accepted
+            render :inline => "Could not start Beacon Receiver " +
+                              "##{@beacon_receiver.id} driver." 
           end
         else
           render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
                             "not attached to a ChaseServer assigned to " +
-                            "a ChaseVehicle.", status: :unprocessable_entity
+                            "a ChaseVehicle."
         end
       else
         render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
-                          "driver already running as PID:#{@beacon_receiver.driver_pid}",
-                          status: :unprocessable_entity
+                          "driver already running as " +
+                          "PID:#{@beacon_receiver.driver_pid}"
       end
     else
-      render :inline => "Failed: Beacon Receiver #{params[:id]} not found.",
-             status: :not_found
+      render :inline => "Failed: Beacon Receiver #{params[:id]} not found."
     end
   end
   
