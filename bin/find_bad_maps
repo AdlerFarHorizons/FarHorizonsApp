@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "Checking for bad map tiles. Results to file 'errors'..."
+find . -name '*.jpg' -exec identify -format "%f\n" {} \; 2>errors
+
