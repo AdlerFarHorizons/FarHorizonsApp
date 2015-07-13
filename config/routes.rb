@@ -1,6 +1,6 @@
 FarHorizonsApp::Application.routes.draw do
   
-  get 'welcome/index'
+  get 'welcome' => 'welcome#index'
 
   # Not associated with a model, so needs explicit route
   get 'track_example' => 'track_example#index'
@@ -49,7 +49,7 @@ FarHorizonsApp::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'welcome#index'
+  root 'tracker#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
