@@ -129,12 +129,10 @@ class BeaconReceiversController < ApplicationController
         @beacon_receiver.driver_pid = nil
         @beacon_receiver.save
         render :inline => "Failed: Beacon Receiver #{@beacon_receiver.id} " +
-                          "driver already stopped",
-                          status: :unprocessable_entity
+                          "driver already stopped"
       end
     else
-      render :inline => "Failed: Beacon Receiver #{params[:id]} not found.",
-             status: :not_found
+      render :inline => "Failed: Beacon Receiver #{params[:id]} not found."
     end
   end
   
