@@ -26,7 +26,7 @@ parseData = (req) ->
   return
 
 load = ->
-  OpenLayers.loadURL 'data/aPREDICTION.kml', '', null, parseData
+  OpenLayers.loadURL '/data/aPREDICTION.kml', '', null, parseData
 
   ### must change KML file everytime before flight ###
 
@@ -116,7 +116,7 @@ map.addControl new (OpenLayers.Control.ScaleLine)(
 predictionTrack = new (OpenLayers.Layer.Vector)('Prediction',
   strategies: [ new (OpenLayers.Strategy.Fixed) ]
   protocol: new (OpenLayers.Protocol.HTTP)(
-    url: 'data/aPREDICTION.kml'
+    url: '/data/aPREDICTION.kml'
     format: new (OpenLayers.Format.KML))
   style:
     strokeColor: 'green'
@@ -185,7 +185,7 @@ style_mark.graphicHeight = 16
 style_mark.graphicXOffset = -style_mark.graphicWidth / 2 # default is -(style_mark.graphicWidth/2);
 style_mark.graphicYOffset = -style_mark.graphicHeight
 # LN - Path to vendor assets is 'assets/<path beneath javascripts>
-style_mark.externalGraphic = "assets/OpenLayers/img/marker.png"
+style_mark.externalGraphic = "/assets/OpenLayers/img/marker.png"
 style_mark.title = "this is a test tooltip"
 
 #
@@ -197,7 +197,7 @@ style_balloon.graphicWidth = 16
 style_balloon.graphicHeight = 16
 style_balloon.graphicXOffset = -style_balloon.graphicWidth / 2 # default is -(style_balloon.graphicWidth/2);
 style_balloon.graphicYOffset = -style_balloon.graphicHeight
-style_balloon.externalGraphic = "assets/balloon.png"
+style_balloon.externalGraphic = "/assets/balloon.png"
 # title only works in Firefox and Internet Explorer
 style_balloon.title = "this is a test tooltip"
 
@@ -210,8 +210,8 @@ style_van.graphicWidth = 16
 style_van.graphicHeight = 16
 style_van.graphicXOffset = -style_van.graphicWidth / 2 # default is -(style_van.graphicWidth/2);
 style_van.graphicYOffset = -style_van.graphicHeight / 2
-# LN - Path to vendor assets is 'assets/<path beneath javascripts>
-style_van.externalGraphic = "assets/van.png"
+# LN - Path to vendor assets is '/assets/<path beneath javascripts>
+style_van.externalGraphic = "/assets/van.png"
 # title only works in Firefox and Internet Explorer
 style_van.title = "this is a test tooltip"
 
@@ -230,7 +230,7 @@ map.addLayer vehicleLayer
 thisVehicleLastTime = null
 thisVehiclePoint = new OpenLayers.Geometry.Point( null, null )
 thisVehicleLocation = null
-urlVehicleLoc = 'chase_vehicle_location/'
+urlVehicleLoc = '/chase_vehicle_location/'
 thisVehicleId = $('#data').data( 'thisVehicle' ).id
 locDev = $('#data').data( 'locDev' )
 
@@ -247,7 +247,7 @@ updateVehicleLocation = ( vehicleId ) ->
 
 platforms = $('#data').data('platforms')
 platformIds = ( x.id for x in platforms )
-urlPlatformTracks = 'platform_tracks/'
+urlPlatformTracks = '/platform_tracks/'
 platformTracks = ( [] for x in platformIds )
 platformTrackMultiPoints = ( [] for x in platformIds )
 platformTrackLines = ( [] for x in platformIds )
