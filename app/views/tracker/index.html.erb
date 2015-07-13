@@ -123,28 +123,28 @@
     </tr>
  </table>
 </div>
-
-
-<div id='control' style ="width:800px; height:100px">
-    <p>
-        &nbsp;&nbsp;Location Device:
-        <button id='locSimStart' type='button'>Start</button>
-        <button id='locSimEnd' type='button'>End</button>
-        <a id="locDriver"></a><br>
-    </p>
-    <p>
-        Beacon Receiver:
-        <button id='beaconSimStart' type='button'>Start</button>
-        <button id='beaconSimEnd' type='button'>End</button>
-        <a id="beaconDriver"></a><br>
-    </p>
-    <p id='simSpeed'>
-        Simulation Speed Factor:
-        <input type='radio' name='simSpeedFactor' value='1'>1
-        <input type='radio' name='simSpeedFactor' value='5'>5
-        <input type='radio' name='simSpeedFactor' value='10' checked>10
-    </p>
-</div>
+<% if @admin %>
+  <div id='control' style ="width:800px; height:100px">
+      <p>
+          &nbsp;&nbsp;Location Device:
+          <button id='locSimStart' type='button'>Start</button>
+          <button id='locSimEnd' type='button'>End</button>
+          <a id="locDriver"></a><br>
+      </p>
+      <p>
+          Beacon Receiver:
+          <button id='beaconSimStart' type='button'>Start</button>
+          <button id='beaconSimEnd' type='button'>End</button>
+          <a id="beaconDriver"></a><br>
+      </p>
+      <p id='simSpeed'>
+          Simulation Speed Factor:
+          <input type='radio' name='simSpeedFactor' value='1'>1
+          <input type='radio' name='simSpeedFactor' value='5'>5
+          <input type='radio' name='simSpeedFactor' value='10' checked>10
+      </p>
+  </div>
+<% end %>
 
 <!-- Javascript includes: This page script plus vendor and other library 
   includes from application.js directives -->

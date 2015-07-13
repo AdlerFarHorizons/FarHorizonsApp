@@ -6,7 +6,7 @@ FarHorizonsApp::Application.routes.draw do
   get 'track_example' => 'track_example#index'
   
   get 'tracking_home' => 'tracking_home#index'
-  
+  get 'tracker/:passwd' => 'tracker#login'
   get 'tracker' => 'tracker#index'
   get 'chase_vehicle_location/:id' => 'chase_vehicles#location'
   get 'platform_tracks/:id' => 'platforms#tracks'
