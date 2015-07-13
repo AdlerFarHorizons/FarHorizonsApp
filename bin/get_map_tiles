@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+#
+# To change this license header, choose License Headers in Project Properties.
+# To change this template file, choose Tools | Templates
+# and open the template in the editor.
+# IL-WI line south of Janesville, WI => 42.5,-89
+# Just SE of Cincinnati, OH => 39,-84.4
+# 38 to 43 latitude, -83 to -91 deg longitude
+def get_tile_number(lat_deg, lng_deg, zoom)
+  lat_rad = 1.0 * lat_deg / 180.0 * Math::PI
+  n = 2.0 ** zoom
+  x = ( ((1.0 * lng_deg + 180.0) / 360.0 * n) ).to_i
+  y = ( ((1.0 - Math::log(Math::tan(lat_rad) + (1 / Math::cos(lat_rad))) / 
+            Math::PI) / 2.0 * n) ).to_i 
+  {:x => x, :y =>y}
+end
+
+min_lat = ARGV[0].to_i
+max_lat = ARGV[1].to_i
+min_lon = ARGV[2].to_i
+max_lon = ARGV[3].to_i
+max_zoom = ARGV[4].to_i
+root = ARGV[5]
+url_root = ARGV[6]
+suffix = ARGV[7]
+count = 0
+t_prev = Time.now().to_f
+if suffix
+	for z in 0..max_zoom 
+		# create z directory
+		min = get_tile_number( max_lat, min_lon, z )
+		max = get_tile_number( min_lat, max_lon, z )
+		zdir = "#{root}/#{z}"
+		Dir.mkdir( zdir ) unless File.directory?( zdir )
+		for xtile in min[:x]..max[:x]
+		  # create x directory
+		  xdir = "#{zdir}/#{xtile}"
+		  Dir.mkdir( xdir ) unless File.directory?( xdir )
+		  for ytile in min[:y]..max[:y]
+		    path = "#{xdir}/#{ytile}.#{suffix}"
+		    url = "#{url_root}/#{z}/#{xtile}/#{ytile}.#{suffix}"
+		    unless File.exist?( path )
+  		    `wget -q -O #{path} #{url}`
+					t_now = Time.now().to_f
+					rate = 1 / ( t_now - t_prev )
+					t_prev = t_now
+					puts "TILES:#{count} RATE:#{rate}"
+		    end
+				count += 1
+		  end
+		end
+	end
+else
+	puts "Space-separated arguments:"
+	puts "  minimum latitude"
+	puts "  maximum latitude"
+	puts "  minimum longitude"
+	puts "  maximum longitude"
+	puts "  maximum zoom level"
+	puts "  root tile target directory (no trailing '/')"
+	puts "  root tile source url (no trailing '/')"
+	puts "  file suffix (no leading '.')"
+end
+
+exit
