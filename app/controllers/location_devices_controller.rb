@@ -73,11 +73,6 @@ class LocationDevicesController < ApplicationController
       speedup = params[:speedup]
       temp = ChaseVehicle.where( :chase_server_id => temp.id.to_s ).first
       
-      # Delete previous simulated tracks if sim driver
-      if driver.end_with?( 'sim' )
-        GroundTrack.where( :id_source => loc ).each { |x| x.destroy() }
-      end
-      
       unless @location_device.driver_pid
         if ( (serv = ChaseServer.where( :location_device_id => loc ).first) &&
              (veh = ChaseVehicle.where( :chase_server_id => serv.id.to_s ).first) )
@@ -130,6 +125,11 @@ class LocationDevicesController < ApplicationController
     else
       render :inline => "Failed: Location Device #{params[:id]} not found."
     end
+    # Delete previous simulated tracks if sim driver
+    if @location_device.driver.end_with?( 'sim' )
+      GroundTrack.where( :id_source => @location_device.id.to_s ).each { |x| x.destroy() }
+    end
+      
   end
 
   private

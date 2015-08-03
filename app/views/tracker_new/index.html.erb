@@ -1,0 +1,180 @@
+<!-- 
+  Baseline is Kit Ng's OpenLayers3 example, 'tracking_home'. Basic tracking
+  functionality and server interaction inherited from OpenLayers2 'tracker'
+  which is based on Roxanne Vitorillo's work during ISGC summer 2013 session.
+  Server interaction is now based on push rather than pull, simplifying both
+  client and server'
+-->
+
+
+<!-- Define some ruby objects to add to a data hash accessible to the js -->
+<% server = ChaseServer.where( :hostname => get_hostname ).first  %>
+<% beacon_receivers = server.beacon_receivers %>
+<% location_device = server.location_device %>
+<% this_vehicle = ChaseVehicle.where( :chase_server_id => server.id.to_s ).first %>
+<% mission = Mission.all.select { |x| x.chase_vehicles.include?( ChaseVehicle.find( this_vehicle.id ) ) }.first  %>
+<% other_vehicles = mission.chase_vehicles.collect {|x| x if x.id != this_vehicle.id }  %>
+<% platforms = mission.platforms  %>
+<% beacons = platforms.collect { |p| p.beacons } %>
+<% image_port = Rails.env.development? ? 2001 : 2000 %>
+
+<!--  The hash is included in properties of an empty div. Note that the ruby
+      underscore keys are accesed as camelcase in the js hash -->
+<%= content_tag 'div', '', 
+  id: 'data', 
+    data: {
+      image_port: image_port,
+      server: server,
+      beacon_rcvrs: beacon_receivers,
+      loc_dev: location_device,
+      mission: mission, 
+      this_vehicle: this_vehicle,
+      other_vehicles: other_vehicles,
+      platforms: platforms,
+      beacons: beacons
+    } %>
+
+
+<!--example from openlayers.org-->
+  <div id="charts">
+    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tr>
+    <!-- set up the map pane -->
+	  <td width="800px">
+	    <div id="map" style="width:897px; height:602px; border-right: 2px #cccccc solid; border-left: 2px #cccccc solid;"></div>
+      </td>
+	  <td>
+
+	    <table width="275px" border="0" cellpadding="0" cellspacing="0">
+	      <tr>
+		<td align="left">
+
+        <!-- Beginning of TABS -->
+        <div class="tabs">
+
+            <div class="tab">
+                <input type="radio" id="tab-1" name="tab-group-1" checked>
+                <label for="tab-1">Current</label>
+
+                <div class="content">
+                    <p>
+                    <div id="BalloonStats" style='background-image: url(<%= image_tag "mini-hero-bg.png" %>); height:50px; width:270px; padding: 10px;'> </div><BR>
+                        <div id="line"></div>
+                    <!-- Beginning of chat code -->
+                    <!-- This is shown only when user needs to log in -->
+                    <div id="logInArea" style='background-image: url(<%= image_tag "mini-hero-bg.png" %>); min-height:70px; width:270px; padding: 10px;'>
+                        <form id="logInForm" onsubmit="logInProc();return false;">
+                        <b>UserName:</b>
+                        <input id="userName" type="text">
+                        <input id="logInButton" name="logIn" type="submit" value="Log In">
+                        </form>
+                    </div>
+
+                <!-- this area is shown only once logged in -->
+                    <div id="chatArea" style='background-image: url(<%= image_tag "mini-hero-bg.png" %>); min-height:200px; width:270px; padding: 10px;'>
+                        <div id="oldMessages"></div>
+                        <form onsubmit="sendMessage();return false;" id="messageForm"><br>
+                        <input id="message" type="text" value="TYPE MESSAGE HERE">
+                        </form>
+                        <div id="logoutbuttonhere">
+                            <form onsubmit="logOutProc(); return false;">
+                            <input id="logOutButton" name="logOut" type="submit" value="Log Out">
+                            </form>
+                        </div>
+                    </div>
+                    <span id="response_msg"><b></b></span>
+                <!-- end of chat code -->
+
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" id="tab-2" name="tab-group-1">
+                <label for="tab-2">Charts</label>
+
+                <div class="content">
+                    <p>
+                    <div id="chart-container-1" style="width:275px; height:175px"></div>
+                    <div id="chart-container-2" style="width:275px; height:175px"></div>
+                    <div id="chart-container-3" style="width:275px; height:175px"></div>
+                    </p>
+                </div>
+            </div>
+
+            <div class="tab">
+                <input type="radio" id="tab-3" name="tab-group-1">
+                <label for="tab-3">Burst</label>
+
+                <div class="content">
+                    <p>
+                    <div id="line"></div>
+                    <div id="outputArea" style='background-image: url(<%= image_tag "mini-hero-bg.png" %>); min-height:400px; width:270px; padding: 10px;'>
+                        <b>Information from Predictive Track KML file:</b>
+                        <div id="output"></div>
+
+                    </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- End of TABS -->
+
+            </td>
+        </tr>
+        </table>
+        </td>
+    </tr>
+ </table>
+</div>
+
+
+<%#*<table width="50%" Border = "0" cellpadding="0" cellspacing="0">%>
+  <%#*<tr>%>
+    <%#*<td>%>
+    <%#*<!-- add in a toggle button for displaying balloon history -->%>
+    <%#*<input id="current-toggle" type="checkbox">%>
+    <%#*<label for="current-toggle">Show Only Current Positions?</label><BR>%>
+    <%#*<!-- add in a toggle button for displaying predicted landing positions -->%>
+    <%#*</td>%>
+    <%#*<td>%>
+    <%#*<input id="predict-toggle" type="checkbox">%>
+    <%#*<label for="predict-toggle">Show Predicted Landing Positions?</label><BR>%>
+    <%#*<!-- add in a button for starting a fake track -->%>
+    <%#*</td>%>
+    <%#*<td>%>
+    <%#*<form id="startFake" onsubmit="startFake();return false">%>
+    <%#*<input id="fakeButton" name="startfake" type="submit" value="Start Fake Track">%>
+    <%#*</form>%>
+    <%#*</td>%>
+  <%#*</tr>%>
+<%#*</table>%>
+<!-- ************************END HTML SETUP************************* -->
+<% if @admin %>
+  <div id='control' style ="width:800px; height:100px">
+      <p>
+          &nbsp;&nbsp;Location Device:
+          <button id='locSimStart' type='button'>Start</button>
+          <button id='locSimEnd' type='button'>End</button>
+          <a id="locDriver"></a><br>
+      </p>
+      <p>
+          Beacon Receiver:
+          <button id='beaconSimStart' type='button'>Start</button>
+          <button id='beaconSimEnd' type='button'>End</button>
+          <a id="beaconDriver"></a><br>
+      </p>
+      <p id='simSpeed'>
+          Simulation Speed Factor:
+          <input type='radio' name='simSpeedFactor' value='1'>1
+          <input type='radio' name='simSpeedFactor' value='5'>5
+          <input type='radio' name='simSpeedFactor' value='10' checked>10
+      </p>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "tracker_new/tracker_new" %>
+<%= javascript_include_tag "tracker_new/chatbox2" %>
+<%= javascript_include_tag "tracker_new/testChart" %>
+<%= javascript_include_tag "application" %>
+

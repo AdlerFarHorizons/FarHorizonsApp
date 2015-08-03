@@ -6,8 +6,8 @@ FarHorizonsApp::Application.routes.draw do
   get 'track_example' => 'track_example#index'
   
   get 'tracking_home' => 'tracking_home#index'
-  get 'tracker/:passwd' => 'tracker#login'
-  get 'tracker' => 'tracker#index'
+  get 'tracker' => 'tracker_new#index'
+  get 'tracker/:passwd' => 'tracker_new#login'
   get 'chase_vehicle_location/:id' => 'chase_vehicles#location'
   get 'platform_tracks/:id' => 'platforms#tracks'
   
@@ -49,7 +49,7 @@ FarHorizonsApp::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'tracker#index'
+  root 'tracker_new#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
