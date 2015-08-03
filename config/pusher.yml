@@ -1,0 +1,13 @@
+development: &global_settings
+  host:   '0.0.0.0'
+  port:   '4567'
+  app_id: '130776'
+  key:    'c33f8eaa482b900bae75'
+  secret: '28fe4639b180d593ca52' #Not a pusher secret, made up for slanger
+
+test:
+  database: fh-test
+  <<: *global_settings
+
+production:
+  <<: *global_settings

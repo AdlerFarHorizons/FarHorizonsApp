@@ -53,5 +53,7 @@ end
 # Use thin web server instead of spammy webrick
 gem 'thin'
 
+gem 'pusher', '>= 0.14.5'
+
 # Use debugger
 gem 'byebug', group: [:development, :test]
