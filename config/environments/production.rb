@@ -26,9 +26,11 @@ FarHorizonsApp::Application.configure do
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
-  # NOTE: This flag is set true until I can figure out how to get non-image assets pre-compiled
   # Fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true #NOTE: Normal production setting --> false
+  # NOTE: Setting to true almost fixes Rails inability to find any image assets
+  # from javascript. Upon load or full refresh, assets are loaded, but resizing
+  # or otherwise disturbing the layout on the browser, causes them to be lost.
+  config.assets.compile = false #NOTE: Normal production setting --> false
 
   # Generate digests for assets URLs.
   config.assets.digest = true
@@ -58,6 +60,12 @@ FarHorizonsApp::Application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"
 
+  # NOTE: The following option apparently does nothing for Rails 4 (maybe useful
+  # for Rails 3?). This option belongs in config/initializers/assets.rb with
+  # 'Rails.application.' pre-pended to it. In config/environments/development.rb
+  # 'config.assets.raise_runtime_errors = true' will raise an error providing the
+  # entry that will be required in assets.rb.
+  # 
   # Precompile additional assets.
   # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
   # config.assets.precompile += %w( search.js )
@@ -78,4 +86,7 @@ FarHorizonsApp::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+  
+  # Do not dump schema after migrations.
+  #config.active_record.dump_schema_after_migration = false
 end
