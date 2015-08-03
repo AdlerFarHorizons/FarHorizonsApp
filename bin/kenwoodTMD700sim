@@ -101,7 +101,7 @@ def update_sim( pos )
   @isBurst = @isBurst ? @isBurst : pos[2] > @burst_alt
   #puts pos.to_s
 end
-puts "ARGV:#{ARGV.to_s}"
+#puts "ARGV:#{ARGV.to_s}"
 @serv_uri = ARGV[0] # host uri, e.g., http://localhost:3000
 @id_source = ARGV[1] # beacon_receiver id
 @filter = JSON.parse(ARGV[2]) # Array of call signs
@@ -167,7 +167,7 @@ while true do
     log_entry( result ) unless result == last_log_entry
     last_log_entry = result
     samp_count = 0
-    puts "count:#{count}"
+    #puts "count:#{count}"
     count += 1
   end
   sleep 1.0 * @t_samp / @speedup

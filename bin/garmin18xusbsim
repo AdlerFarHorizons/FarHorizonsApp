@@ -66,7 +66,7 @@ log_entry( "---------------")
 log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
 
 num_lines = 2 # Number of lines per position report
-num_reports = 10 # just post every nth report
+num_reports = 3 # just post every nth report
 report = ""
 reports = 0
 
@@ -92,7 +92,7 @@ begin
             log_entry( result ) unless result == last_log_entry
             last_log_entry = result
             reports = 0
-            puts report
+            #puts report
           else
             reports += 1
           end

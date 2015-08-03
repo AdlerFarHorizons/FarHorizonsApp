@@ -41,7 +41,7 @@ def loc_str_to_json( loc_str )
   time = Time.parse( loc_str )
   temp = loc_str.split( " " )
   lat = temp[5][0..temp[5].length-2].to_f * ( temp[5].end_with?('N') ? 1 : -1 )
-  puts "lat: #{temp[5]} : #{lat.to_s}"
+  #puts "lat: #{temp[5]} : #{lat.to_s}"
   lon = temp[6][0..temp[6].length-2].to_f * ( temp[6].end_with?('E') ? 1 : -1 )
   alt = temp[7].to_f
   { :time => time, :lat => lat, :alt => alt, :lon => lon, 
@@ -67,7 +67,7 @@ log_entry( "---------------")
 log_entry( "Started #{@cmd} on device id:#{@id_source} to server #{@serv_uri}")
 
 num_lines = 2 # Number of lines per position report
-num_reports = 10 # just post every nth report
+num_reports = 3 # just post every nth report
 report = ""
 reports = 0
 
@@ -83,7 +83,7 @@ begin
     begin
       stdin.each do |line|
         line.delete!("\r\n")
-        puts ("line:#{line}")
+        #puts ("line:#{line}")
         report += line
         if count == num_lines - 1 
           if reports == num_reports - 1
