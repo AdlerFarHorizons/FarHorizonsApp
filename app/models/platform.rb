@@ -17,5 +17,9 @@ class Platform
   def platform_server
     PlatformServer.find( platform_server_id )
   end
+  
+  def beacons
+    Beacon.all.select {|b| beacon_ids.include?( b.id.to_s )}
+  end
 
 end

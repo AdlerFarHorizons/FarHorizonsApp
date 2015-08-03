@@ -95,6 +95,10 @@ class PointsController < ApplicationController
           track ||= SkyTrack.create( :id_source => device.id.to_s,
                                       :platform => host, :ident => @point.ident )
           track.add_point( @point )
+          #puts "Platform channel:Platform_#{host.id}"
+          Pusher["Platform_#{host.id}"].trigger('new_point', {
+              message: @point
+            })
           track.save
           host.sky_tracks << track unless track.platform
           host.save
@@ -104,6 +108,9 @@ class PointsController < ApplicationController
           track ||= GroundTrack.create( :id_source => @point.id_source.to_s,
                                         :chase_vehicle => host, :ident => @point.ident )
           track.add_point( @point )
+          Pusher["ChaseVehicle_#{@point.ident}"].trigger('new_point', {
+              message: @point
+            })
           track.save
           return track
         else

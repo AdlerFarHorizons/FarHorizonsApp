@@ -24,7 +24,7 @@ module FarHorizonsApp
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-
+    
     debugger if ENV["DEBUG"] && Rails.env.development?
     
     # Start support services
@@ -41,7 +41,7 @@ module FarHorizonsApp
       end
       pid = `ps x | grep "mapserver #{Socket.gethostname}" | grep -v grep`.split[0]
       unless pid
-        Process.detach( spawn( "bin/mapserver #{Socket.gethostname} /data/map.tiles" ) )
+        Process.detach( spawn( "bin/mapserver #{Socket.gethostname} /var/www/images" ) )
       end
     end
   end
