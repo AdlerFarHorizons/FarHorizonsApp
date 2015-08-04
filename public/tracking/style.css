@@ -1,5 +1,5 @@
 body {
-    background-image:url('img/body_bgc.png');
+    background-image: asset-data-url("body_bgc.png");
     background-repeat:repeat-x;
 }
 
